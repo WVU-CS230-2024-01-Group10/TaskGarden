@@ -1,0 +1,54 @@
+<!--
+ - TaskGarden/taskPage/styles.css 
+ - Version: 1.0.0 (27 Feb 2024)
+ - Authors: C. Jones 
+ - Last Edit: C. Jones
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Garden Task View Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Task Garden Task View Page</h1>
+
+    <p>
+        Here you can view the list of tasks you've added, the date and time they are to be completed (if applicable), 
+        the difficulty level, and how many points will be awarded for completing it.
+    </p>
+
+    <p> Click the button below to add a new task! </p>
+    <button onclick="taskAdd()">Add a Task</button>
+
+    <!-- Pop-up box for taskAdd function -->
+    <div id="taskAddBox">
+        <h2>Enter Information</h2>
+        <form id="taskInfo">
+            <label for="title">Title of Task:</label>
+            <input type="text" id="title" name="title"><br><br>
+
+            <label for="desc">Brief Description:</label>
+            <input type="text" id="desc" name="desc"><br><br>
+
+            <label for="datetime">Date & Time:</label>
+            <input type="datetime-local" id="datetime" name="datetime"><br><br>
+
+            <label for="datetime">Difficulty Level:</label>
+            <input type="number" id="diff" name="diff"><br><br>
+
+            <button type="button" onclick="saveData()">Add Task</button>
+            <button type="button" onclick="closeTaskAddBox()">Cancel</button>
+        </form>
+    </div>
+
+    <h2>Current Task List:</h2>
+    <div id="output"></div>
+
+</body>
+</html>
+
