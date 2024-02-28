@@ -18,6 +18,19 @@ function taskAdd() {
 
 // TODO@caj00017: Add functionality for task removal and editing.
 
+// function taskEdit(): retrieves all values so that a task can be edited, and displays the taskAddBox.
+function taskEdit(taskID) {
+    var task = tasks.find(function(task) {
+        return task.id === taskID;
+    });
+
+    document.getElementById('title').value = task.title;
+    document.getElementById('desc').value = task.desc;
+    document.getElementById('datetime').value = task.datetime;
+    document.getElementById('diff').value = task.diff;
+    document.getElementById('taskAddBox').style.display = 'block';
+}
+
 // function closeTaskAddBox(): closes the taskAddBox. 
 function closeTaskAddBox() {
     document.getElementById('taskAddBox').style.display = 'none';
@@ -29,6 +42,7 @@ function saveData() {
 
     // Store input values into currentTask Object. 
     var currentTask = {
+        id: tasks.length,
         title: document.getElementById('title').value,
         desc: document.getElementById('desc').value,
         datetime: document.getElementById('datetime').value,
@@ -56,5 +70,14 @@ function saveData() {
         ' | Points Available: TBD'; // TODO@everyone: Decide on the difficulty:points exchange rate.
 
         outputDiv.appendChild(p);
+
+        // adding edit button for specific task
+        var editButton = document.createElement('button');
+        editButton.style.display = 'inline';
+        editButton.textContent = 'Edit';
+        editButton.onclick = function() {
+            taskEdit(task.id);
+        }
+        outputDiv.appendChild(editButton);
     });
 }
