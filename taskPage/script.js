@@ -18,8 +18,13 @@ function taskAdd() {
 
 // TODO@caj00017: Add functionality for task removal and editing.
 
-// function closeTaskAddBox(): closes the taskAddBox. 
-function closeTaskAddBox() {
+// function close(): closes the box for adding, editing, or removing. 
+function close(id) {
+    document.getElementById(id).style.display = 'none';
+}
+
+function closeTaskAddBox()
+{
     document.getElementById('taskAddBox').style.display = 'none';
 }
 
@@ -38,8 +43,8 @@ function saveData() {
     // Push the current task to the tasks array.
     tasks.push(currentTask);
 
-    // Close the popup.
-    closeTaskAddBox();
+    // Close the taskAddBox.
+    close('taskAddBox');
 
     // Update the List to include the new Task.
     var outputDiv = document.getElementById('output');

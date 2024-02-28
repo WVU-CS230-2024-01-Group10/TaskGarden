@@ -42,7 +42,10 @@
             <input type="number" id="diff" name="diff"><br><br>
 
             <button type="button" onclick="saveData()">Add Task</button>
-            <button type="button" onclick="closeTaskAddBox()">Cancel</button>
+
+            <!-- TODO@caj00017: Figure out why close('taskAddBox') doesn't work, 
+            but closeTaskAddBox() does. -->
+            <button type="button" onclick="closeTaskAddBox()">Cancel</button> 
         </form>
     </div>
 
