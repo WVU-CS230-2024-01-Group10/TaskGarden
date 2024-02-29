@@ -95,6 +95,7 @@ function updateList() {
         } );
         taskListDiv.appendChild(removeButton);
 
+
         // Create edit button
         var editButton = document.createElement('button');
         editButton.style.display = 'inline';
