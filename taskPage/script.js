@@ -1,7 +1,7 @@
 /*
  * TaskGarden/taskPage/script.js 
- * Version: 1.0.1 (28 Feb 2024)
- * Authors: C. Jones
+ * Version: 1.0.2 (29 Feb 2024)
+ * Authors: C. Jones, D. Campa
  * Last Edit: C. Jones
  */
 
@@ -16,11 +16,23 @@ function showTaskAddBox() {
     document.getElementById('taskAddBox').style.display = 'block';
 }
 
-function showTaskEditBox() {
-    document.getElementById('taskEditBox').style.display = 'block';
-}
+// function taskEdit(): retrieves all values so that a task can be edited, and displays the taskAddBox.
+function taskEdit(taskID) {
+    var task = tasks.find(function(task) {
+        return task.id === taskID;
+    });
 
-// TODO@caj00017: Add functionality for task editing
+    document.getElementById('title').value = task.title;
+    document.getElementById('desc').value = task.desc;
+    document.getElementById('datetime').value = task.datetime;
+    document.getElementById('diff').value = task.diff;
+    document.getElementById('taskAddBox').style.display = 'block';
+
+    /* if editing means adding a new task with 
+    SOME identical fields, remove the old task first */
+    tasks.splice(tasks.indexOf(task), 1);
+    editButton.hidden = true;
+}
 
 // function close(): closes the box for adding, editing, or removing. 
 function close(id) {
@@ -38,6 +50,7 @@ function addTask() {
 
     // Store input values into currentTask Object. 
     var currentTask = {
+        id: tasks.length,
         title: document.getElementById('title').value,
         desc: document.getElementById('desc').value,
         datetime: document.getElementById('datetime').value,
@@ -83,15 +96,12 @@ function updateList() {
         taskListDiv.appendChild(removeButton);
 
         // Create edit button
-        // TODO@caj00017: Figure out a way to make the Task stay if the 'cancel' button is pressed.
         var editButton = document.createElement('button');
+        editButton.style.display = 'inline';
         editButton.textContent = 'Edit';
-        editButton.addEventListener('click', function() {
-            tasks.splice(tasks.indexOf(task), 1);
-            document.getElementById('taskAddBox').style.display = 'block';
-            editButton.hidden = true;
-            updateList();
-        });
+        editButton.onclick = function() {
+            taskEdit(task.id);
+        }
         taskListDiv.appendChild(editButton);
     });
 }
