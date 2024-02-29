@@ -16,7 +16,11 @@ function showTaskAddBox() {
     document.getElementById('taskAddBox').style.display = 'block';
 }
 
-// TODO@caj00017: Add functionality for task removal and editing.
+function showTaskEditBox() {
+    document.getElementById('taskEditBox').style.display = 'block';
+}
+
+// TODO@caj00017: Add functionality for task editing
 
 // function close(): closes the box for adding, editing, or removing. 
 function close(id) {
@@ -77,5 +81,17 @@ function updateList() {
             updateList();
         } );
         taskListDiv.appendChild(removeButton);
+
+        // Create edit button
+        // TODO@caj00017: Figure out a way to make the Task stay if the 'cancel' button is pressed.
+        var editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.addEventListener('click', function() {
+            tasks.splice(tasks.indexOf(task), 1);
+            document.getElementById('taskAddBox').style.display = 'block';
+            editButton.hidden = true;
+            updateList();
+        });
+        taskListDiv.appendChild(editButton);
     });
 }
