@@ -1,6 +1,6 @@
 /*
  * TaskGarden/taskPage/styles.css 
- * Version: 1.0.0 (27 Feb 2024)
+ * Version: 1.0.1 (28 Feb 2024)
  * Authors: C. Jones
  * Last Edit: C. Jones
  */
@@ -10,7 +10,7 @@ h1 {
 }
 
  /* Styling for the taskAddBox */
- #taskAddBox {
+ .popup {
     display: none;
     position: fixed;
     top: 50%;
