@@ -7,6 +7,10 @@
 
 var tasks = []; // Array for storing task Objects.
 
+document.addEventListener('DOMContentLoaded', function() {
+    updateList();
+});
+
 // function showTaskAddBox(): resets all values to 0 so that a new task can be added, and displays the taskAddBox.
 function showTaskAddBox() {
     document.getElementById('title').value = '';
@@ -74,16 +78,26 @@ function updateList() {
     var taskListDiv = document.getElementById('taskListDiv');
     taskListDiv.innerHTML = ''; // Clear previous content
 
+    // Create table and header
+    var table = document.createElement('table');
+    var header = table.insertRow(); 
+    header.insertCell().textContent = "Title";
+    header.insertCell().textContent = "Description";
+    header.insertCell().textContent = "Date & Time";
+    header.insertCell().textContent = "Difficulty Level";
+    header.insertCell().textContent = "Points Available";
+    header.insertCell().textContent = "Remove";
+    header.insertCell().textContent = "Edit";
+
     // TODO@caj00017: Find a way to implement this as a <ul> or <ol> intead of <p>. 
     tasks.forEach(function(task) {
-        // Display task
-        var p = document.createElement('p');
-        p.textContent = 'Title: ' + task.title + 
-        ' | Description: ' + task.desc +
-        ' | Date & Time: ' + task.datetime +
-        ' | Difficulty Level: ' + task.diff +
-        ' | Points Available: TBD'; // TODO@everyone: Decide on the difficulty:points exchange rate.
-        taskListDiv.appendChild(p);
+
+        var row = table.insertRow();
+        row.insertCell().textContent = task.title;
+        row.insertCell().textContent = task.desc;
+        row.insertCell().textContent = task.datetime;
+        row.insertCell().textContent = task.diff;
+        row.insertCell().textContent = "TBD";
 
         // Create remove button
         var removeButton = document.createElement('button');
@@ -93,7 +107,7 @@ function updateList() {
             removeButton.hidden = true; 
             updateList();
         } );
-        taskListDiv.appendChild(removeButton);
+        row.insertCell().appendChild(removeButton);
 
 
         // Create edit button
@@ -103,6 +117,8 @@ function updateList() {
         editButton.onclick = function() {
             taskEdit(task.id);
         }
-        taskListDiv.appendChild(editButton);
+        row.insertCell().appendChild(editButton);
     });
+
+    taskListDiv.appendChild(table);
 }
