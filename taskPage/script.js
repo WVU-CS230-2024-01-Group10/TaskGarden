@@ -1,7 +1,7 @@
 /*
  * TaskGarden/taskPage/script.js 
- * Version: 1.0.2 (29 Feb 2024)
- * Authors: C. Jones, D. Campa
+ * Version: 1.0.3 (01 Mar 2024)
+ * Authors: C. Jones, D. Campa, E. Hall
  * Last Edit: C. Jones
  */
 
@@ -9,6 +9,16 @@ var tasks = []; // Array for storing task Objects.
 
 document.addEventListener('DOMContentLoaded', function() {
     updateList();
+});
+
+document.getElementById("addTaskButton").addEventListener("mouseover", function () {
+    // Indicate to the user that this button is interactive
+    this.style.backgroundColor = "darkgreen";
+    this.style.cursor = "pointer";
+});
+
+document.getElementById("addTaskButton").addEventListener("mouseout", function () {
+    this.style.backgroundColor = ""; // Reset to the default background color
 });
 
 // function showTaskAddBox(): resets all values to 0 so that a new task can be added, and displays the taskAddBox.
@@ -54,6 +64,7 @@ function addTask() {
 
     // Store input values into currentTask Object. 
     var currentTask = {
+        // Note: I think this id may need to be changed, needs to update when the task list updates (E. Hall)
         id: tasks.length,
         title: document.getElementById('title').value,
         desc: document.getElementById('desc').value,
@@ -121,4 +132,13 @@ function updateList() {
     });
 
     taskListDiv.appendChild(table);
+}
+
+function updateTaskDifficulty() {
+    var range = document.getElementById("diff");
+    var output = document.getElementById("diffOutput");
+    output.innerHTML = range.value;
+
+    range.classList.remove("value-2", "value-3");
+    range.classList.add("value-" + range.value);
 }
