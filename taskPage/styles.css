@@ -22,3 +22,26 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 9999;
 }
+
+/* Style for the task table */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    background-color: #f2f2f2;
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+}
+
+td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

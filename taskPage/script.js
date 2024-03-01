@@ -1,107 +1,111 @@
 /*
- * TaskGarden/taskPage/script.js 
- * Version: 1.0.2 (29 Feb 2024)
+ * TaskGarden/taskPage/script.js
+ * Version: 1.0.3 (1 Mar 2024)
  * Authors: C. Jones, D. Campa
  * Last Edit: C. Jones
  */
 
-var tasks = []; // Array for storing task Objects.
+tasks = [];
 
-// function showTaskAddBox(): resets all values to 0 so that a new task can be added, and displays the taskAddBox.
+document.addEventListener('DOMContentLoaded', function() {
+    updateList();
+});
+
+// Cache DOM elements
+var titleInput = document.getElementById('title');
+var descInput = document.getElementById('desc');
+var datetimeInput = document.getElementById('datetime');
+var diffInput = document.getElementById('diff');
+var taskAddBox = document.getElementById('taskAddBox');
+var taskListDiv = document.getElementById('taskListDiv');
+
+// function showTaskAddBox(): resets all values and displays the taskAddBox.
 function showTaskAddBox() {
-    document.getElementById('title').value = '';
-    document.getElementById('desc').value = '';
-    document.getElementById('datetime').value = '';
-    document.getElementById('diff').value = '';
-    document.getElementById('taskAddBox').style.display = 'block';
+    titleInput.value = '';
+    descInput.value = '';
+    datetimeInput.value = '';
+    diffInput.value = '';
+    taskAddBox.style.display = 'block';
 }
 
-// function taskEdit(): retrieves all values so that a task can be edited, and displays the taskAddBox.
+// function taskEdit(): retrieves all values and displays the taskAddBox.
 function taskEdit(taskID) {
     var task = tasks.find(function(task) {
         return task.id === taskID;
     });
 
-    document.getElementById('title').value = task.title;
-    document.getElementById('desc').value = task.desc;
-    document.getElementById('datetime').value = task.datetime;
-    document.getElementById('diff').value = task.diff;
-    document.getElementById('taskAddBox').style.display = 'block';
-
-    /* if editing means adding a new task with 
-    SOME identical fields, remove the old task first */
-    tasks.splice(tasks.indexOf(task), 1);
-    editButton.hidden = true;
+    titleInput.value = task.title;
+    descInput.value = task.desc;
+    datetimeInput.value = task.datetime;
+    diffInput.value = task.diff;
+    taskAddBox.style.display = 'block';
 }
 
-// function close(): closes the box for adding, editing, or removing. 
-function close(id) {
-    document.getElementById(id).style.display = 'none';
-}
-
-// alternative function closeTaskAddBox() for removing *specifically* the taskAddBox. 
-// Note: I'm trying to figure out how to use close() instead of this method, for some reason I can't get it to work. (C. Jones)
 function closeTaskAddBox() {
-    document.getElementById('taskAddBox').style.display = 'none';
+    taskAddBox.style.display = 'none';
 }
 
 // function addTask(): Adds a task from the popup form to the task list.
 function addTask() {
-
-    // Store input values into currentTask Object. 
     var currentTask = {
         id: tasks.length,
-        title: document.getElementById('title').value,
-        desc: document.getElementById('desc').value,
-        datetime: document.getElementById('datetime').value,
-        diff: document.getElementById('diff').value
+        title: titleInput.value,
+        desc: descInput.value,
+        datetime: datetimeInput.value,
+        diff: diffInput.value
     };
 
-    // Push the current task to the tasks array.
+        // Remove the old task if it exists
+    if (currentTask.id < tasks.length) {
+        tasks.splice(currentTask.id, 1);
+    }
+
     tasks.push(currentTask);
-
-    // Close the taskAddBox.
-    close('taskAddBox');
-
-    // Update the list.
+    taskAddBox.style.display = 'none';
     updateList();
 }
 
-// function updateList(): Refreshes the list of tasks at the bottom of the page. 
-// TODO@everyone: Find a way to add task information to local storage. In the future it can be stored server-side.
+// function updateList(): Refreshes the list of tasks.
 function updateList() {
-
-    var taskListDiv = document.getElementById('taskListDiv');
     taskListDiv.innerHTML = ''; // Clear previous content
 
-    // TODO@caj00017: Find a way to implement this as a <ul> or <ol> intead of <p>. 
+    var table = document.createElement('table');
+    var header = table.insertRow(); 
+    header.innerHTML = `
+        <th>Title</th>
+        <th>Description</th>
+        <th>Date & Time</th>
+        <th>Difficulty Level</th>
+        <th>Points Available</th>
+        <th>Remove</th>
+        <th>Edit</th>
+    `;
+
     tasks.forEach(function(task) {
-        // Display task
-        var p = document.createElement('p');
-        p.textContent = 'Title: ' + task.title + 
-        ' | Description: ' + task.desc +
-        ' | Date & Time: ' + task.datetime +
-        ' | Difficulty Level: ' + task.diff +
-        ' | Points Available: TBD'; // TODO@everyone: Decide on the difficulty:points exchange rate.
-        taskListDiv.appendChild(p);
+        var row = table.insertRow();
+        row.innerHTML = `
+            <td>${task.title}</td>
+            <td>${task.desc}</td>
+            <td>${task.datetime}</td>
+            <td>${task.diff}</td>
+            <td>TBD</td>
+            <td><button class="remove-btn">Remove</button></td>
+            <td><button class="edit-btn">Edit</button></td>
+        `;
 
-        // Create remove button
-        var removeButton = document.createElement('button');
-        removeButton.textContent = 'Remove';
-        removeButton.addEventListener('click', function() {
+        // Add event listener for remove button
+        row.querySelector('.remove-btn').addEventListener('click', function() {
             tasks.splice(tasks.indexOf(task), 1);
-            removeButton.hidden = true; 
             updateList();
-        } );
-        taskListDiv.appendChild(removeButton);
+        });
 
-        // Create edit button
-        var editButton = document.createElement('button');
-        editButton.style.display = 'inline';
-        editButton.textContent = 'Edit';
-        editButton.onclick = function() {
+        // Add event listener for edit button
+        row.querySelector('.edit-btn').addEventListener('click', function() {
             taskEdit(task.id);
-        }
-        taskListDiv.appendChild(editButton);
+        });
+
+        console.log(tasks);
     });
+
+    taskListDiv.appendChild(table);
 }
