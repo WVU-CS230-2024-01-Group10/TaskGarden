@@ -4,8 +4,18 @@
  * Authors: C. Jones, D. Campa, E. Hall
  * Last Edit: C. Jones
  */
-
+ 
 var tasks = []; // Array for storing task Objects.
+
+if (localStorage.getItem("tasks")) {                
+    tasks = JSON.parse(localStorage.getItem("tasks"));
+    updateList();
+ }
+
+// saves all tasks to local storage
+function saveTask() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     updateList();
@@ -132,6 +142,8 @@ function updateList() {
     });
 
     taskListDiv.appendChild(table);
+
+    saveTask();
 }
 
 function updateTaskDifficulty() {
