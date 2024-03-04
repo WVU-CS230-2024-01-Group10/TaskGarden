@@ -1,6 +1,6 @@
 /*
  * TaskGarden/taskPage/script.js 
- * Version: 1.0.3 (01 Mar 2024)
+ * Version: 1.0.4 (04 Mar 2024)
  * Authors: C. Jones, D. Campa, E. Hall
  * Last Edit: C. Jones
  */
@@ -19,6 +19,7 @@ function saveTask() {
 
 document.addEventListener('DOMContentLoaded', function() {
     updateList();
+    console.log(tasks);
 });
 
 document.getElementById("addTaskButton").addEventListener("mouseover", function () {
@@ -51,11 +52,6 @@ function taskEdit(taskID) {
     document.getElementById('datetime').value = task.datetime;
     document.getElementById('diff').value = task.diff;
     document.getElementById('taskAddBox').style.display = 'block';
-
-    /* if editing means adding a new task with 
-    SOME identical fields, remove the old task first */
-    tasks.splice(tasks.indexOf(task), 1);
-    editButton.hidden = true;
 }
 
 // function close(): closes the box for adding, editing, or removing. 
@@ -74,8 +70,8 @@ function addTask() {
 
     // Store input values into currentTask Object. 
     var currentTask = {
-        // Note: I think this id may need to be changed, needs to update when the task list updates (E. Hall)
-        id: tasks.length,
+        // Note: Changed ID attribute to be a unique integer 0-999. The same ID being generated twice is possible but extremely improbable. (C. Jones)
+        id: Math.trunc(Math.random() * 999),
         title: document.getElementById('title').value,
         desc: document.getElementById('desc').value,
         datetime: document.getElementById('datetime').value,
@@ -84,6 +80,7 @@ function addTask() {
 
     // Push the current task to the tasks array.
     tasks.push(currentTask);
+    console.log(tasks);
 
     // Close the taskAddBox.
     close('taskAddBox');
