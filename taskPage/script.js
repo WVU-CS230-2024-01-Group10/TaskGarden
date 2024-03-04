@@ -85,11 +85,10 @@ function addTask() {
     var currentTask = {
         // Note: Changed ID attribute to be a unique integer 0-999. The same ID being generated twice is possible but extremely improbable. (C. Jones)
         id: Math.trunc(Math.random() * 999),
-        title: document.getElementById('title').value,
-        desc: document.getElementById('desc').value,
-        datetime: document.getElementById('datetime').value,
-        diff: document.getElementById('diff').value,
-        priority: document.getElementById('priority').value
+        title: titleInput.value,
+        desc: descInput.value,
+        datetime: datetimeInput.value,
+        diff: diffInput.value
     };
 
     // Push the current task to the tasks array.
@@ -111,31 +110,33 @@ function updateList() {
     // Create table and header
     var table = document.createElement('table');
     var header = table.insertRow(); 
-    header.insertCell().textContent = "Title";
-    header.insertCell().textContent = "Description";
-    header.insertCell().textContent = "Date & Time";
-    header.insertCell().textContent = "Difficulty Level";
-    header.insertCell().textContent = "Priority";
-    header.insertCell().textContent = "Points Available";
-    header.insertCell().textContent = "Remove";
-    header.insertCell().textContent = "Edit";
+    header.innerHTML = `
+        <th>Title</th>
+        <th>Description</th>
+        <th>Date & Time</th>
+        <th>Difficulty Level</th>
+        <th>Points Available</th>
+        <th>Remove</th>
+        <th>Edit</th>
+    `;
 
     // TODO@caj00017: Find a way to implement this as a <ul> or <ol> intead of <p>. 
     tasks.forEach(function(task) {
 
         // Create a row for each task
         var row = table.insertRow();
-        row.insertCell().textContent = task.title;
-        row.insertCell().textContent = task.desc;
-        row.insertCell().textContent = task.datetime;
-        row.insertCell().textContent = task.diff;
-        row.insertCell().textContent = task.priority;
-        row.insertCell().textContent = "TBD";
+        row.innerHTML = `
+            <td>${task.title}</td>
+            <td>${task.desc}</td>
+            <td>${task.datetime}</td>
+            <td>${task.diff}</td>
+            <td>TBD</td>
+            <td><button class="remove-btn">Remove</button></td>
+            <td><button class="edit-btn">Edit</button></td>
+        `;
 
-        // Create remove button
-        var removeButton = document.createElement('button');
-        removeButton.textContent = 'Remove';
-        removeButton.addEventListener('click', function() {
+        // Add event listener for remove button
+        row.querySelector('.remove-btn').addEventListener('click', function() {
             tasks.splice(tasks.indexOf(task), 1);
             updateList();
         });
