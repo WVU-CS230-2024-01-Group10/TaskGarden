@@ -38,9 +38,11 @@ function showTaskAddBox() {
     document.getElementById('desc').value = '';
     document.getElementById('datetime').value = '';
     document.getElementById('diff').value = '';
+    document.getElementById('priority').value = '';
     document.getElementById('taskAddBox').style.display = 'block';
 }
 
+// Bug: Editing a task creates a new task. Would be wise to create another editTaskBox (supports ISP)
 // function taskEdit(): retrieves all values so that a task can be edited, and displays the taskAddBox.
 function taskEdit(taskID) {
     var task = tasks.find(function(task) {
@@ -51,6 +53,7 @@ function taskEdit(taskID) {
     document.getElementById('desc').value = task.desc;
     document.getElementById('datetime').value = task.datetime;
     document.getElementById('diff').value = task.diff;
+    document.getElementById('priority').value = task.priority;
     document.getElementById('taskAddBox').style.display = 'block';
 }
 
@@ -75,7 +78,8 @@ function addTask() {
         title: document.getElementById('title').value,
         desc: document.getElementById('desc').value,
         datetime: document.getElementById('datetime').value,
-        diff: document.getElementById('diff').value
+        diff: document.getElementById('diff').value,
+        priority: document.getElementById('priority').value
     };
 
     // Push the current task to the tasks array.
@@ -103,6 +107,7 @@ function updateList() {
     header.insertCell().textContent = "Description";
     header.insertCell().textContent = "Date & Time";
     header.insertCell().textContent = "Difficulty Level";
+    header.insertCell().textContent = "Priority";
     header.insertCell().textContent = "Points Available";
     header.insertCell().textContent = "Remove";
     header.insertCell().textContent = "Edit";
@@ -115,6 +120,7 @@ function updateList() {
         row.insertCell().textContent = task.desc;
         row.insertCell().textContent = task.datetime;
         row.insertCell().textContent = task.diff;
+        row.insertCell().textContent = task.priority;
         row.insertCell().textContent = "TBD";
 
         // Create remove button
@@ -150,4 +156,13 @@ function updateTaskDifficulty() {
 
     range.classList.remove("value-2", "value-3");
     range.classList.add("value-" + range.value);
+}
+
+function updateTaskPriority() {
+var range = document.getElementById("priority");
+var output = document.getElementById("priorityOutput");
+output.innerHTML = range.value;
+
+range.classList.remove("value-2", "value-3");
+range.classList.add("value-" + range.value);
 }
