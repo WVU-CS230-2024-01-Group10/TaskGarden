@@ -59,12 +59,12 @@ function taskEdit(taskID) {
         return task.id === taskID;
     });
 
-    document.getElementById('title').value = task.title;
-    document.getElementById('desc').value = task.desc;
-    document.getElementById('datetime').value = task.datetime;
-    document.getElementById('diff').value = task.diff;
-    document.getElementById('priority') = task.priority;
-    document.getElementById('taskAddBox').style.display = 'block';
+    titleInput.value = task.title;
+    descInput.value = task.desc;
+    datetimeInput.value = task.datetime;
+    diffInput.value = task.diff;
+    priorityInput.value = task.priority;
+    taskAddBox.style.display = 'block';
 }
 
 // function close(): closes the box for adding, editing, or removing. 
@@ -88,7 +88,8 @@ function addTask() {
         title: titleInput.value,
         desc: descInput.value,
         datetime: datetimeInput.value,
-        diff: diffInput.value
+        diff: diffInput.value,
+        priority: document.getElementById('priority').value // I have no idea why priorityInput.value doesn't work here. (C. Jones)
     };
 
     // Push the current task to the tasks array.
@@ -114,13 +115,13 @@ function updateList() {
         <th>Title</th>
         <th>Description</th>
         <th>Date & Time</th>
+        <th>Priority Level</th>
         <th>Difficulty Level</th>
         <th>Points Available</th>
         <th>Remove</th>
         <th>Edit</th>
     `;
 
-    // TODO@caj00017: Find a way to implement this as a <ul> or <ol> intead of <p>. 
     tasks.forEach(function(task) {
 
         // Create a row for each task
@@ -129,6 +130,7 @@ function updateList() {
             <td>${task.title}</td>
             <td>${task.desc}</td>
             <td>${task.datetime}</td>
+            <td>${task.priority}</td>
             <td>${task.diff}</td>
             <td>TBD</td>
             <td><button class="remove-btn">Remove</button></td>
