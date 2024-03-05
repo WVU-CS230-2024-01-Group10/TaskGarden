@@ -1,12 +1,25 @@
 /*
  * TaskGarden/taskPage/styles.css 
- * Version: 1.0.1 (28 Feb 2024)
- * Authors: C. Jones
- * Last Edit: C. Jones
+ * Version: 1.0.2 (01 Mar 2024)
+ * Authors: C. Jones, E. Hall
+ * Last Edit: E. Hall
  */
 
 h1 {
     text-align: center;
+}
+
+#addTaskButton {
+    background-color: green;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
 }
 
  /* Styling for the taskAddBox */
