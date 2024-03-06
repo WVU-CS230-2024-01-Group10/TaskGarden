@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.getElementById("addTaskButton").addEventListener("mouseover", function () {
     // Indicate to the user that this button is interactive
-    this.style.backgroundColor = "darkgreen";
+    this.style.backgroundColor = "darkgoldenrod";
     this.style.cursor = "pointer";
 });
 
