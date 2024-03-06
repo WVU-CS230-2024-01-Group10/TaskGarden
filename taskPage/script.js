@@ -90,11 +90,6 @@ function addTask() {
         priority: document.getElementById('priority').value // I have no idea why priorityInput.value doesn't work here. (C. Jones)
     };
 
-        // Remove the old task if it exists
-    if (currentTask.id < tasks.length) {
-        tasks.splice(currentTask.id, 1);
-    }
-
     tasks.push(currentTask);
     console.log(tasks);
 
