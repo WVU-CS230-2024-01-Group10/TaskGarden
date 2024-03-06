@@ -65,6 +65,10 @@ function taskEdit(taskID) {
     diffInput.value = task.diff;
     priorityInput.value = task.priority;
     taskAddBox.style.display = 'block';
+
+    // mark the old task to be removed in updateList() by "blocking" it
+    task.id = "BLOCK";
+
 }
 
 // function close(): closes the box for adding, editing, or removing. 
@@ -137,6 +141,8 @@ function updateList() {
             <td><button class="edit-btn">Edit</button></td>
         `;
 
+        if (task.id === "BLOCK") { row.style.display = 'none'; } // Do not display the blocked row.
+
         // Add event listener for remove button
         row.querySelector('.remove-btn').addEventListener('click', function() {
             tasks.splice(tasks.indexOf(task), 1);
@@ -151,6 +157,7 @@ function updateList() {
 
     taskListDiv.appendChild(table);
 
+    flush();
     saveTask();
 }
 
@@ -170,4 +177,12 @@ function updateTaskPriority() {
 
     range.classList.remove("value-2", "value-3");
     range.classList.add("value-" + range.value);
+}
+
+// function flush(): removes blocked tasks from the array.
+function flush() {
+    tasks.forEach(function(task) {
+        if (task.id === "BLOCK")
+            tasks.splice(tasks.indexOf(task), 1);
+    });
 }
