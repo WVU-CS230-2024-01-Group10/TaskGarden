@@ -5,52 +5,19 @@
  * Last Edit: E. Hall
  */
 
-body {
-    background-image: url('Z-Tasks\ HomePage.jpeg');
-    background-size: cover;
-}
-
-h1 {
-    display:none;
-}
-
-h2 {
-    font-style: oblique;
-    color: gold;
-    text-shadow: 2px 2px 5px black;
-    margin-top: 11%;
-    margin-left: 5%;
-    margin-right: 5%;
-}
-
-h3 {
-    font-style: oblique;
-    color: gold;
-    text-shadow: 2px 2px 5px black;
-    margin-left: 5%;
-    margin-right: 5%;
-}
-
-#taskButtonDiv {
-    text-align: center;
-}
-
-#taskListDiv {
+ h1 {
     text-align: center;
 }
 
 #addTaskButton {
-    background-color: gold;
+    background-color: green;
     border: none;
-    border-radius: 10px;
-    border-color: black;
-    color: black;
+    border-radius: 4px;
+    color: white;
     padding: 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-family: serif;
-    font-style: oblique;
     font-size: 16px;
     margin: 4px 2px;
 }
@@ -72,26 +39,20 @@ h3 {
 /* Style for the task table */
 table {
     border-collapse: collapse;
-    width: 85%;
-    margin-right: 5%;
-    margin-left: 5%;
-    text-align: center;
+    width: 100%;
 }
 
 th {
-    /* background-color: #f2f2f2; */
-    border: 1px solid black;
-    background-color: gold;
+    background-color: #f2f2f2;
+    border: 1px solid #dddddd;
     padding: 8px;
     text-align: left;
 }
 
 td {
-    background-color: darkgoldenrod;
-    border: 1px solid black;
+    border: 1px solid #dddddd;
     padding: 8px;
     text-align: left;
-    color: black;
 }
 
 #loginPageLink {
