@@ -75,7 +75,7 @@ a:hover {
 #taskPageLink {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #45a049;
     color: #fff;
     text-decoration: none;
     border: none;
@@ -83,5 +83,5 @@ a:hover {
     cursor: pointer;
 }
 #taskPageLink:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
 }

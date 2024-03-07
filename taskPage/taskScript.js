@@ -138,7 +138,7 @@ function updateList() {
             <td>${task.diff}</td>
             <td>TBD</td>
             <td><button class="remove-btn">Remove</button></td>
-            <td><button class="edit-btn">Edit</button></td>
+            <td><button class="edit-btn" style="background-image: url('editIcon.png')">Edit</button></td>
         `;
 
         if (task.id === "BLOCK") { row.style.display = 'none'; } // Do not display the blocked row.
