@@ -3,10 +3,11 @@
  * Version: 1.0.4 (04 Mar 2024)
  * Authors: C. Jones, D. Campa, E. Hall
  * Last Edit: C. Jones
- * TODO: Find a way for 'editing' a task to actually 'edit' the task instead of just creating a new one. 
+ * TODO: Find a way to save points to localStorage without breaking it because apparently that happens idk why (C. Jones)
  */
  
 var tasks = []; // Array for storing task Objects.
+var points = 0;
 
 // Cache DOM elements
 var titleInput = document.getElementById('title');
@@ -16,6 +17,7 @@ var diffInput = document.getElementById('diff');
 var priorityInput = document.getElementById('priority');
 var taskAddBox = document.getElementById('taskAddBox');
 var taskListDiv = document.getElementById('taskListDiv');
+var pointCountDiv = document.getElementById('pointCount');
 
 if (localStorage.getItem("tasks")) {                
     tasks = JSON.parse(localStorage.getItem("tasks"));
@@ -96,6 +98,11 @@ function addTask() {
         priority: document.getElementById('priority').value // I have no idea why priorityInput.value doesn't work here. (C. Jones)
     };
 
+    if (currentTask.title === "") { currentTask.title = "Unnamed Task" };
+    if (currentTask.desc === "") { currentTask.desc = "This task has no description" };
+
+    console.log(currentTask.title);
+
     // Push the current task to the tasks array.
     tasks.push(currentTask);
     console.log(tasks);
@@ -109,57 +116,59 @@ function addTask() {
 
 // function updateList(): Refreshes the list of tasks at the bottom of the page. 
 function updateList() {
-
-    taskListDiv.innerHTML = ''; // Clear previous content
-
-    // Create table and header
-    var table = document.createElement('table');
-    var header = table.insertRow(); 
-    header.innerHTML = `
-        <th>Title</th>
-        <th>Description</th>
-        <th>Date & Time</th>
-        <th>Priority Level</th>
-        <th>Difficulty Level</th>
-        <th>Points Available</th>
-        <th>Remove</th>
-        <th>Edit</th>
-    `;
+    // Clear previous content
+    taskListDiv.innerHTML = '';
 
     tasks.forEach(function(task) {
+        // Create a card for each task
+        var card = document.createElement('div');
+        card.classList.add('card', 'my-3');
 
-        // Create a row for each task
-        var row = table.insertRow();
-        row.innerHTML = `
-            <td>${task.title}</td>
-            <td>${task.desc}</td>
-            <td>${task.datetime}</td>
-            <td>${task.priority}</td>
-            <td>${task.diff}</td>
-            <td>TBD</td>
-            <td><button class="remove-btn">Remove</button></td>
-            <td><button class="edit-btn">Edit</button></td>
+        var cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+
+        cardBody.innerHTML = `
+            <h5 class="card-title">${task.title}</h5>
+            <p class="card-text">${task.desc}</p>
+            <p class="card-text">${task.datetime}</p>
+            <p class="card-text">Difficulty Level: ${task.diff}</p>
+            <p class="card-text">Priority Level: ${task.priority}</p>
+            <div id="btn-div"><button class="btn remove-btn">X</button>
+            <button class="btn complete-btn">Complete</button>
+            <button class="btn edit-btn">Edit</button></div>
+            <p id="pointCount" class="card-text">${task.diff * 10} Points</p>
         `;
 
-        if (task.id === "BLOCK") { row.style.display = 'none'; } // Do not display the blocked row.
+        if (task.id === "BLOCK") { card.style.display = 'none'; } // Do not display the blocked row.
 
         // Add event listener for remove button
-        row.querySelector('.remove-btn').addEventListener('click', function() {
+        cardBody.querySelector('.remove-btn').addEventListener('click', function() {
             tasks.splice(tasks.indexOf(task), 1);
             updateList();
         });
 
         // Add event listener for edit button
-        row.querySelector('.edit-btn').addEventListener('click', function() {
+        cardBody.querySelector('.edit-btn').addEventListener('click', function() {
             taskEdit(task.id);
         });
+
+        // Add event listener for complete button
+        cardBody.querySelector('.complete-btn').addEventListener('click', function() {
+            points += task.diff * 10;
+            tasks.splice(tasks.indexOf(task), 1);
+            congratulate();
+            updateList();
+        });
+
+        card.appendChild(cardBody);
+        taskListDiv.appendChild(card);
     });
 
-    taskListDiv.appendChild(table);
-
-    flush();
+    // Save tasks and points to localStorage after updating the list
     saveTask();
+    flush();
 }
+
 
 function updateTaskDifficulty() {
     var range = document.getElementById("diff");
@@ -185,4 +194,16 @@ function flush() {
         if (task.id === "BLOCK")
             tasks.splice(tasks.indexOf(task), 1);
     });
+}
+
+// function congratulate(): show congratulations message to user for completing a task
+function congratulate() {
+    const congratsElement = document.getElementById('congrats');
+    congratsElement.classList.remove('hidden'); 
+    congratsElement.classList.add('visible'); 
+
+    setTimeout(function() {
+        congratsElement.classList.remove('visible');
+        congratsElement.classList.add('hidden');
+    }, 2000);
 }
