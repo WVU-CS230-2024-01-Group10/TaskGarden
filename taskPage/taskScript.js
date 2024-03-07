@@ -1,5 +1,5 @@
 /*
- * TaskGarden/taskPage/script.js 
+ * TaskGarden/taskPage/taskScript.js 
  * Version: 1.0.4 (04 Mar 2024)
  * Authors: C. Jones, D. Campa, E. Hall
  * Last Edit: C. Jones
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.getElementById("addTaskButton").addEventListener("mouseover", function () {
     // Indicate to the user that this button is interactive
-    this.style.backgroundColor = "darkgoldenrod";
+    this.style.backgroundColor = "darkgreen";
     this.style.cursor = "pointer";
 });
 
@@ -42,7 +42,7 @@ document.getElementById("addTaskButton").addEventListener("mouseout", function (
     this.style.backgroundColor = ""; // Reset to the default background color
 });
 
-// function showTaskAddBox(): resets all values and displays the taskAddBox.
+// function showTaskAddBox(): resets all values to 0 so that a new task can be added, and displays the taskAddBox.
 function showTaskAddBox() {
     titleInput.value = '';
     descInput.value = '';
@@ -65,6 +65,10 @@ function taskEdit(taskID) {
     diffInput.value = task.diff;
     priorityInput.value = task.priority;
     taskAddBox.style.display = 'block';
+
+    // mark the old task to be removed in updateList() by "blocking" it
+    task.id = "BLOCK";
+
 }
 
 // function close(): closes the box for adding, editing, or removing. 
@@ -80,6 +84,8 @@ function closeTaskAddBox() {
 
 // function addTask(): Adds a task from the popup form to the task list.
 function addTask() {
+
+    // Store input values into currentTask Object. 
     var currentTask = {
         // Note: Changed ID attribute to be a unique integer 0-999. The same ID being generated twice is possible but extremely improbable. (C. Jones)
         id: Math.trunc(Math.random() * 999),
@@ -90,6 +96,7 @@ function addTask() {
         priority: document.getElementById('priority').value // I have no idea why priorityInput.value doesn't work here. (C. Jones)
     };
 
+    // Push the current task to the tasks array.
     tasks.push(currentTask);
     console.log(tasks);
 
@@ -134,6 +141,8 @@ function updateList() {
             <td><button class="edit-btn">Edit</button></td>
         `;
 
+        if (task.id === "BLOCK") { row.style.display = 'none'; } // Do not display the blocked row.
+
         // Add event listener for remove button
         row.querySelector('.remove-btn').addEventListener('click', function() {
             tasks.splice(tasks.indexOf(task), 1);
@@ -148,6 +157,7 @@ function updateList() {
 
     taskListDiv.appendChild(table);
 
+    flush();
     saveTask();
 }
 
@@ -167,4 +177,12 @@ function updateTaskPriority() {
 
     range.classList.remove("value-2", "value-3");
     range.classList.add("value-" + range.value);
+}
+
+// function flush(): removes blocked tasks from the array.
+function flush() {
+    tasks.forEach(function(task) {
+        if (task.id === "BLOCK")
+            tasks.splice(tasks.indexOf(task), 1);
+    });
 }
