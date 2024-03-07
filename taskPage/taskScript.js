@@ -98,6 +98,11 @@ function addTask() {
         priority: document.getElementById('priority').value // I have no idea why priorityInput.value doesn't work here. (C. Jones)
     };
 
+    if (currentTask.title === "") { currentTask.title = "Unnamed Task" };
+    if (currentTask.desc === "") { currentTask.desc = "This task has no description" };
+
+    console.log(currentTask.title);
+
     // Push the current task to the tasks array.
     tasks.push(currentTask);
     console.log(tasks);
@@ -111,69 +116,59 @@ function addTask() {
 
 // function updateList(): Refreshes the list of tasks at the bottom of the page. 
 function updateList() {
-
-    pointCountDiv.innerHTML = `<p>Your Points: ${points}</p>`;
-
-    taskListDiv.innerHTML = ''; // Clear previous content
-
-    // Create table and header
-    var table = document.createElement('table');
-    var header = table.insertRow(); 
-    header.innerHTML = `
-        <th>Title</th>
-        <th>Description</th>
-        <th>Date & Time</th>
-        <th>Priority Level</th>
-        <th>Difficulty Level</th>
-        <th>Points Available</th>
-        <th>Remove</th>
-        <th>Edit</th>
-        <th>Complete</th>
-    `;
+    // Clear previous content
+    taskListDiv.innerHTML = '';
 
     tasks.forEach(function(task) {
+        // Create a card for each task
+        var card = document.createElement('div');
+        card.classList.add('card', 'my-3');
 
-        // Create a row for each task
-        var row = table.insertRow();
-        row.innerHTML = `
-            <td>${task.title}</td>
-            <td>${task.desc}</td>
-            <td>${task.datetime}</td>
-            <td>${task.priority}</td>
-            <td>${task.diff}</td>
-            <td>${task.diff * 10}</td>
-            <td><button class="remove-btn">Remove</button></td>
-            <td><button class="edit-btn">Edit</button></td>
-            <td><button class="complete-btn">Complete</button></td>
+        var cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+
+        cardBody.innerHTML = `
+            <h5 class="card-title">${task.title}</h5>
+            <p class="card-text">${task.desc}</p>
+            <p class="card-text">${task.datetime}</p>
+            <p class="card-text">Difficulty Level: ${task.diff}</p>
+            <p class="card-text">Priority Level: ${task.priority}</p>
+            <div id="btn-div"><button class="btn remove-btn">X</button>
+            <button class="btn complete-btn">Complete</button>
+            <button class="btn edit-btn">Edit</button></div>
+            <p id="pointCount" class="card-text">${task.diff * 10} Points</p>
         `;
 
-        if (task.id === "BLOCK") { row.style.display = 'none'; } // Do not display the blocked row.
+        if (task.id === "BLOCK") { card.style.display = 'none'; } // Do not display the blocked row.
 
         // Add event listener for remove button
-        row.querySelector('.remove-btn').addEventListener('click', function() {
+        cardBody.querySelector('.remove-btn').addEventListener('click', function() {
             tasks.splice(tasks.indexOf(task), 1);
             updateList();
         });
 
         // Add event listener for edit button
-        row.querySelector('.edit-btn').addEventListener('click', function() {
+        cardBody.querySelector('.edit-btn').addEventListener('click', function() {
             taskEdit(task.id);
         });
 
-        // Add event listener for edit button
-        row.querySelector('.complete-btn').addEventListener('click', function() {
+        // Add event listener for complete button
+        cardBody.querySelector('.complete-btn').addEventListener('click', function() {
             points += task.diff * 10;
             tasks.splice(tasks.indexOf(task), 1);
             congratulate();
             updateList();
         });
+
+        card.appendChild(cardBody);
+        taskListDiv.appendChild(card);
     });
 
-    taskListDiv.appendChild(table);
-
-    flush();
+    // Save tasks and points to localStorage after updating the list
     saveTask();
+    flush();
 }
+
 
 function updateTaskDifficulty() {
     var range = document.getElementById("diff");
