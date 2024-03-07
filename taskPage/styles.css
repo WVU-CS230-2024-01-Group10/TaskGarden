@@ -84,10 +84,10 @@ input[type="text"], input[type="datetime-local"], input[type="range"], button {
 
 /* Task list styles */
 #taskListDiv {
-    margin: 20px auto; /* Add margin and auto to horizontally center */
-    display: flex; /* Use flexbox */
-    flex-direction: column; /* Stack items vertically */
-    align-items: center; /* Center items horizontally */
+    margin: 20px auto; 
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
 }
 
 /* Button styles */
@@ -119,28 +119,38 @@ button[type="button"]:hover {
     color: #45a049;
 }
 
-.edit-btn
-{
-    background-image: url('editIcon.png');
-    background-size: cover; /* or contain, depending on your preference */
+/* Common styles for all button types */
+.edit-btn,
+.remove-btn,
+.complete-btn {
+    background-size: cover;
     background-color: #f3f3f3;
-    width: 50px; /* Set width and height according to your image size */
-     height: 50px; 
+    width: 50px;
+    height: 50px;
     border: none;
     cursor: pointer;
-    /* If you want to hide the default text content of the button */
-    text-indent: -9999px;  /* Or use visibility: hidden; -*/
-} 
+    text-indent: -9999px;
+}
 
-.remove-btn
-{
+/* Specific styles for each button type */
+.edit-btn {
+    background-image: url('editIcon.png');
+}
+
+.remove-btn {
     background-image: url('removeIcon.png');
-    background-size: cover; /* or contain, depending on your preference */
-    background-color: #f3f3f3;
-    width: 50px; /* Set width and height according to your image size */
-     height: 50px; 
-    border: none;
-    cursor: pointer;
-    /* If you want to hide the default text content of the button */
-    text-indent: -9999px;  /* Or use visibility: hidden; -*/
-} 
+}
+
+.complete-btn {
+    background-image: url('completeIcon.png');
+}
+
+/* hidden and visible states for the congratulations message / potentially usable for future animations */
+.hidden {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.visible {
+    opacity: 1;
+}

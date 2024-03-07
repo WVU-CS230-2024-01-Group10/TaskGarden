@@ -3,10 +3,11 @@
  * Version: 1.0.4 (04 Mar 2024)
  * Authors: C. Jones, D. Campa, E. Hall
  * Last Edit: C. Jones
- * TODO: Find a way for 'editing' a task to actually 'edit' the task instead of just creating a new one. 
+ * TODO: Find a way to save points to localStorage without breaking it because apparently that happens idk why (C. Jones)
  */
  
 var tasks = []; // Array for storing task Objects.
+var points = 0;
 
 // Cache DOM elements
 var titleInput = document.getElementById('title');
@@ -16,6 +17,7 @@ var diffInput = document.getElementById('diff');
 var priorityInput = document.getElementById('priority');
 var taskAddBox = document.getElementById('taskAddBox');
 var taskListDiv = document.getElementById('taskListDiv');
+var pointCountDiv = document.getElementById('pointCount');
 
 if (localStorage.getItem("tasks")) {                
     tasks = JSON.parse(localStorage.getItem("tasks"));
@@ -110,6 +112,8 @@ function addTask() {
 // function updateList(): Refreshes the list of tasks at the bottom of the page. 
 function updateList() {
 
+    pointCountDiv.innerHTML = `<p>Your Points: ${points}</p>`;
+
     taskListDiv.innerHTML = ''; // Clear previous content
 
     // Create table and header
@@ -124,6 +128,7 @@ function updateList() {
         <th>Points Available</th>
         <th>Remove</th>
         <th>Edit</th>
+        <th>Complete</th>
     `;
 
     tasks.forEach(function(task) {
@@ -136,9 +141,10 @@ function updateList() {
             <td>${task.datetime}</td>
             <td>${task.priority}</td>
             <td>${task.diff}</td>
-            <td>TBD</td>
+            <td>${task.diff * 10}</td>
             <td><button class="remove-btn">Remove</button></td>
-            <td><button class="edit-btn" style="background-image: url('editIcon.png')">Edit</button></td>
+            <td><button class="edit-btn">Edit</button></td>
+            <td><button class="complete-btn">Complete</button></td>
         `;
 
         if (task.id === "BLOCK") { row.style.display = 'none'; } // Do not display the blocked row.
@@ -152,6 +158,14 @@ function updateList() {
         // Add event listener for edit button
         row.querySelector('.edit-btn').addEventListener('click', function() {
             taskEdit(task.id);
+        });
+
+        // Add event listener for edit button
+        row.querySelector('.complete-btn').addEventListener('click', function() {
+            points += task.diff * 10;
+            tasks.splice(tasks.indexOf(task), 1);
+            congratulate();
+            updateList();
         });
     });
 
@@ -185,4 +199,16 @@ function flush() {
         if (task.id === "BLOCK")
             tasks.splice(tasks.indexOf(task), 1);
     });
+}
+
+// function congratulate(): show congratulations message to user for completing a task
+function congratulate() {
+    const congratsElement = document.getElementById('congrats');
+    congratsElement.classList.remove('hidden'); 
+    congratsElement.classList.add('visible'); 
+
+    setTimeout(function() {
+        congratsElement.classList.remove('visible');
+        congratsElement.classList.add('hidden');
+    }, 2000);
 }
