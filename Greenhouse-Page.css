@@ -1,5 +1,14 @@
-.box { 
+.background { 
   background-color: #b49673;
   border: 5px solid  #775f41;
   box-shadow: 0 0 0 10px #f9e3d0;
+}
+
+.friend_btn{
+  background-color: #f8c766;
+  box-shadow: 0 0 0 5px #ad873b;
+  width: 60px;
+  height: 40px;
+  font-style: bold;
+  font-size: large;
 }
