@@ -1,0 +1,203 @@
+/* 
+ * TaskGarden/taskPage/taskStyles.css 
+ * Version: 1.0.2 (01 Mar 2024)
+ * Authors: C. Jones, E. Hall
+ * Last Edit: E. Hall
+ */
+
+/* Style for the task table */
+table {
+    border-collapse: collapse;
+    width: 90%;
+}
+
+th {
+    background-color: #f2f2f2;
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+}
+
+td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+}
+
+h1, h2, h3 {
+    color: #4CAF50;
+    text-align: center;
+}
+
+p {
+    color: darkgreen;
+    text-align: center;
+}
+
+/* Task button styles */
+#addTaskButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Pop-up box styles */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    display: none;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+}
+
+.popup h2 {
+    color: #4CAF50;
+}
+
+/* Input field styles */
+input[type="text"], input[type="datetime-local"], input[type="range"], button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Task list styles */
+#taskListDiv {
+    margin: 20px auto; 
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+}
+
+/* Button styles */
+button[type="button"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button[type="button"]:hover {
+    background-color: #45a049;
+}
+
+/* Logout link styles */
+#loginPageLink {
+    text-decoration: none;
+    color: #4CAF50;
+}
+
+#loginPageLink:hover {
+    color: #45a049;
+}
+
+/* Common styles for all button types */
+.edit-btn,
+.remove-btn,
+.complete-btn {
+    background-size:cover;
+    background-color: #f3f3f3;
+    width: 30px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    text-indent: -9999px;
+    margin-right:5px;
+}
+
+.btn:hover {
+    background-color:#D1FFBD;
+}
+
+/* Specific styles for each button type */
+.edit-btn {
+    background-image: url('editIcon.png');
+}
+
+.remove-btn {
+    background-image: url('removeIcon.png');
+}
+
+.complete-btn {
+    background-image: url('completeIcon.png');
+}
+
+/* hidden and visible states for the congratulations message / potentially usable for future animations */
+.hidden {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.visible {
+    opacity: 1;
+}
+
+/* New Styling for tasks: Cards rather than tables. */
+.card {
+    position: relative; 
+    width: 100%;
+    max-width: 80%; 
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index:0;
+    margin-top: 10px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.card-text {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+#btn-div {
+    text-align: right;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#pointCount {
+    text-align: right;
+}

@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="container">
-    <form id="newUserForm" action="newUser.php" method="POST">
+    <form id="register.html" action="newUser.php" method="POST">
 	<h2>New User</h2>
 	<input type="email" name="email" placeholder="Email"required>
 	<input type="password" name="password" placeholder="Password" required>
