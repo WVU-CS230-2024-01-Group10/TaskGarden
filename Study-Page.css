@@ -1,0 +1,10 @@
+.parent{
+  background-color: #775f41;
+}
+
+.child{
+  box-sizing: content box;
+  width: 50%;
+  background-color: ##b49673;
+  box-shadow: 0 0 0 10px #f9e3d0;
+}
