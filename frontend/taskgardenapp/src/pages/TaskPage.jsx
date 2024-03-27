@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/taskStyles.css';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 /*Currently able to add, edit, remove, and complete tasks, BUT they don't save to localStorage. */
 function TaskPage() {
@@ -12,24 +14,37 @@ function TaskPage() {
     const [priorityInput, setPriorityInput] = useState(2); // Default priority
     const [taskAddBoxVisible, setTaskAddBoxVisible] = useState(false);
 
-    useEffect(() => {
-        const storedTasks = localStorage.getItem("tasks");
-        if (storedTasks) {
-            setTasks(JSON.parse(storedTasks));
-        }
-    }, []);
 
     useEffect(() => {
-        const saveTask = () => {
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-        };
+        const fetchAllTasks = async () => {
+            try {
+                const res = await axios.get("http://localhost:3500/tasks");
+                setTasks(res.data);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }, [])
+
+    // // localStorage fetching: may become obsolete
+    // useEffect(() => {
+    //     const storedTasks = localStorage.getItem("tasks");
+    //     if (storedTasks) {
+    //         setTasks(JSON.parse(storedTasks));
+    //     }
+    // }, []);
+
+    // useEffect(() => {
+    //     const saveTask = () => {
+    //         localStorage.setItem("tasks", JSON.stringify(tasks));
+    //     };
     
-        saveTask(); // Call saveTask inside useEffect
+    //     saveTask(); // Call saveTask inside useEffect
     
-        return () => {
-            // Cleanup function (optional) if needed
-        };
-    }, [tasks]);
+    //     return () => {
+    //         // Cleanup function (optional) if needed
+    //     };
+    // }, [tasks]);
 
     const showTaskAddBox = () => {
         setTitleInput('');
@@ -44,26 +59,31 @@ function TaskPage() {
         setTaskAddBoxVisible(false);
     };
 
-    const addTask = () => {
+    const addTask = async () => {
         const newTask = {
-            id: Math.trunc(Math.random() * 999),
+            id: uuidv4(), // Assign random number as id
             title: titleInput,
             desc: descInput,
             datetime: datetimeInput,
             diff: diffInput,
             priority: priorityInput
         };
+        console.log(newTask.id);
 
+    
         if (newTask.title === "") { newTask.title = "Unnamed Task" };
         if (newTask.desc === "") { newTask.desc = "This task has no description" };
-
-        setTasks(prevTasks => {
-            const updatedTasks = [...prevTasks, newTask];
-            localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-            return updatedTasks;
-        });
-        closeTaskAddBox();
-    };
+    
+        // try/catch block for axios POST req. untested
+        try {
+            const response = await axios.post('http://localhost:3500/tasks', newTask);
+            const createdTask = response.data;
+            setTasks(prevTasks => [...prevTasks, createdTask]);
+            closeTaskAddBox();
+        } catch (err) {
+            console.log(err);
+        }
+    };    
 
     const congratulate = () => {
         const congratsElement = document.getElementById('congrats');

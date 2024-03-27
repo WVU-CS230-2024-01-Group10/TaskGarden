@@ -9,9 +9,10 @@
 
 import express from "express";
 import mysql2 from "mysql2";
+import cors from 'cors';
 
 const app = express();
-const port = 3000;
+const port = 3500;
 
 // Connect database to the app.
 const db = mysql2.createConnection({
@@ -20,6 +21,9 @@ const db = mysql2.createConnection({
     password:"Laakeg26730!",
     database:"taskgarden"
 })
+
+app.use(express.json());
+app.use(cors());
 
 // handle HTTP GET req
 app.get("/", (req,res) => {
@@ -37,17 +41,20 @@ app.get("/tasks", (req,res) => {
 
 // handle HTTP POST task req
 app.post("/tasks", (req,res) => {
-  const q = "INSERT INTO tasks (`title`, `desc`, `datetime`, `diff`, `priority`) VALUES (?)"
-  
-  // TEST VALUES, this will change in the future
+  const q = "INSERT INTO tasks (`id`, `title`, `desc`, `datetime`, `diff`, `priority`) VALUES (?)";
+
   const values = [
-    "title from backend", 
-    "desc from backend",
-    null, 0, 0 ];
+    req.body.id,
+    req.body.title, 
+    req.body.desc,
+    req.body.datetime,
+    req.body.diff,
+    req.body.priority
+    ];
 
   db.query(q, [values], (err, data) => {
     if(err) return res.json(err);
-    return res.json(data);
+    return res.json("Task created successfully!");
   });
 });
 
