@@ -58,6 +58,16 @@ app.post("/tasks", (req,res) => {
   });
 });
 
+app.delete("/tasks/:id", (req, res) => {
+    const taskId = req.params.id;
+    const q = "DELETE FROM tasks WHERE id = ?";
+
+    db.query(q, [taskId], (err,data) => {
+      if (err) return res.json(err);
+      return res.json("Task has been deleted!");
+    })
+})
+
 // Start server listening
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);

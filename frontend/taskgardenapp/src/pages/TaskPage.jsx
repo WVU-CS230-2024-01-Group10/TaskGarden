@@ -19,11 +19,14 @@ function TaskPage() {
         const fetchAllTasks = async () => {
             try {
                 const res = await axios.get("http://localhost:3500/tasks");
+                console.log(res.data);
                 setTasks(res.data);
             } catch (err) {
                 console.log(err);
             }
-        }
+        };
+
+        fetchAllTasks();
     }, [])
 
     // // localStorage fetching: may become obsolete
@@ -61,14 +64,14 @@ function TaskPage() {
 
     const addTask = async () => {
         const newTask = {
-            id: uuidv4(), // Assign random number as id
-            title: titleInput,
-            desc: descInput,
-            datetime: datetimeInput,
-            diff: diffInput,
-            priority: priorityInput
+            "id": uuidv4(), // Assign random number as id
+            "title": titleInput,
+            "desc": descInput,
+            "datetime": datetimeInput,
+            "diff": diffInput,
+            "priority": priorityInput
         };
-        console.log(newTask.id);
+        console.log(newTask);
 
     
         if (newTask.title === "") { newTask.title = "Unnamed Task" };
@@ -77,12 +80,14 @@ function TaskPage() {
         // try/catch block for axios POST req. untested
         try {
             const response = await axios.post('http://localhost:3500/tasks', newTask);
-            const createdTask = response.data;
-            setTasks(prevTasks => [...prevTasks, createdTask]);
+            setTasks(prevTasks => [...prevTasks, newTask]);
             closeTaskAddBox();
         } catch (err) {
             console.log(err);
         }
+
+        // reload the window to show the new task
+        window.location.reload();
     };    
 
     const congratulate = () => {
@@ -93,21 +98,30 @@ function TaskPage() {
         setTimeout(function () {
             congratsElement.classList.remove('visible');
             congratsElement.classList.add('hidden');
-        }, 2000);
+            window.location.reload();
+        }, 1000);
     };
 
-    const removeTask = (taskId) => {
-        setTasks(tasks.filter(task => task.id !== taskId));
+    const removeTask = async (taskId, reload) => {
+        // setTasks(tasks.filter(task => task.id !== taskId));
+        try {
+            await axios.delete("http://localhost:3500/tasks/"+taskId);
+        } catch (err) {
+            console.log(err);
+        }
+
+        if (reload)
+            window.location.reload();
     };
 
     const completeTask = (taskId) => {
         const task = tasks.find(task => task.id === taskId);
         setPoints(points + task.diff * 10);
-        setTasks(tasks.filter(task => task.id !== taskId));
+        removeTask(taskId, false);
         congratulate();
     };
 
-    const editTask = (taskId) => {
+    const editTask = async (taskId) => {
         const task = tasks.find(task => task.id === taskId);
         setTitleInput(task.title);
         setDescInput(task.desc);
@@ -115,7 +129,7 @@ function TaskPage() {
         setDiffInput(task.diff);
         setPriorityInput(task.priority);
         setTaskAddBoxVisible(true);
-        removeTask(taskId); // Remove the task from the list while editing
+        removeTask(taskId, false);
     };
 
     return (
@@ -161,7 +175,7 @@ function TaskPage() {
                     <p>Difficulty Level: {task.diff}</p>
                     <p>Priority Level: {task.priority}</p>
                     <div className="btn-div">
-                        <button className="btn remove-btn" onClick={() => removeTask(task.id)}>Remove</button>
+                        <button className="btn remove-btn" onClick={() => removeTask(task.id, true)}>Remove</button>
                         <button className="btn complete-btn" onClick={() => completeTask(task.id)}>Complete</button>
                         <button className="btn edit-btn" onClick={() => editTask(task.id)}>Edit</button>
                     </div>
