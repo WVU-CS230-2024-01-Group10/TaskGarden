@@ -1,0 +1,22 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <form id="registerForm" action="register.php" method="POST">
+            <h2>Create Account</h2>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+            <button type="submit">Create Account</button>
+            <a href="login.html">Already have an account? Login Here</a>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
