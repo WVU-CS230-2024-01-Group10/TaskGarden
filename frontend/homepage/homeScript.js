@@ -11,14 +11,8 @@ if (localStorage.getItem("points")) {
     points = JSON.parse(localStorage.getItem("points"));
 }
 
-if (points >= 100) {
-    stage = 2;
-} else if (points >= 250) {
-    stage = 3;
-} else if (points >= 500) {
-    stage = 4;
-} else if (points >= 1000) {
-    stage = 5;
+if (localStorage.getItem("stage")) {                
+    stage = JSON.parse(localStorage.getItem("stage"));
 }
 
 var plantContainer = document.getElementById('plant-picture');
@@ -31,4 +25,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function updateView() {
     plantContainer.innerHTML = `<img src="${plantType}_${stage}.png" alt="${plantType} stage ${stage}">`;
+}
+
+function upgradePlant() {
+    if (stage == 5) {
+        console.log("plant is at maximum stage");
+        return;
+    }
+    if (points >= 100) {
+        stage += 1;
+        points -= 100;
+        localStorage.setItem("stage", stage);
+        localStorage.setItem("points", points);
+        updateView();
+    } else {
+        console.log("not enough points to upgrade plant");
+    }
 }
