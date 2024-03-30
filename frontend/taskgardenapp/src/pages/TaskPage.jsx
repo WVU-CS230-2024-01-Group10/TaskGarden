@@ -100,7 +100,7 @@ function TaskPage() {
 
     return (
         <div className='taskPage'>
-            <div style={{ textAlign: 'right' }}>
+            <div>
                 <a id="loginPageLink" href="../LoginPage/LoginPage.html">Logout</a>
             </div>
             <h1>Task Garden Task View Page</h1>
@@ -135,15 +135,18 @@ function TaskPage() {
             <h3>Current Task List:</h3>
             {tasks.map((task) => (
                 <div key={task.id} className="task-item">
-                    <h3>{task.title}</h3>
-                    <p>{task.desc}</p>
-                    <p>{task.datetime}</p>
-                    <p>Difficulty Level: {task.diff}</p>
-                    <p>Priority Level: {task.priority}</p>
+                    <div className="card-body">
+                    <h3 class="card-title">{task.title}</h3>
+                    <p class="card-text">{task.desc}</p>
+                    <p class="card-text">{task.datetime}</p>
+                    <p class="card-text">Difficulty Level: {task.diff}</p>
+                    <p class="card-text">Priority Level: {task.priority}</p>
                     <div className="btn-div">
                         <button className="btn remove-btn" onClick={() => removeTask(task.id)}>Remove</button>
                         <button className="btn complete-btn" onClick={() => completeTask(task.id)}>Complete</button>
                         <button className="btn edit-btn" onClick={() => editTask(task.id)}>Edit</button>
+                    </div>
+                    <p id="pointCount" class="card-text">{task.diff * 10} Points</p>
                     </div>
                 </div>
             ))}

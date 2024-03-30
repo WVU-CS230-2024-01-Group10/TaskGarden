@@ -32,18 +32,25 @@ body {
 }
 
 h1, h2, h3 {
-    color: #4CAF50;
-    text-align: center;
-}
-
-p {
     color: darkgreen;
     text-align: center;
 }
 
+p {
+    color: #775f41;
+    text-align: center;
+}
+
 /* Task button styles */
+
+#taskButtonDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #addTaskButton {
-    background-color: #4CAF50;
+    background-color: darkgreen;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -54,6 +61,7 @@ p {
     margin-top: 20px;
     cursor: pointer;
     border-radius: 5px;
+    width: 50vw;
 }
 
 /* Pop-up box styles */
@@ -63,7 +71,7 @@ p {
     left: 50%; 
     transform: translate(-50%, -50%);
     display: none;
-    background-color: #fff;
+    background-color: rgb(255, 243, 228);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -71,7 +79,7 @@ p {
 }
 
 .popup h2 {
-    color: #4CAF50;
+    color: darkgreen;
 }
 
 /* Input field styles */
@@ -115,7 +123,7 @@ button[type="button"]:hover {
 /* Logout link styles */
 #loginPageLink {
     text-decoration: none;
-    color: #4CAF50;
+    color: crimson;
 }
 
 #loginPageLink:hover {
