@@ -5,35 +5,15 @@
  * Last Edit: E. Hall
  */
 
-/* Style for the task table */
-table {
-    border-collapse: collapse;
-    width: 90%;
-}
-
-th {
-    background-color: #f2f2f2;
-    border: 1px solid #dddddd;
-    padding: 8px;
-    text-align: left;
-}
-
-td {
-    border: 1px solid #dddddd;
-    padding: 8px;
-    text-align: left;
-}
-
 body {
-
     font-family: Arial, sans-serif;
     background-color: #b49673;
     border: 5px solid  #775f41;
-    box-shadow: 0 0 0 10px #f9e3d0;
+    box-shadow: 0 0 0 10px #050505;
 }
 
 h1, h2, h3 {
-    color: darkgreen;
+    color: #52412c;
     text-align: center;
 }
 
@@ -42,14 +22,31 @@ p {
     text-align: center;
 }
 
+a {
+    color: #775f41;
+}
+
+a:hover {
+    color: #3f3221;
+}
+
+#pageDesc {
+    font-size: 20px;
+    margin-bottom: 20px;
+    margin-right: 20%;
+    margin-left: 20%;
+}
+
 /* Task button styles */
-#taskButtonDiv {
+#taskButtonDiv, #openNavBoxDiv {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 5%;
 }
-#addTaskButton {
-    background-color: darkgreen;
+
+#addTaskButton, #openNavBox {
+    background-color: #775f41;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -63,8 +60,8 @@ p {
     width: 50vw;
 }
 
-#addTaskButton:hover {
-    background-color: green; 
+#addTaskButton:hover, #openNavBox:hover {
+    background-color: #634f36; 
 }
 
 /* Pop-up box styles */
@@ -77,16 +74,16 @@ p {
     background-color: rgb(255, 243, 228);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 10000;
     height:fit-content;
     width: 25vw;
 }
 
-.popup h2 {
+/* .popup h2 {
     color: darkgreen;
     padding-top: 5px;
-}
+} */
 
 /* Input field styles */
 input[type="text"], input[type="datetime-local"], input[type="range"]{
@@ -118,7 +115,7 @@ button{
 
 /* Button styles */
 button[type="button"] {
-    background-color: #4CAF50;
+    background-color: #775f41;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -126,24 +123,25 @@ button[type="button"] {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    margin-top: 15px;
     margin-right: 10px;
     cursor: pointer;
     border-radius: 5px;
 }
 
 button[type="button"]:hover {
-    background-color: #45a049;
+    background-color: #775f41;
 }
 
 /* Logout link styles */
-#loginPageLink {
+#logoutButton {
     text-decoration: none;
     text-align: right;
-    color: crimson;
+    color: #775f41;
 }
 
-#loginPageLink:hover {
-    color: #45a049;
+#loginButton:hover {
+    color: #3b2f21;
 }
 
 /* Common styles for all button types */
@@ -161,7 +159,7 @@ button[type="button"]:hover {
 }
 
 .btn:hover {
-    background-color:#D1FFBD;
+    background-color:#755d40;
 }
 
 /* Specific styles for each button type */
@@ -195,10 +193,11 @@ button[type="button"]:hover {
     position: relative;
     width: 100%;
     max-width: 80%; 
-    border: 1px solid #ccc;
+    border: 1px solid #634f36;
+    background-color: #f3f3f3;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index:0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 0;
     margin: 10px auto;
 }
 
@@ -230,5 +229,10 @@ button[type="button"]:hover {
 }
 
 #pointCount {
+    text-align: right;
+}
+
+#tally {
+    margin-right:5px;
     text-align: right;
 }

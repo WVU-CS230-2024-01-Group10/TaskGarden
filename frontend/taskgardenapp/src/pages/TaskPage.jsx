@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles/taskStyles.css';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { Link } from 'react-router-dom'; // Import Link component
 
 /*Currently able to add, edit, remove, and complete tasks, BUT they don't save to localStorage. */
 function TaskPage() {
@@ -13,8 +14,9 @@ function TaskPage() {
     const [diffInput, setDiffInput] = useState(2); // Default difficulty
     const [priorityInput, setPriorityInput] = useState(2); // Default priority
     const [taskAddBoxVisible, setTaskAddBoxVisible] = useState(false);
+    const [navBoxVisible, setNavBoxVisible] = useState(false);
 
-
+    // fetch tasks from db
     useEffect(() => {
         const fetchAllTasks = async () => {
             try {
@@ -29,25 +31,20 @@ function TaskPage() {
         fetchAllTasks();
     }, [])
 
-    // // localStorage fetching: may become obsolete
-    // useEffect(() => {
-    //     const storedTasks = localStorage.getItem("tasks");
-    //     if (storedTasks) {
-    //         setTasks(JSON.parse(storedTasks));
-    //     }
-    // }, []);
+    // fetch points from db
+    useEffect(() => {
+        const fetchPoints = async () => {
+            try {
+                const res = await axios.get("http://localhost:3500/points");
+                console.log("Points: " + res.data.points)
+                setPoints(res.data.points);
+            } catch (err) {
+                console.log(err);
+            }
+        };
 
-    // useEffect(() => {
-    //     const saveTask = () => {
-    //         localStorage.setItem("tasks", JSON.stringify(tasks));
-    //     };
-    
-    //     saveTask(); // Call saveTask inside useEffect
-    
-    //     return () => {
-    //         // Cleanup function (optional) if needed
-    //     };
-    // }, [tasks]);
+        fetchPoints();
+    }, []);
 
     const showTaskAddBox = () => {
         setTitleInput('');
@@ -58,8 +55,16 @@ function TaskPage() {
         setTaskAddBoxVisible(true);
     };
 
+    const showNavBox = () => {
+        setNavBoxVisible(true);
+    }
+
     const closeTaskAddBox = () => {
         setTaskAddBoxVisible(false);
+    };
+
+    const closeNavBox = () => {
+        setNavBoxVisible(false);
     };
 
     const addTask = async () => {
@@ -77,7 +82,7 @@ function TaskPage() {
         if (newTask.title === "") { newTask.title = "Unnamed Task" };
         if (newTask.desc === "") { newTask.desc = "This task has no description" };
     
-        // try/catch block for axios POST req. untested
+        // try/catch block for task POST req. 
         try {
             const response = await axios.post('http://localhost:3500/tasks', newTask);
             setTasks(prevTasks => [...prevTasks, newTask]);
@@ -103,7 +108,6 @@ function TaskPage() {
     };
 
     const removeTask = async (taskId, reload) => {
-        // setTasks(tasks.filter(task => task.id !== taskId));
         try {
             await axios.delete("http://localhost:3500/tasks/"+taskId);
         } catch (err) {
@@ -111,14 +115,23 @@ function TaskPage() {
         }
 
         if (reload)
-            window.location.reload();
+           window.location.reload();
     };
 
-    const completeTask = (taskId) => {
+    const completeTask = async (taskId) => {
         const task = tasks.find(task => task.id === taskId);
-        setPoints(points + task.diff * 10);
-        removeTask(taskId, false);
-        congratulate();
+        const newPoints = points + task.diff * 10;
+
+        // try/catch block for points POST req. untested
+        try {
+            console.log(newPoints);
+             const response = await axios.post('http://localhost:3500/points', { points: newPoints });
+             setPoints(newPoints);
+             removeTask(taskId, false);
+             congratulate();
+          } catch (err) {
+               console.log(err);
+        }
     };
 
     const editTask = async (taskId) => {
@@ -135,11 +148,11 @@ function TaskPage() {
     return (
         <div className='taskPage'>
             <div>
-                <a id="loginPageLink" href="../LoginPage/LoginPage.html">Logout</a>
+            <Link className="link" id="logoutButton" to="/login">Logout</Link>
             </div>
             <h1>Task Garden Task View Page</h1>
-            <div id="pointCount">{points} Points</div>
-            <p>
+            <div id="tally">You have {points} Points!</div>
+            <p id='pageDesc'>
                 Here you can view the list of tasks you've added, the date and time they are to be completed (if applicable),
                 the difficulty level, and how many points will be awarded for completing it.
             </p>
@@ -170,21 +183,33 @@ function TaskPage() {
             {tasks.map((task) => (
                 <div key={task.id} className="task-item">
                     <div className="card-body">
-                    <h3 class="card-title">{task.title}</h3>
-                    <p class="card-text">{task.desc}</p>
-                    <p class="card-text">{task.datetime}</p>
-                    <p class="card-text">Difficulty Level: {task.diff}</p>
-                    <p class="card-text">Priority Level: {task.priority}</p>
+                    <h3 className="card-title">{task.title}</h3>
+                    <p className="card-text">{task.desc}</p>
+                    <p className="card-text">{task.datetime}</p>
+                    <p className="card-text">Difficulty Level: {task.diff}</p>
+                    <p className="card-text">Priority Level: {task.priority}</p>
                     <div className="btn-div">
                         <button className="btn remove-btn" onClick={() => removeTask(task.id, true)}>Remove</button>
                         <button className="btn complete-btn" onClick={() => completeTask(task.id)}>Complete</button>
                         <button className="btn edit-btn" onClick={() => editTask(task.id)}>Edit</button>
                     </div>
-                    <p id="pointCount" class="card-text">{task.diff * 10} Points</p>
+                    <p id="pointCount" className="card-text">{task.diff * 10} Points</p>
                     </div>
                 </div>
             ))}
             <h1 id="congrats" className="hidden">Congratulations!</h1>
+            <h3>Click here to navigate to a different page!</h3>
+            <div id="openNavBoxDiv"><button id="openNavBox" onClick={showNavBox}>Pages</button></div>
+            {navBoxVisible && (
+                <div id="navBox" className="popup">
+                <h3>Task Garden Navigation</h3>
+                <Link className="link" id="homePageLink" to="/home">Home</Link>
+                <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
+                <Link className="link" id="studyPageLink" to="/study">Study</Link>
+                <Link className="link" id="loginPageLink" to="/login">Logout</Link>
+                <button type="button" onClick={closeNavBox}>Cancel</button>
+            </div>
+            )}
         </div>
     );
 }

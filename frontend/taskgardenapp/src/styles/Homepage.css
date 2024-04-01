@@ -1,6 +1,3 @@
-body {
-  background-color: blanchedalmond;
-}
 
 .container {
   border: 1px solid black;
@@ -23,9 +20,10 @@ body {
   vertical-align: middle;
 }
 
-.background{
+/* Original Code */ 
+/* .background{
   background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/Bare%20Homepage.jpeg");
-}
+} */
 
 .watering_can{
   background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/Watering%20Can%20png.png");
