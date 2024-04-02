@@ -20,10 +20,9 @@
   vertical-align: middle;
 }
 
-/* Original Code */ 
-/* .background{
+.background{
   background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/Bare%20Homepage.jpeg");
-} */
+}
 
 .watering_can{
   background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/Watering%20Can%20png.png");
@@ -134,29 +133,29 @@
   background-position: center 25% bottom;
 }
 
-.sticky_tasks{
+#taskPageLink {
   background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/Tasks%20Sticky%20Note%20png.png");
   background-position: right center 20px left 10px top;
 }
 
-.sticky_tasks:hover{
+#taskPageLink:hover {
   background-color: bisque;
 }
 
-.sticky_study{
+#studyPageLink {
   background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/Study%20Sticky%20Note%20png.png");
   background-position: right center 10px left 10px top;
 }
 
-.sticky_study:hover{
+#studyPageLink:hover {
   background-color: bisque;
 }
 
-.sticky_greenhouse{
+#greenhousePageLink {
   background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/Greenhouse%20Sticky%20Note%20png.png");
   background-position: right center 15px left;
 }
 
-.sticky_greenhouse:hover{
+#greenhousePageLink:hover {
   background-color: bisque;
 }
