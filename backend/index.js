@@ -27,7 +27,7 @@ app.use(cors());
 
 // handle HTTP GET req
 app.get("/", (req,res) => {
-  res.json("Hello World!"); // Test message
+  res.json("/tasks => taskgarden.tasks | /points => taskgarden.points");
 });
 
 // handle HTTP GET tasks req
@@ -36,6 +36,20 @@ app.get("/tasks", (req,res) => {
   db.query(q, (err,data) => {
     if (err) return res.json(err);
     return res.json(data);
+  })
+});
+
+// handle HTTP GET points req
+app.get("/points", (req,res) => {
+  const q = "SELECT total_points FROM points";
+  db.query(q, (err,data) => {
+      if (err) return res.json(err);
+      if (data.length > 0) {
+          return res.json({ points: data[0].total_points });
+      } else {
+          // If no row exists, return 0 points
+          return res.json({ points: 0 });
+      }
   })
 });
 
@@ -58,6 +72,19 @@ app.post("/tasks", (req,res) => {
   });
 });
 
+// handle HTTP POST points req
+app.post("/points", (req, res) => {
+  const newPoints = req.body.points;
+  const q = "UPDATE points SET total_points = ?";
+
+  db.query(q, [newPoints], (err, data) => {
+    if (err) return res.json(err);
+    return res.json(`Points updated successfully to ${newPoints}`);
+  });
+});
+
+
+// handle HTTP DELETE task req
 app.delete("/tasks/:id", (req, res) => {
     const taskId = req.params.id;
     const q = "DELETE FROM tasks WHERE id = ?";
@@ -66,6 +93,18 @@ app.delete("/tasks/:id", (req, res) => {
       if (err) return res.json(err);
       return res.json("Task has been deleted!");
     })
+})
+
+// handle HTTP DELETE points req
+// this is currently completely pointless code but it may be useful in the future when creating a way to actually spend points
+app.delete("/points/:id", (req, res) => {
+  const taskId = req.params.id;
+  const q = "DELETE FROM points WHERE id = ?";
+
+  db.query(q, [pointsId], (err,data) => {
+    if (err) return res.json(err);
+    return res.json("Task has been deleted!");
+  })
 })
 
 // Start server listening
