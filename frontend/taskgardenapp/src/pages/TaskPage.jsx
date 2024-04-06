@@ -206,7 +206,7 @@ function TaskPage() {
                 <Link className="link" id="homePageLink" to="/home">Home</Link>
                 <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
                 <Link className="link" id="studyPageLink" to="/study">Study</Link>
-                <Link className="link" id="loginPageLink" to="/login">Logout</Link>
+                <Link className="link" id="profilePageLink" to="/profile">Profile</Link>
                 <button type="button" onClick={closeNavBox}>Cancel</button>
             </div>
             )}
