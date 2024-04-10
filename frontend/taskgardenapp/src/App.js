@@ -32,15 +32,17 @@ const analytics = getAnalytics(app);
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/home" element={<HomePage />}></Route>
-          <Route path="/login" element={<LoginPage />}></Route>
-          <Route path="/tasks" element={<TaskPage />}></Route>
-          <Route path="/greenhouse" element={<GreenHouse />}></Route>
-          <Route path="/study" element={<StudyPage />}></Route>
-        </Routes>
-      </BrowserRouter>
+      <root>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/home" element={<HomePage />}></Route>
+            <Route path="/login" element={<LoginPage />}></Route>
+            <Route path="/tasks" element={<TaskPage />}></Route>
+            <Route path="/greenhouse" element={<GreenHouse />}></Route>
+            <Route path="/study" element={<StudyPage />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </root>
     </div>
   );
 }
