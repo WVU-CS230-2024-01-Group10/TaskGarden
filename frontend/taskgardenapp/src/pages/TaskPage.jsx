@@ -3,6 +3,7 @@ import '../styles/taskStyles.css';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { Link } from 'react-router-dom'; // Import Link component
+import { getAuth } from "firebase/auth";
 
 /*Currently able to add, edit, remove, and complete tasks, BUT they don't save to localStorage. */
 function TaskPage() {
@@ -15,6 +16,10 @@ function TaskPage() {
     const [priorityInput, setPriorityInput] = useState(2); // Default priority
     const [taskAddBoxVisible, setTaskAddBoxVisible] = useState(false);
     const [navBoxVisible, setNavBoxVisible] = useState(false);
+
+    // google auth
+    const auth = getAuth();
+    auth.useDeviceLanguage();
 
     // fetch tasks from db
     useEffect(() => {

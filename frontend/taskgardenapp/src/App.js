@@ -10,6 +10,7 @@ import StudyPage from './pages/StudyPage.jsx';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -32,7 +33,7 @@ const analytics = getAnalytics(app);
 function App() {
   return (
     <div className="App">
-      <root>
+      <div id='root'>
         <BrowserRouter>
           <Routes>
             <Route path="/home" element={<HomePage />}></Route>
@@ -42,7 +43,7 @@ function App() {
             <Route path="/study" element={<StudyPage />}></Route>
           </Routes>
         </BrowserRouter>
-      </root>
+      </div>
     </div>
   );
 }
