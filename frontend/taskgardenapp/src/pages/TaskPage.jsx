@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import '../styles/taskStyles.css';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { Link } from 'react-router-dom'; // Import Link component
+import { Link, useNavigate } from 'react-router-dom'; // Import Link component
 import { getAuth } from "firebase/auth";
+import { useAuth } from '../contexts/authContext';
+import { doSignOut } from '../firebase/auth';
 
 /*Currently able to add, edit, remove, and complete tasks, BUT they don't save to localStorage. */
 function TaskPage() {
@@ -16,6 +18,7 @@ function TaskPage() {
     const [priorityInput, setPriorityInput] = useState(2); // Default priority
     const [taskAddBoxVisible, setTaskAddBoxVisible] = useState(false);
     const [navBoxVisible, setNavBoxVisible] = useState(false);
+    const navigate = useNavigate();
 
     // google auth
     const auth = getAuth();
@@ -211,7 +214,11 @@ function TaskPage() {
                 <Link className="link" id="homePageLink" to="/home">Home</Link>
                 <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
                 <Link className="link" id="studyPageLink" to="/study">Study</Link>
-                <Link className="link" id="loginPageLink" to="/login">Logout</Link>
+                <button onClick={ ()=> {
+                    doSignOut().then(() => {
+                        navigate('/login');
+                    })
+                }}>Logout</button>
                 <button type="button" onClick={closeNavBox}>Cancel</button>
             </div>
             )}

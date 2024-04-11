@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import '../styles/Homepage.css'; 
 import { Link } from 'react-router-dom'; // Import Link component
 import axios from 'axios';
+import { useAuth } from '../contexts/authContext';
 
 function HomePage() {
     const [plantType, setPlantType] = useState("succulent");
     const [points, setPoints] = useState(0);
     const [stage, setStage] = useState(1);
+    const { currentUser } = useAuth();
 
     useEffect(() => {
         const storedPlantType = localStorage.getItem("plantType");
@@ -64,6 +66,7 @@ function HomePage() {
 
     return (
         <div className="container">
+            <h3>Hello, {currentUser.displayName ? currentUser.displayName : currentUser.email}!</h3>
             <div className="plant-view">
                 Plant Here
                 <img src={`${plantType}_${stage}.png`} alt={`${plantType} stage ${stage}`} />
