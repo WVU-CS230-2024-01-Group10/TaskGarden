@@ -106,6 +106,9 @@ function TaskPage() {
             await addDoc(collection(db, "tasks"), {...newTask});
             closeTaskAddBox();
     
+            // Fetch the updated list of tasks from the database
+            getTasks();
+    
             if (!isEditing) {
                 Swal.fire({
                     icon: 'success',
@@ -113,27 +116,24 @@ function TaskPage() {
                     text: `"${newTask.title}" has been added.`,
                     showConfirmButton: false,
                     timer: 1500,
-                }).then(result => {
-                    window.location.reload();   
                 });
-            } 
-            else {
+            } else {
                 Swal.fire({
                     icon: 'success',
                     title: 'Edited!',
                     text: `"${newTask.title}" has been edited.`,
                     showConfirmButton: false,
                     timer: 1500,
-                }).then(result => {
-                    window.location.reload(); 
                 });
             }
         } catch (err) {
             console.log(err);
         }
     };
+    
+    
 
-    const removeTask = async (taskId, reload) => {
+    const removeTask = async (taskId) => {
         Swal.fire({
             icon: 'warning',
             title: 'Are you sure?',
@@ -143,23 +143,25 @@ function TaskPage() {
             cancelButtonText: 'No, cancel!',
         }).then(result => {
             if (result.value) {
-                const [task] = tasks.filter(task => task.id === taskId)
-
+                const [task] = tasks.filter(task => task.id === taskId);
+    
                 // remove from firebase
                 deleteDoc(doc(db, "tasks", taskId)).then(() => {
+                    // Update the task list state after deleting the task
+                    setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
+    
                     Swal.fire({
                         icon: 'success',
                         title: 'Deleted!',
                         text: `${task.title} has been deleted.`,
                         showConfirmButton: false,
                         timer: 1500,
-                    }).then(result => {
-                        window.location.reload();   
                     });
                 });
             }
-        })
+        });
     };
+    
 
     // function removeWithoutAsking for completion and editing
     const removeWithoutAsking = (taskId) => {
@@ -192,7 +194,7 @@ function TaskPage() {
             showConfirmButton: false,
             timer: 2500,
         }).then(result => {
-                window.location.reload();   
+                // window.location.reload();   
         });
     };
 
@@ -209,9 +211,17 @@ function TaskPage() {
     };
 
     const handleLogout = () => {
-        doSignOut().then(() => {
-            navigate('/login');
-        });
+        Swal.fire({
+            icon: 'info',
+            title: `${user.username} has been logged out.`,
+            showCancelButton: false,
+            confirmButtonText: "Yes.",
+        }).then(result => {
+            doSignOut().then(() => {
+                navigate('/login');
+            });
+        })
+        
     }
 
     return (
