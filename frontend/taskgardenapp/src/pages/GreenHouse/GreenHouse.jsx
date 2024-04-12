@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Greenhouse-Page.css'; 
+import './Greenhouse-Page.css'; 
 
 function GreenHouse() {
     return (
