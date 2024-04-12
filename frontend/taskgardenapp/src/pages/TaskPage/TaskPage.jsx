@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth';
+import UserContext from '../../contexts/UserContext';
 import './taskStyles.css';
-import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 import { Link, useNavigate } from 'react-router-dom'; // Import Link component
-import { getAuth } from "firebase/auth";
-import { useAuth } from '../../contexts/authContext';
 import { doSignOut } from '../../firebase/auth';
-import { QuerySnapshot, collection, addDoc, getDocs, setDoc, doc, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
 
 /*Currently able to add, edit, remove, and complete tasks, BUT they don't save to localStorage. */
 function TaskPage() {
+    const { user } = useContext(UserContext);
     const [tasks, setTasks] = useState([]);
     const [points, setPoints] = useState(0);
     const [titleInput, setTitleInput] = useState('');
@@ -28,17 +27,31 @@ function TaskPage() {
     const auth = getAuth();
     auth.useDeviceLanguage();
 
+    // fetch tasks from db, only if user is logged in
+    useEffect(() => {
+        if (!user) {
+            navigate('/login');
+        } else {
+            console.log(user);
+            getTasks();
+        }
+    }, [])
+
+    // allow the user to stay signed in on refresh
+        setPersistence(auth, browserSessionPersistence)
+        .then(() => {
+            // Authentication state will persist across browser sessions
+    })
+        .catch((error) => {
+            console.log(error);
+    });
+
     // get tasks function
     const getTasks = async () => {
         const querySnapshot = await getDocs(collection(db, "tasks"));
         const tasks = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
         setTasks(tasks);
     }
-
-    // fetch tasks from db
-    useEffect(() => {
-        getTasks();
-    }, [])
 
     // fetch points from db
     // OLD SQL CODE
@@ -119,19 +132,6 @@ function TaskPage() {
             console.log(err);
         }
     };
-    
-
-    const congratulate = () => {
-        const congratsElement = document.getElementById('congrats');
-        congratsElement.classList.remove('hidden');
-        congratsElement.classList.add('visible');
-
-        setTimeout(function () {
-            congratsElement.classList.remove('visible');
-            congratsElement.classList.add('hidden');
-            window.location.reload();
-        }, 1000);
-    };
 
     const removeTask = async (taskId, reload) => {
         Swal.fire({
@@ -208,12 +208,19 @@ function TaskPage() {
         removeWithoutAsking(taskId);
     };
 
+    const handleLogout = () => {
+        doSignOut().then(() => {
+            navigate('/login');
+        });
+    }
+
     return (
         <div className='taskPage'>
             <div>
-            <Link className="link" id="logoutButton" to="/login">Logout</Link>
+            <button id="logoutButton" onClick={handleLogout}>Logout</button>
             </div>
             <h1>Task Garden Task View Page</h1>
+            {user && (<h3>Logged in as: {user.username}</h3>)}
             <div id="tally">You have {points} Points!</div>
             <p id='pageDesc'>
                 Here you can view the list of tasks you've added, the date and time they are to be completed (if applicable),
@@ -269,11 +276,7 @@ function TaskPage() {
                 <Link className="link" id="homePageLink" to="/home">Home</Link>
                 <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
                 <Link className="link" id="studyPageLink" to="/study">Study</Link>
-                <button onClick={ ()=> {
-                    doSignOut().then(() => {
-                        navigate('/login');
-                    })
-                }}>Logout</button>
+                <button onClick={handleLogout}>Logout</button>
                 <button type="button" onClick={closeNavBox}>Cancel</button>
             </div>
             )}

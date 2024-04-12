@@ -1,58 +1,74 @@
-import React, { useEffect, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { getDocs, collection } from 'firebase/firestore';
+import { db } from '../../firebase/firebase';
+import Swal from 'sweetalert2';
 import './loginStyles.css';
-
-// FIREBASE: Import the functions you need from the SDKs you need
-import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../../firebase/auth';
-import { useAuth } from '../../contexts/authContext/index';
+import UserContext from '../../contexts/UserContext';
 
 function LoginPage() {
 
-  // broken code
-  // const { userLoggedIn } = useAuth();
-
+  const [users, setUsers] = useState([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const { setUser } = useContext(UserContext);
+
+  const navigate = useNavigate(); 
+
+  const getUsers = async () => {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    const users = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+    setUsers(users);
+  }
+
+  useEffect(() => {
+    getUsers();
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Perform login logic here
-    if (!isSigningIn) {
-      setIsSigningIn(true);
-      await doSignInWithEmailAndPassword(email, password);
+    document.getElementById('container').style.display = 'none';
+  
+    const currentUser = users.find(user => user.email === email);
+    if (currentUser === undefined) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Account not found!',
+        text: `Please check your username and password again.`,
+        confirmButtonText: "OK",
+        showConfirmButton: true,
+      }).then(result => {
+        document.getElementById('container').style.display = 'block';
+      });
+    } else {
+      setUser(currentUser);
+      localStorage.setItem("user", currentUser)
+      Swal.fire({
+        icon: 'success',
+        title: 'Logged in!',
+        text: `Hello, ${currentUser.username}!`,
+        showConfirmButton: false,
+        timer: 1500
+      }).then(result => {
+        // Navigate to the TaskPage
+        navigate('/tasks');
+      });
     }
-
-    // For demonstration purposes, navigate to the TaskPage
-    navigate('/tasks'); // Navigate to TaskPage
   };
 
-  const onGoogleSignIn = (e) => {
-    e.preventDefault();
-    if (!isSigningIn) {
-      setIsSigningIn(true);
-      doSignInWithGoogle().catch(err => {
-        setIsSigningIn(false);
-      })
-    }
-  }
-
   return (
-    <div className="container">
-      {/* Broken code: */}
-      {/* {userLoggedIn && (<Navigate to={'/home'} replace={true} />)} */}
-      <form id="loginForm" onSubmit={handleSubmit}>
-        <h2>🪴 Welcome to TaskGarden 🪴</h2>
-        <input type="email" name="email" value={email} onChange={(e) => { setEmail(e.target.value) }} placeholder="Email" required />
-        <input type="password" name="password" value={password} onChange={(e) => { setPassword(e.target.value) }} placeholder="Password" required />
-        <button type="submit" disabled={isSigningIn}>{isSigningIn ? 'Signing In...' : 'Sign In'}</button>
-        <button onClick={onGoogleSignIn}>Sign in with Google</button>
-        <Link to="/register">New User? Register Here</Link>
-      </form>
+    <div id="container" className="container">
+        <div id="loginBox">
+          <form id="loginForm" onSubmit={handleSubmit}>
+            <h2>🪴 Welcome to TaskGarden 🪴</h2>
+            <input type="email" name="email" value={email} onChange={(e) => { setEmail(e.target.value) }} placeholder="Email" required />
+            <input type="password" name="password" value={password} onChange={(e) => { setPassword(e.target.value) }} placeholder="Password" required />
+            <button type="submit" disabled={isSigningIn}>{isSigningIn ? 'Signing In...' : 'Sign In'}</button>
+            <Link to="/register">New User? Register Here</Link>
+          </form>
+        </div>
     </div>
   );
 }

@@ -22,7 +22,7 @@ function HomePage() {
 
         updateView();
         console.log(points);
-    }, []);
+    }, [points]);
 
     // fetch points from db
     useEffect(() => {

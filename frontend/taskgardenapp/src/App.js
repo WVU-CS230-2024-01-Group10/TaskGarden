@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/appStyle.css';
+import { UserProvider } from './contexts/UserContext';
 
 // import pages
 import LoginPage from './pages/LoginPage/LoginPage.jsx';
@@ -14,17 +15,19 @@ function App() {
   return (
     <div className="App">
       <div id='root'>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/home" element={<HomePage />}></Route>
-            <Route path="/login" element={<LoginPage />}></Route>
-            <Route path="/tasks" element={<TaskPage />}></Route>
-            <Route path="/greenhouse" element={<GreenHouse />}></Route>
-            <Route path="/study" element={<StudyPage />}></Route>
-            <Route path="/register" element={<Register />}></Route>
-            {/* For development purposes: */} <Route path="/" element={<TaskPage />}></Route> {/* (should be homepage later */}
-          </Routes>
-        </BrowserRouter>
+        <UserProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/home" element={<HomePage />}></Route>
+              <Route path="/login" element={<LoginPage />}></Route>
+              <Route path="/tasks" element={<TaskPage />}></Route>
+              <Route path="/greenhouse" element={<GreenHouse />}></Route>
+              <Route path="/study" element={<StudyPage />}></Route>
+              <Route path="/register" element={<Register />}></Route>
+              {/* For development purposes: */} <Route path="/" element={<TaskPage />}></Route> {/* (should be homepage later */}
+            </Routes>
+          </BrowserRouter>
+        </UserProvider>
       </div>
     </div>
   );
