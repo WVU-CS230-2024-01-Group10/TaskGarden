@@ -37,7 +37,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/home" element={<HomePage />}></Route>
-            <Route path="/login" element={<LoginPage />}></Route>
+            {/* DO NOT CHANGE LOGIN PATH */}
+            <Route path="/" element={<LoginPage />}></Route>
             <Route path="/tasks" element={<TaskPage />}></Route>
             <Route path="/greenhouse" element={<GreenHouse />}></Route>
             <Route path="/study" element={<StudyPage />}></Route>
