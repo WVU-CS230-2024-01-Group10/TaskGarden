@@ -4,7 +4,7 @@ import './styles/appStyle.css';
 
 // import pages
 import LoginPage from './pages/LoginPage/LoginPage.jsx';
-import TaskPage from './pages/TaskPage/TaskPage.jsx'
+import TaskPage from './pages/TaskPage/TaskPage.jsx';
 import GreenHouse from './pages/GreenHouse/GreenHouse.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
 import StudyPage from './pages/StudyPage/StudyPage.jsx';
@@ -22,6 +22,7 @@ function App() {
             <Route path="/greenhouse" element={<GreenHouse />}></Route>
             <Route path="/study" element={<StudyPage />}></Route>
             <Route path="/register" element={<Register />}></Route>
+            {/* For development purposes: */} <Route path="/" element={<TaskPage />}></Route> {/* (should be homepage later */}
           </Routes>
         </BrowserRouter>
       </div>

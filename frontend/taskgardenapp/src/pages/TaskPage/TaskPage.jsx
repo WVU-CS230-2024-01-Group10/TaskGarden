@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'; // Import Link component
 import { getAuth } from "firebase/auth";
 import { useAuth } from '../../contexts/authContext';
 import { doSignOut } from '../../firebase/auth';
-import { QuerySnapshot, collection, getDocs, doc } from 'firebase/firestore';
+import { QuerySnapshot, collection, addDoc, getDocs, doc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 
 /*Currently able to add, edit, remove, and complete tasks, BUT they don't save to localStorage. */
@@ -76,7 +76,7 @@ function TaskPage() {
 
     const addTask = async () => {
         const newTask = {
-            "id": uuidv4(), // Assign random number as id
+            "id": uuidv4(), // i'm pretty sure that with firebase this wont be needed
             "title": titleInput,
             "desc": descInput,
             "datetime": datetimeInput,
@@ -89,11 +89,9 @@ function TaskPage() {
         if (newTask.title === "") { newTask.title = "Unnamed Task" };
         if (newTask.desc === "") { newTask.desc = "This task has no description" };
     
-        // try/catch block for task POST req. 
+        // add task to firebase
         try {
-            const response = await axios.post('http://localhost:3500/tasks', newTask);
-            setTasks(prevTasks => [...prevTasks, newTask]);
-            closeTaskAddBox();
+            const dbTask = await addDoc(collection(db, "tasks"), {...newTask});
         } catch (err) {
             console.log(err);
         }
