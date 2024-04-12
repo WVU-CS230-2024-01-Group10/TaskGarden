@@ -6,8 +6,9 @@ import { Link, useNavigate } from 'react-router-dom'; // Import Link component
 import { getAuth } from "firebase/auth";
 import { useAuth } from '../../contexts/authContext';
 import { doSignOut } from '../../firebase/auth';
-import { QuerySnapshot, collection, addDoc, getDocs, doc } from 'firebase/firestore';
+import { QuerySnapshot, collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
+import Swal from 'sweetalert2';
 
 /*Currently able to add, edit, remove, and complete tasks, BUT they don't save to localStorage. */
 function TaskPage() {
@@ -39,19 +40,19 @@ function TaskPage() {
     }, [])
 
     // fetch points from db
-    useEffect(() => {
-        const fetchPoints = async () => {
-            try {
-                const res = await axios.get("http://localhost:3500/points");
-                console.log("Points: " + res.data.points)
-                setPoints(res.data.points);
-            } catch (err) {
-                console.log(err);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchPoints = async () => {
+    //         try {
+    //             const res = await axios.get("http://localhost:3500/points");
+    //             console.log("Points: " + res.data.points)
+    //             setPoints(res.data.points);
+    //         } catch (err) {
+    //             console.log(err);
+    //         }
+    //     };
 
-        fetchPoints();
-    }, []);
+    //     fetchPoints();
+    // }, []);
 
     const showTaskAddBox = () => {
         setTitleInput('');
@@ -76,7 +77,7 @@ function TaskPage() {
 
     const addTask = async () => {
         const newTask = {
-            "id": uuidv4(), // i'm pretty sure that with firebase this wont be needed
+            // "id": uuidv4(), // i'm pretty sure that with firebase this wont be needed
             "title": titleInput,
             "desc": descInput,
             "datetime": datetimeInput,
@@ -91,7 +92,7 @@ function TaskPage() {
     
         // add task to firebase
         try {
-            const dbTask = await addDoc(collection(db, "tasks"), {...newTask});
+            await addDoc(collection(db, "tasks"), {...newTask});
         } catch (err) {
             console.log(err);
         }
@@ -113,30 +114,48 @@ function TaskPage() {
     };
 
     const removeTask = async (taskId, reload) => {
-        try {
-            await axios.delete("http://localhost:3500/tasks/"+taskId);
-        } catch (err) {
-            console.log(err);
-        }
+        Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this',
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: 'No, cancel!',
+        }).then(result => {
+            if (result.value) {
+                const [task] = tasks.filter(task => task.id === taskId)
 
-        if (reload)
-           window.location.reload();
+                // TODO delete document
+                deleteDoc(doc(db, "tasks", taskId));
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted!',
+                    text: `${task.title} has been deleted.`,
+                    showConfirmButton: false,
+                    timer: 1500,
+                })
+                
+                if (reload)
+                    window.location.reload();   
+            }
+        })
     };
 
     const completeTask = async (taskId) => {
         const task = tasks.find(task => task.id === taskId);
         const newPoints = points + task.diff * 10;
 
-        // try/catch block for points POST req. untested
-        try {
-            console.log(newPoints);
-             const response = await axios.post('http://localhost:3500/points', { points: newPoints });
-             setPoints(newPoints);
-             removeTask(taskId, false);
-             congratulate();
-          } catch (err) {
-               console.log(err);
-        }
+        // // try/catch block for points POST req. untested
+        // try {
+        //     console.log(newPoints);
+        //      const response = await axios.post('http://localhost:3500/points', { points: newPoints });
+        //      setPoints(newPoints);
+        //      removeTask(taskId, false);
+        //      congratulate();
+        //   } catch (err) {
+        //        console.log(err);
+        // }
     };
 
     const editTask = async (taskId) => {
