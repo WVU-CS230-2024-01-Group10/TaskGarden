@@ -173,18 +173,11 @@ function TaskPage() {
     const completeTask = async (taskId) => {
         const task = tasks.find(task => task.id === taskId);
         const newPoints = points + task.diff * 10;
-
-        // // try/catch block for points POST req. untested
-        // try {
-        //     console.log(newPoints);
-        //      const response = await axios.post('http://localhost:3500/points', { points: newPoints });
-        //      setPoints(newPoints);
-        //      removeTask(taskId, false);
-        //      congratulate();
-        //   } catch (err) {
-        //        console.log(err);
-        // }
-
+    
+        // Update the task list state after completing the task
+        const updatedTasks = tasks.filter(t => t.id !== taskId);
+        setTasks(updatedTasks);
+    
         setPoints(newPoints);
         removeWithoutAsking(taskId);
         Swal.fire({
@@ -194,9 +187,10 @@ function TaskPage() {
             showConfirmButton: false,
             timer: 2500,
         }).then(result => {
-                // window.location.reload();   
+                // Don't reload the window
         });
     };
+    
 
     const editTask = async (taskId) => {
         const task = tasks.find(task => task.id === taskId);
