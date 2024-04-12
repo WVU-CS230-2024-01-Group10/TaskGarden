@@ -10,7 +10,7 @@ import GreenHouse from './pages/GreenHouse/GreenHouse.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
 import StudyPage from './pages/StudyPage/StudyPage.jsx';
 import Register from './pages/Register/Register.jsx';
-
+import ProfilePage from './pages/ProfilePage.jsx';
 function App() {
   return (
     <div className="App">
@@ -25,6 +25,7 @@ function App() {
               <Route path="/study" element={<StudyPage />}></Route>
               <Route path="/register" element={<Register />}></Route>
               {/* For development purposes: */} <Route path="/" element={<TaskPage />}></Route> {/* (should be homepage later */}
+              <Route path "/profile" element={<ProfilePage />}></Route>
             </Routes>
           </BrowserRouter>
         </UserProvider>
