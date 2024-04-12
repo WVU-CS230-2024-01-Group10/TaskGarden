@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'; // Import Link component
 import { getAuth } from "firebase/auth";
 import { useAuth } from '../../contexts/authContext';
 import { doSignOut } from '../../firebase/auth';
-import { QuerySnapshot, collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { QuerySnapshot, collection, addDoc, getDocs, setDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
 
@@ -21,6 +21,7 @@ function TaskPage() {
     const [priorityInput, setPriorityInput] = useState(2); // Default priority
     const [taskAddBoxVisible, setTaskAddBoxVisible] = useState(false);
     const [navBoxVisible, setNavBoxVisible] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     const navigate = useNavigate();
 
     // google auth
@@ -40,6 +41,7 @@ function TaskPage() {
     }, [])
 
     // fetch points from db
+    // OLD SQL CODE
     // useEffect(() => {
     //     const fetchPoints = async () => {
     //         try {
@@ -77,29 +79,47 @@ function TaskPage() {
 
     const addTask = async () => {
         const newTask = {
-            // "id": uuidv4(), // i'm pretty sure that with firebase this wont be needed
             "title": titleInput,
             "desc": descInput,
             "datetime": datetimeInput,
             "diff": diffInput,
             "priority": priorityInput
         };
-        console.log(newTask);
-
     
         if (newTask.title === "") { newTask.title = "Unnamed Task" };
         if (newTask.desc === "") { newTask.desc = "This task has no description" };
     
-        // add task to firebase
         try {
             await addDoc(collection(db, "tasks"), {...newTask});
+            closeTaskAddBox();
+    
+            if (!isEditing) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Added!',
+                    text: `"${newTask.title}" has been added.`,
+                    showConfirmButton: false,
+                    timer: 1500,
+                }).then(result => {
+                    window.location.reload();   
+                });
+            } 
+            else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Edited!',
+                    text: `"${newTask.title}" has been edited.`,
+                    showConfirmButton: false,
+                    timer: 1500,
+                }).then(result => {
+                    window.location.reload(); 
+                });
+            }
         } catch (err) {
             console.log(err);
         }
-
-        // reload the window to show the new task
-        window.location.reload();
-    };    
+    };
+    
 
     const congratulate = () => {
         const congratsElement = document.getElementById('congrats');
@@ -125,22 +145,28 @@ function TaskPage() {
             if (result.value) {
                 const [task] = tasks.filter(task => task.id === taskId)
 
-                // TODO delete document
-                deleteDoc(doc(db, "tasks", taskId));
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Deleted!',
-                    text: `${task.title} has been deleted.`,
-                    showConfirmButton: false,
-                    timer: 1500,
-                })
-                
-                if (reload)
-                    window.location.reload();   
+                // remove from firebase
+                deleteDoc(doc(db, "tasks", taskId)).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: `${task.title} has been deleted.`,
+                        showConfirmButton: false,
+                        timer: 1500,
+                    }).then(result => {
+                        window.location.reload();   
+                    });
+                });
             }
         })
     };
+
+    // function removeWithoutAsking for completion and editing
+    const removeWithoutAsking = (taskId) => {
+        const [task] = tasks.filter(task => task.id === taskId)
+            // delete from firebase
+            deleteDoc(doc(db, "tasks", taskId));
+    }
 
     const completeTask = async (taskId) => {
         const task = tasks.find(task => task.id === taskId);
@@ -156,17 +182,30 @@ function TaskPage() {
         //   } catch (err) {
         //        console.log(err);
         // }
+
+        setPoints(newPoints);
+        removeWithoutAsking(taskId);
+        Swal.fire({
+            icon: 'success',
+            title: `Congratulations!`,
+            text: `${task.title} has been completed. You have earned ${task.diff * 10} points!`,
+            showConfirmButton: false,
+            timer: 2500,
+        }).then(result => {
+                window.location.reload();   
+        });
     };
 
     const editTask = async (taskId) => {
         const task = tasks.find(task => task.id === taskId);
+        setIsEditing(true);
         setTitleInput(task.title);
         setDescInput(task.desc);
         setDatetimeInput(task.datetime);
         setDiffInput(task.diff);
         setPriorityInput(task.priority);
         setTaskAddBoxVisible(true);
-        removeTask(taskId, false);
+        removeWithoutAsking(taskId);
     };
 
     return (
@@ -199,7 +238,7 @@ function TaskPage() {
                         <input type="range" id="priority" name="priority" min="1" max="3" value={priorityInput} onChange={(e) => setPriorityInput(parseInt(e.target.value))} />
                         <output id="priorityOutput">{priorityInput}</output><br /><br />
                         <button type="button" onClick={addTask}>Confirm</button>
-                        <button type="button" onClick={closeTaskAddBox}>Cancel</button>
+                        <button id="taskAddBoxCancelButton" type="button" onClick={closeTaskAddBox}>Cancel</button>
                     </form>
                 </div>
             )}
