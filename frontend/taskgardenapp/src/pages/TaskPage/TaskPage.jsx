@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/taskStyles.css';
+import './taskStyles.css';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { Link, useNavigate } from 'react-router-dom'; // Import Link component
 import { getAuth } from "firebase/auth";
-import { useAuth } from '../contexts/authContext';
-import { doSignOut } from '../firebase/auth';
+import { useAuth } from '../../contexts/authContext';
+import { doSignOut } from '../../firebase/auth';
+import { QuerySnapshot, collection, getDocs, doc } from 'firebase/firestore';
+import { db } from '../../firebase/firebase';
 
 /*Currently able to add, edit, remove, and complete tasks, BUT they don't save to localStorage. */
 function TaskPage() {
@@ -24,19 +26,16 @@ function TaskPage() {
     const auth = getAuth();
     auth.useDeviceLanguage();
 
+    // get tasks function
+    const getTasks = async () => {
+        const querySnapshot = await getDocs(collection(db, "tasks"));
+        const tasks = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+        setTasks(tasks);
+    }
+
     // fetch tasks from db
     useEffect(() => {
-        const fetchAllTasks = async () => {
-            try {
-                const res = await axios.get("http://localhost:3500/tasks");
-                console.log(res.data);
-                setTasks(res.data);
-            } catch (err) {
-                console.log(err);
-            }
-        };
-
-        fetchAllTasks();
+        getTasks();
     }, [])
 
     // fetch points from db

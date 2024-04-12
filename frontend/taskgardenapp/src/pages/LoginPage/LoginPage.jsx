@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom'; // Import useNavigate
-import '../styles/loginStyles.css';
+import './loginStyles.css';
 
 // FIREBASE: Import the functions you need from the SDKs you need
-import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth';
-import { useAuth } from '../contexts/authContext/index';
+import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../../firebase/auth';
+import { useAuth } from '../../contexts/authContext/index';
 
 function LoginPage() {
 
-  const { userLoggedIn } = useAuth();
+  // broken code
+  // const { userLoggedIn } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,7 +43,8 @@ function LoginPage() {
 
   return (
     <div className="container">
-      {userLoggedIn && (<Navigate to={'/home'} replace={true} />)}
+      {/* Broken code: */}
+      {/* {userLoggedIn && (<Navigate to={'/home'} replace={true} />)} */}
       <form id="loginForm" onSubmit={handleSubmit}>
         <h2>🪴 Welcome to TaskGarden 🪴</h2>
         <input type="email" name="email" value={email} onChange={(e) => { setEmail(e.target.value) }} placeholder="Email" required />
