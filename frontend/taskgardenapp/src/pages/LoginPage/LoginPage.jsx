@@ -23,12 +23,9 @@ function LoginPage() {
     setUsers(users);
   }
 
-  useEffect(() => {
-    getUsers();
-  });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    getUsers();
     document.getElementById('container').style.display = 'none';
   
     const currentUser = users.find(user => user.email === email);

@@ -25,7 +25,7 @@ function App() {
               <Route path="/study" element={<StudyPage />}></Route>
               <Route path="/register" element={<Register />}></Route>
               {/* For development purposes: */} <Route path="/" element={<TaskPage />}></Route> {/* (should be homepage later */}
-              <Route path "/profile" element={<ProfilePage />}></Route>
+              <Route path="/profile" element={<ProfilePage />}></Route>
             </Routes>
           </BrowserRouter>
         </UserProvider>
