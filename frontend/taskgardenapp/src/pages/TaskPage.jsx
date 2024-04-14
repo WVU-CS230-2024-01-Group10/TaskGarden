@@ -93,7 +93,7 @@ function TaskPage() {
 
         // reload the window to show the new task
         window.location.reload();
-    };    
+    };
 
     const congratulate = () => {
         const congratsElement = document.getElementById('congrats');
