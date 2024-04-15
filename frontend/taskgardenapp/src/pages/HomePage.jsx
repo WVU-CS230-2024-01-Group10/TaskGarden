@@ -2,14 +2,22 @@ import React, { useState, useEffect } from 'react';
 import '../styles/Homepage.css'; 
 import { Link } from 'react-router-dom'; // Import Link component
 import axios from 'axios';
-import plants from '../img/plants/*'
+import plant from '../img/plants/flower_s1.png'
 
 function HomePage() {
     const [plantType, setPlantType] = useState("succulent");
-    const [points, setPoints] = useState(0);
+    const [points, setPoints] = useState(400);
     const [stage, setStage] = useState(1);
     const [plantSelectVisible, setPlantSelectVisible] = useState(false);
 
+    // Import all plant images dynamically
+    const importAll = (r) => {
+        let images = {};
+        r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
+        return images;
+    };
+    const plantImages = importAll(require.context('../img/plants', false, /\.(png|jpe?g|svg)$/));
+    
     useEffect(() => {
         const storedPlantType = localStorage.getItem("plantType");
         if (storedPlantType) setPlantType(JSON.parse(storedPlantType));
@@ -81,7 +89,7 @@ function HomePage() {
         <div className="container">
             <div className="plant-view">
                 Plant Here
-                <img src={`/frontend/taskgardenapp/src/img/plants/${plantType}_s${stage}.png`} alt={`${plantType} stage ${stage}`} />
+                <img src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
                 <button onClick={upgradePlant}>Upgrade for 100 points</button>
                 <p>(reset button for dev purposes)</p>
                 <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
