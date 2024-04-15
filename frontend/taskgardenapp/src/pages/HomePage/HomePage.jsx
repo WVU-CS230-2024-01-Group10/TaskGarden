@@ -6,10 +6,19 @@ import { useAuth } from '../../contexts/authContext';
 
 function HomePage() {
     const [plantType, setPlantType] = useState("succulent");
-    const [points, setPoints] = useState(0);
+    const [points, setPoints] = useState(400);
     const [stage, setStage] = useState(1);
     // const { currentUser } = useAuth();
+    const [plantSelectVisible, setPlantSelectVisible] = useState(false);
 
+    // Import all plant images dynamically
+    const importAll = (r) => {
+        let images = {};
+        r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
+        return images;
+    };
+    const plantImages = importAll(require.context('../img/plants', false, /\.(png|jpe?g|svg)$/));
+    
     useEffect(() => {
         const storedPlantType = localStorage.getItem("plantType");
         if (storedPlantType) setPlantType(JSON.parse(storedPlantType));
@@ -39,11 +48,24 @@ function HomePage() {
         fetchPoints();
     }, []);
 
+    const showPlantSelect = () => {
+        setPlantType(plantType);
+        setPlantSelectVisible(true);
+    };
+
+    const closePlantSelect = () => {
+        setPlantSelectVisible(false);
+    };
+
     function updateView() {
         // i'm not sure how this one converts to react
     }
 
-   async function upgradePlant() {
+    async function selectPlant() {
+        setPlantType();
+    }
+
+    async function upgradePlant() {
         if (stage === 5) {
             console.log("plant is at maximum stage");
             return;
@@ -69,12 +91,31 @@ function HomePage() {
             {/* <h3>Hello, {currentUser.displayName ? currentUser.displayName : currentUser.email}!</h3> */}
             <div className="plant-view">
                 Plant Here
-                <img src={`${plantType}_${stage}.png`} alt={`${plantType} stage ${stage}`} />
+                <img src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
                 <button onClick={upgradePlant}>Upgrade for 100 points</button>
                 <p>(reset button for dev purposes)</p>
                 <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
                 <p>Your Points: {points}</p>
             </div>
+            <div>
+                <div id="plantButtonDiv"><button id="selectPlantButton" onClick={showPlantSelect}>Select Plant</button></div>
+                {plantSelectVisible && (
+                    <div id="plantSelectBox" className="popup">
+                        <h2>Select Plant</h2>
+                        <form id="plantInfo">
+                            <label htmlFor="title">Plant Type</label>
+                            <select name="plantTypeSelect" id="plantTypeSelect"  value={plantType}>
+                                <option value="cactus">Cactus</option>
+                                <option value="flower">Flower</option>
+                                <option value="pothos">Pothos</option>
+                                <option value="succulent">Succulent</option>
+                            </select>
+                            <button type="button" onClick={selectPlant}>Confirm</button>
+                            <button type="button" onClick={closePlantSelect}>Cancel</button>
+                        </form>
+                    </div>
+                )}
+                </div>
             <div className="link-board">
                 <Link className="link" id="taskPageLink" to="/tasks">Task List</Link>
                 <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
