@@ -1,18 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth';
-import UserContext from '../../contexts/UserContext';
+// version 4/15/24 - all commented code is broken auth stuff
+
+import React, { useState, useEffect, /* useContext */ } from 'react';
+// import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth';
+// import UserContext from '../../contexts/UserContext';
 import './taskStyles.css';
 import { Link, useNavigate } from 'react-router-dom'; // Import Link component
-import { doSignOut } from '../../firebase/auth';
-import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
+// import { doSignOut } from '../../firebase/auth';
+import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
 
-/*Currently able to add, edit, remove, and complete tasks, BUT they don't save to localStorage. */
 function TaskPage() {
-    const { user } = useContext(UserContext);
+    // const { user } = useContext(UserContext); part of broken auth code 
     const [tasks, setTasks] = useState([]);
     const [points, setPoints] = useState(0);
+    const [username, setUsername] = useState('');
     const [titleInput, setTitleInput] = useState('');
     const [descInput, setDescInput] = useState('');
     const [datetimeInput, setDatetimeInput] = useState('');
@@ -24,50 +26,70 @@ function TaskPage() {
     const navigate = useNavigate();
 
     // google auth
-    const auth = getAuth();
-    auth.useDeviceLanguage();
+    // const auth = getAuth();
+    // auth.useDeviceLanguage();
+
+    // get user ID from localStorage
+    const userID = localStorage.getItem("userID");
 
     // fetch tasks from db, only if user is logged in
     useEffect(() => {
-        if (!user) {
+        if (!userID) {
             navigate('/login');
         } else {
-            console.log(user);
-            getTasks();
+            getUserInfo();
+            console.log("Logged in as: " + username);
         }
     }, [])
 
     // allow the user to stay signed in on refresh
-        setPersistence(auth, browserSessionPersistence)
-        .then(() => {
-            // Authentication state will persist across browser sessions
-    })
-        .catch((error) => {
-            console.log(error);
-    });
+    //     setPersistence(auth, browserSessionPersistence)
+    //     .then(() => {
+    //         // Authentication state will persist across browser sessions
+    // })
+    //     .catch((error) => {
+    //         console.log(error);
+    // });
 
-    // get tasks function
-    const getTasks = async () => {
-        const querySnapshot = await getDocs(collection(db, "tasks"));
-        const tasks = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+    /* function getUserInfo (version 4/16/24)
+    * author: C. Jones
+    * this function retrieves information about the user that is relevant to the task page. (username, tasks, points) */
+    const getUserInfo = async () => {
+
+        // show "fetching user info..." message and hide inaccurate tally
+        document.getElementById('tally').style.display = 'none';
+        document.getElementById('fetchingUserInfoMessage').style.display = 'block';
+
+        // get users and docs from db
+        const usersQuery = await getDocs(collection(db, "users"));
+        const tasksQuery = await getDocs(collection(db, "users", userID, "tasks"));
+
+        // map users and docs
+        const users = usersQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
+        const tasks = tasksQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
+
+        // find current user with locally stored user id
+        const currentUser = users.find(user => user.id === userID);
+
+        // set user information
+        setUsername(currentUser.username);
+        if (currentUser.points === undefined || currentUser.points === 'NaN')
+            setPoints(0);
+        else setPoints(currentUser.points);
         setTasks(tasks);
+
+        // display information
+        document.getElementById('tally').style.display = 'block';
+        document.getElementById('fetchingUserInfoMessage').style.display = 'none';
+      }
+
+    const updatePoints = async (newPoints) => {
+        const user = doc(db, "users", userID);
+        await updateDoc(user, {
+            points: newPoints
+        })
+        setPoints(newPoints);
     }
-
-    // fetch points from db
-    // OLD SQL CODE
-    // useEffect(() => {
-    //     const fetchPoints = async () => {
-    //         try {
-    //             const res = await axios.get("http://localhost:3500/points");
-    //             console.log("Points: " + res.data.points)
-    //             setPoints(res.data.points);
-    //         } catch (err) {
-    //             console.log(err);
-    //         }
-    //     };
-
-    //     fetchPoints();
-    // }, []);
 
     const showTaskAddBox = () => {
         setTitleInput('');
@@ -103,11 +125,11 @@ function TaskPage() {
         if (newTask.desc === "") { newTask.desc = "This task has no description" };
     
         try {
-            await addDoc(collection(db, "tasks"), {...newTask});
+            await addDoc(collection(db, "users", userID, "tasks"), {...newTask});
             closeTaskAddBox();
     
             // Fetch the updated list of tasks from the database
-            getTasks();
+            getUserInfo();
     
             if (!isEditing) {
                 Swal.fire({
@@ -161,7 +183,7 @@ function TaskPage() {
                 const [task] = tasks.filter(task => task.id === taskId);
     
                 // remove from firebase
-                deleteDoc(doc(db, "tasks", taskId)).then(() => {
+                deleteDoc(doc(db, "users", userID, "tasks", taskId)).then(() => {
                     // Update the task list state after deleting the task
                     setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
     
@@ -182,7 +204,7 @@ function TaskPage() {
     const removeWithoutAsking = (taskId) => {
         const [task] = tasks.filter(task => task.id === taskId)
             // delete from firebase
-            deleteDoc(doc(db, "tasks", taskId));
+            deleteDoc(doc(db, "users", userID, "tasks", taskId));
     }
 
     const completeTask = async (taskId) => {
@@ -202,7 +224,7 @@ function TaskPage() {
             showConfirmButton: false,
             timer: 2500,
         }).then(result => {
-                // Don't reload the window
+            updatePoints(points + (task.diff * 10));
         });
     };
     
@@ -220,26 +242,23 @@ function TaskPage() {
     };
 
     const handleLogout = () => {
+        localStorage.removeItem("userID");
         Swal.fire({
             icon: 'info',
-            title: `${user.username} has been logged out.`,
-            showCancelButton: false,
-            confirmButtonText: "Yes.",
+            title: `${username} has been logged out.`,
+            showCancelButton: false
         }).then(result => {
-            doSignOut().then(() => {
+            // doSignOut().then(() => {
                 navigate('/login');
-            });
+            // });
         })
-        
     }
 
     return (
         <div className='taskPage'>
-            <div>
             <button id="logoutButton" onClick={handleLogout}>Logout</button>
-            </div>
             <h1>Task Garden Task View Page</h1>
-            {user && (<h3>Logged in as: {user.username}</h3>)}
+            {userID && (<h3>Logged in as: {username}</h3>)}
             <div id="tally">You have {points} Points!</div>
             <p id='pageDesc'>
                 Here you can view the list of tasks you've added, the date and time they are to be completed (if applicable),
@@ -269,6 +288,7 @@ function TaskPage() {
                 </div>
             )}
             <h3>Current Task List:</h3>
+            <h1 id='fetchingUserInfoMessage' style={{display: 'none'}}>Fetching user info...</h1>
             {tasks.map((task) => (
                 <div key={task.id} className="task-item">
                     <div className="card-body">
