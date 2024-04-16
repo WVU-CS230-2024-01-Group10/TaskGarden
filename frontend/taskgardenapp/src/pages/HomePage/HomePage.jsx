@@ -87,11 +87,12 @@ function HomePage() {
     }
 
     return (
+        <div class = "background">
         <div className="container">
             {/* <h3>Hello, {currentUser.displayName ? currentUser.displayName : currentUser.email}!</h3> */}
             <div className="plant-view">
                 Plant Here
-                <img src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
+                <img src={plantImages[`${plantType}_s${stage}`]} alt={`${plantType} stage ${stage}`} /> //remove .png to get css names of the plants
                 <button onClick={upgradePlant}>Upgrade for 100 points</button>
                 <p>(reset button for dev purposes)</p>
                 <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
@@ -123,6 +124,7 @@ function HomePage() {
                 <Link className="link" id="loginPageLink" to="/login">Logout</Link>
             </div>
         </div>
+    </div>
     );
 }
 
