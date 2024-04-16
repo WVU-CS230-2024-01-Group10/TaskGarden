@@ -225,6 +225,7 @@ function TaskPage() {
     };
 
     const handleLogout = () => {
+        document.getElementById('container').style.display = 'none';
         localStorage.removeItem("userID");
         Swal.fire({
             icon: 'info',

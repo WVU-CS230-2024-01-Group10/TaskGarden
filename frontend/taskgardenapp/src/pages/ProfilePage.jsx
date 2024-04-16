@@ -3,6 +3,7 @@ import '../styles/profileStyles.css';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import {  useNavigate } from 'react-router-dom'; // Import Link component
+import Swal from 'sweetalert2';
 
 // Need to implement db operations to fetch user info
 
@@ -42,12 +43,25 @@ function ProfilePage() {
         // set user information
         setUsername(currentUser.username);
         setEmail(currentUser.email);
-      }
+    }
+
+      const handleLogout = () => {
+        localStorage.removeItem("userID");
+        Swal.fire({
+            icon: 'info',
+            title: `${username} has been logged out.`,
+            showCancelButton: false
+        }).then(result => {
+            // doSignOut().then(() => {
+                navigate('/login');
+            // });
+        })
+    }
 
     return (
         <div className="ProfilePage">
             <h1 className="userLabel">Username</h1>
-            <div className="gridContainer">
+            <div id='container' className="gridContainer">
                 <div className="item1">
                     <h2>Account Information</h2>
                     <p>Username: {username}</p>
@@ -69,7 +83,7 @@ function ProfilePage() {
                 </div>
                 <div className="item4">
                     <a href="/">
-                        <button type="button" className="signOutBtn"> Sign Out</button>
+                        <button onClick={handleLogout} type="button" className="signOutBtn"> Sign Out</button>
                     </a>
                 </div>
             </div>
