@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Homepage.css'; 
-import { Link } from 'react-router-dom'; // Import Link component
+import { Link, useNavigate } from 'react-router-dom'; // Import Link component
+import Swal from 'sweetalert2';
 // import { useAuth } from '../../contexts/authContext';
 
 // firestore imports
@@ -8,9 +9,11 @@ import { db } from '../../firebase/firebase';
 import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 function HomePage() {
+    const [username, setUsername] = useState('');
     const [plantType, setPlantType] = useState("succulent");
     const [points, setPoints] = useState(0);
     const [stage, setStage] = useState(1);
+    const navigate = useNavigate();
     // const { currentUser } = useAuth();
 
     // get user ID from localStorage
@@ -27,8 +30,8 @@ function HomePage() {
         if (storedStage) setStage(JSON.parse(storedStage));
 
         getPoints(); // fetch points from db
-        console.log(points);
-    }, [points]);
+        console.log("useEffect running. points: " + points);
+    }, []);
 
     /* function getPoints (version 4/16/24)
     * author: C. Jones
@@ -37,7 +40,12 @@ function HomePage() {
         const usersQuery = await getDocs(collection(db, "users"));
         const users = usersQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
         const currentUser = users.find(user => user.id === userID);
-        setPoints(currentUser.points);
+
+        // set username and points
+        setUsername(currentUser.username);
+        if (currentUser.points === undefined || currentUser.points === 'NaN')
+        setPoints(0);
+        else setPoints(currentUser.points);
     }
 
     /* function updatePoints (version 4/16/24)
@@ -71,8 +79,25 @@ function HomePage() {
         }
     }
 
+    /* function handleLogout (version 4/16/24)
+    * author: C. Jones
+    * this function removes the user's ID from local storage and notifies them */
+    const handleLogout = () => {
+        localStorage.removeItem("userID");
+        document.getElementById('container').style.display = 'none';
+        Swal.fire({
+            icon: 'info',
+            title: `${username} has been logged out.`,
+            showCancelButton: false
+        }).then(result => {
+            // doSignOut().then(() => {
+                navigate('/login');
+            // });
+        })
+    }
+
     return (
-        <div className="container">
+        <div id='container' className="container">
             {/* <h3>Hello, {currentUser.displayName ? currentUser.displayName : currentUser.email}!</h3> */}
             <div className="plant-view">
                 Plant Here
@@ -86,7 +111,7 @@ function HomePage() {
                 <Link className="link" id="taskPageLink" to="/tasks">Task List</Link>
                 <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
                 <Link className="link" id="studyPageLink" to="/study">Study</Link>
-                <Link className="link" id="loginPageLink" to="/login">Logout</Link>
+                <button onClick={handleLogout}>Logout</button>
             </div>
         </div>
     );

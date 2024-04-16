@@ -73,7 +73,9 @@ function TaskPage() {
 
         // set user information
         setUsername(currentUser.username);
-        setPoints(currentUser.points);
+        if (currentUser.points === undefined || currentUser.points === 'NaN')
+            setPoints(0);
+        else setPoints(currentUser.points);
         setTasks(tasks);
 
         // display information
@@ -229,14 +231,12 @@ function TaskPage() {
         Swal.fire({
             icon: 'info',
             title: `${username} has been logged out.`,
-            showCancelButton: false,
-            confirmButtonText: "Yes.",
+            showCancelButton: false
         }).then(result => {
             // doSignOut().then(() => {
                 navigate('/login');
             // });
         })
-        
     }
 
     return (
