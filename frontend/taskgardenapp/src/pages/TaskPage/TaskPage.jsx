@@ -6,7 +6,7 @@ import React, { useState, useEffect, /* useContext */ } from 'react';
 import './taskStyles.css';
 import { Link, useNavigate } from 'react-router-dom'; // Import Link component
 // import { doSignOut } from '../../firebase/auth';
-import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
 
@@ -14,6 +14,7 @@ function TaskPage() {
     // const { user } = useContext(UserContext); part of broken auth code 
     const [tasks, setTasks] = useState([]);
     const [points, setPoints] = useState(0);
+    const [username, setUsername] = useState('');
     const [titleInput, setTitleInput] = useState('');
     const [descInput, setDescInput] = useState('');
     const [datetimeInput, setDatetimeInput] = useState('');
@@ -36,9 +37,8 @@ function TaskPage() {
         if (!userID) {
             navigate('/login');
         } else {
-            // getUser();
-            console.log("Logged in as: " + userID);
-            getTasks();
+            getUserInfo();
+            console.log("Logged in as: " + username);
         }
     }, [])
 
@@ -51,18 +51,42 @@ function TaskPage() {
     //         console.log(error);
     // });
 
-    // get tasks function
-    const getTasks = async () => {
-        document.getElementById('fetchingTasksMessage').style.display = 'block';
+    /* function getUserInfo (version 4/16/24)
+    * author: C. Jones
+    * this function retrieves information about the user that is relevant to the task page. (username, tasks, points) */
+    const getUserInfo = async () => {
 
-        // test
-        const querySnapshot = await getDocs(collection(db, "users", userID, "tasks"));
-        querySnapshot.forEach((doc) => {
-            console.log(doc.id, " => ", doc.data());
-        })
-        const tasks = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+        // show "fetching user info..." message and hide inaccurate tally
+        document.getElementById('tally').style.display = 'none';
+        document.getElementById('fetchingUserInfoMessage').style.display = 'block';
+
+        // get users and docs from db
+        const usersQuery = await getDocs(collection(db, "users"));
+        const tasksQuery = await getDocs(collection(db, "users", userID, "tasks"));
+
+        // map users and docs
+        const users = usersQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
+        const tasks = tasksQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
+
+        // find current user with locally stored user id
+        const currentUser = users.find(user => user.id === userID);
+
+        // set user information
+        setUsername(currentUser.username);
+        setPoints(currentUser.points);
         setTasks(tasks);
-        document.getElementById('fetchingTasksMessage').style.display = 'none';
+
+        // display information
+        document.getElementById('tally').style.display = 'block';
+        document.getElementById('fetchingUserInfoMessage').style.display = 'none';
+      }
+
+    const updatePoints = async (newPoints) => {
+        const user = doc(db, "users", userID);
+        await updateDoc(user, {
+            points: newPoints
+        })
+        setPoints(newPoints);
     }
 
     const showTaskAddBox = () => {
@@ -103,7 +127,7 @@ function TaskPage() {
             closeTaskAddBox();
     
             // Fetch the updated list of tasks from the database
-            getTasks();
+            getUserInfo();
     
             if (!isEditing) {
                 Swal.fire({
@@ -183,7 +207,7 @@ function TaskPage() {
             showConfirmButton: false,
             timer: 2500,
         }).then(result => {
-                // Don't reload the window
+            updatePoints(points + (task.diff * 10));
         });
     };
     
@@ -204,7 +228,7 @@ function TaskPage() {
         localStorage.removeItem("userID");
         Swal.fire({
             icon: 'info',
-            title: `${userID} has been logged out.`,
+            title: `${username} has been logged out.`,
             showCancelButton: false,
             confirmButtonText: "Yes.",
         }).then(result => {
@@ -219,7 +243,7 @@ function TaskPage() {
         <div className='taskPage'>
             <button id="logoutButton" onClick={handleLogout}>Logout</button>
             <h1>Task Garden Task View Page</h1>
-            {userID && (<h3>Logged in as: {userID}</h3>)}
+            {userID && (<h3>Logged in as: {username}</h3>)}
             <div id="tally">You have {points} Points!</div>
             <p id='pageDesc'>
                 Here you can view the list of tasks you've added, the date and time they are to be completed (if applicable),
@@ -249,7 +273,7 @@ function TaskPage() {
                 </div>
             )}
             <h3>Current Task List:</h3>
-            <h2 id='fetchingTasksMessage' style={{display: 'none'}}>Fetching tasks...</h2>
+            <h1 id='fetchingUserInfoMessage' style={{display: 'none'}}>Fetching user info...</h1>
             {tasks.map((task) => (
                 <div key={task.id} className="task-item">
                     <div className="card-body">

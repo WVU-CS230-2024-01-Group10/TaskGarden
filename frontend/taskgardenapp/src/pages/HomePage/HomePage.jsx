@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import './Homepage.css'; 
 import { Link } from 'react-router-dom'; // Import Link component
-import axios from 'axios';
-import { useAuth } from '../../contexts/authContext';
+// import { useAuth } from '../../contexts/authContext';
+
+// firestore imports
+import { db } from '../../firebase/firebase';
+import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 function HomePage() {
     const [plantType, setPlantType] = useState("succulent");
     const [points, setPoints] = useState(0);
     const [stage, setStage] = useState(1);
     // const { currentUser } = useAuth();
+
+    // get user ID from localStorage
+    const userID = localStorage.getItem("userID");
 
     useEffect(() => {
         const storedPlantType = localStorage.getItem("plantType");
@@ -20,27 +26,29 @@ function HomePage() {
         const storedStage = localStorage.getItem("stage");
         if (storedStage) setStage(JSON.parse(storedStage));
 
-        updateView();
+        getPoints(); // fetch points from db
         console.log(points);
     }, [points]);
 
-    // fetch points from db
-    useEffect(() => {
-        const fetchPoints = async () => {
-            try {
-                const res = await axios.get("http://localhost:3500/points");
-                console.log("Points: " + res.data.points)
-                setPoints(res.data.points);
-            } catch (err) {
-                console.log(err);
-            }
-        };
+    /* function getPoints (version 4/16/24)
+    * author: C. Jones
+    * this function retrieves the user's point count from the db */
+    const getPoints = async () => {
+        const usersQuery = await getDocs(collection(db, "users"));
+        const users = usersQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
+        const currentUser = users.find(user => user.id === userID);
+        setPoints(currentUser.points);
+    }
 
-        fetchPoints();
-    }, []);
-
-    function updateView() {
-        // i'm not sure how this one converts to react
+    /* function updatePoints (version 4/16/24)
+    * author: C. Jones
+    * this function updates the user's point count within the db */
+    const updatePoints = async (newPoints) => {
+        const user = doc(db, "users", userID);
+        await updateDoc(user, {
+            points: newPoints
+        })
+        setPoints(newPoints);
     }
 
    async function upgradePlant() {
@@ -54,8 +62,7 @@ function HomePage() {
                 setPoints(prevPoints => prevPoints - 100);
                 localStorage.setItem("stage", stage + 1);
                 localStorage.setItem("points", points - 100);
-                const res = await axios.post('http://localhost:3500/points', {points: points - 100});
-                updateView();
+                updatePoints(points - 100);
             } catch (err) {
                 console.log(err);
             }
