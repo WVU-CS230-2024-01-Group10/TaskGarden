@@ -11,7 +11,7 @@ import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase
 function HomePage() {
     const [username, setUsername] = useState('');
     const [plantType, setPlantType] = useState("succulent");
-    const [points, setPoints] = useState(400);
+    const [points, setPoints] = useState(0);
     const [stage, setStage] = useState(1);
     const navigate = useNavigate();
     // const { currentUser } = useAuth();
@@ -127,19 +127,21 @@ function HomePage() {
     }
 
     return (
-        <div class = "background">
-        <div id='container' className="container">
-            {/* <h3>Hello, {currentUser.displayName ? currentUser.displayName : currentUser.email}!</h3> */}
+        <body className="background">
             <div className="plant-view">
-                Plant Here
-                <img src={plantImages[`${plantType}_s${stage}`]} alt={`${plantType} stage ${stage}`} /> 
+                <img className="plant" src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
+            </div>
+        <div className="container">
+            {/* <h3>Hello, {currentUser.displayName ? currentUser.displayName : currentUser.email}!</h3> */}
+            {/* <div className="plant-view">
                 <button onClick={upgradePlant}>Upgrade for 100 points</button>
                 <p>(reset button for dev purposes)</p>
                 <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
+                <button onClick={() => {localStorage.setItem("points", 10000)}}>Get points</button>
                 <p>Your Points: {points}</p>
-            </div>
+            </div> */}
             <div>
-                <div id="plantButtonDiv"><button id="selectPlantButton" onClick={showPlantSelect}>Select Plant</button></div>
+                <div id="plantButtonDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showPlantSelect}>Select Plant</button></div>
                 {plantSelectVisible && (
                     <div id="plantSelectBox" className="popup">
                         <h2>Select Plant</h2>
@@ -156,15 +158,15 @@ function HomePage() {
                         </form>
                     </div>
                 )}
-                </div>
-            <div className="link-board">
+            </div>
+            {/* <div className="link-board">
                 <Link className="link" id="taskPageLink" to="/tasks">Task List</Link>
                 <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
                 <Link className="link" id="studyPageLink" to="/study">Study</Link>
-                <button onClick={handleLogout}>Logout</button>
-            </div>
+                <Link className="link" id="loginPageLink" to="/login">Logout</Link>
+            </div> */}
         </div>
-    </div>
+        </body>
     );
 }
 
