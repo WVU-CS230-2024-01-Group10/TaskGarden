@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/profileStyles.css'; 
+import './profileStyles.css'; 
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase/firebase';
+import { db } from '../../firebase/firebase';
 import {  useNavigate } from 'react-router-dom'; // Import Link component
 import Swal from 'sweetalert2';
 
@@ -75,7 +75,7 @@ function ProfilePage() {
                 </div>
                 <div className="item2">
                     <h2>Current plant: Flower</h2>
-                    <img src="https://raw.githubusercontent.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/main/PNG%20Images/png%20Flower%20Stage%205.png?token=GHSAT0AAAAAACMOJD2MITKTB4GJ6LPLF5O2ZQQPF2A" alt="Plant" />
+                    <img src="../img/plants/succulent_s1.png" alt="Plant" />
                 </div>
                 <div className="item3">
                     <button type="button" className="deleteAccBtn">Delete Account</button>

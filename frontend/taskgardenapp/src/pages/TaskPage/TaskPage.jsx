@@ -240,8 +240,9 @@ function TaskPage() {
 
     return (
         <div id='container' className='taskPage'>
-            <button id="logoutButton" onClick={handleLogout}>Logout</button>
-            <h1>Task Garden Task View Page</h1>
+            <div style={{ margin: '15px' }} >
+                <h1>Task Garden Task View Page</h1>
+            </div>
             {userID && (<h3>Logged in as: {username}</h3>)}
             <div id="tally">You have {points} Points!</div>
             <p id='pageDesc'>
