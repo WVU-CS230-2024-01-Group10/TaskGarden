@@ -126,7 +126,7 @@ function HomePage() {
             {/* <h3>Hello, {currentUser.displayName ? currentUser.displayName : currentUser.email}!</h3> */}
             <div className="plant-view">
                 Plant Here
-                <img src={plantImages[`${plantType}_s${stage}`]} alt={`${plantType} stage ${stage}`} /> //remove .png to get css names of the plants
+                <img src={plantImages[`${plantType}_s${stage}`]} alt={`${plantType} stage ${stage}`} /> 
                 <button onClick={upgradePlant}>Upgrade for 100 points</button>
                 <p>(reset button for dev purposes)</p>
                 <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
