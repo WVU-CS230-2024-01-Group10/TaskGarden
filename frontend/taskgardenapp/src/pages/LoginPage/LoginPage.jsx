@@ -17,6 +17,10 @@ function LoginPage() {
 
   // const { setUser } = useContext(UserContext);
 
+  useEffect(() => {
+    getUsers();
+  }, [])
+
   const navigate = useNavigate(); 
 
   const getUsers = async () => {
@@ -27,7 +31,6 @@ function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    getUsers();
     document.getElementById('container').style.display = 'none';
   
     const currentUser = users.find(user => user.email === email);
