@@ -28,16 +28,16 @@ function TaskPage() {
     // const auth = getAuth();
     // auth.useDeviceLanguage();
 
-    // get user from localStorage
-    const username = localStorage.getItem("username");
-    const email = localStorage.getItem("email");
+    // get user ID from localStorage
+    const userID = localStorage.getItem("userID");
 
     // fetch tasks from db, only if user is logged in
     useEffect(() => {
-        if (!username) {
+        if (!userID) {
             navigate('/login');
         } else {
-            console.log(username);
+            // getUser();
+            console.log("Logged in as: " + userID);
             getTasks();
         }
     }, [])
@@ -54,7 +54,12 @@ function TaskPage() {
     // get tasks function
     const getTasks = async () => {
         document.getElementById('fetchingTasksMessage').style.display = 'block';
-        const querySnapshot = await getDocs(collection(db, "tasks"));
+
+        // test
+        const querySnapshot = await getDocs(collection(db, "users", userID, "tasks"));
+        querySnapshot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+        })
         const tasks = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
         setTasks(tasks);
         document.getElementById('fetchingTasksMessage').style.display = 'none';
@@ -94,7 +99,7 @@ function TaskPage() {
         if (newTask.desc === "") { newTask.desc = "This task has no description" };
     
         try {
-            await addDoc(collection(db, "tasks"), {...newTask});
+            await addDoc(collection(db, "users", userID, "tasks"), {...newTask});
             closeTaskAddBox();
     
             // Fetch the updated list of tasks from the database
@@ -137,7 +142,7 @@ function TaskPage() {
                 const [task] = tasks.filter(task => task.id === taskId);
     
                 // remove from firebase
-                deleteDoc(doc(db, "tasks", taskId)).then(() => {
+                deleteDoc(doc(db, "users", userID, "tasks", taskId)).then(() => {
                     // Update the task list state after deleting the task
                     setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
     
@@ -158,7 +163,7 @@ function TaskPage() {
     const removeWithoutAsking = (taskId) => {
         const [task] = tasks.filter(task => task.id === taskId)
             // delete from firebase
-            deleteDoc(doc(db, "tasks", taskId));
+            deleteDoc(doc(db, "users", userID, "tasks", taskId));
     }
 
     const completeTask = async (taskId) => {
@@ -196,11 +201,10 @@ function TaskPage() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("username");
-        localStorage.removeItem("email");
+        localStorage.removeItem("userID");
         Swal.fire({
             icon: 'info',
-            title: `${username} has been logged out.`,
+            title: `${userID} has been logged out.`,
             showCancelButton: false,
             confirmButtonText: "Yes.",
         }).then(result => {
@@ -215,7 +219,7 @@ function TaskPage() {
         <div className='taskPage'>
             <button id="logoutButton" onClick={handleLogout}>Logout</button>
             <h1>Task Garden Task View Page</h1>
-            {username && (<h3>Logged in as: {username}</h3>)}
+            {userID && (<h3>Logged in as: {userID}</h3>)}
             <div id="tally">You have {points} Points!</div>
             <p id='pageDesc'>
                 Here you can view the list of tasks you've added, the date and time they are to be completed (if applicable),

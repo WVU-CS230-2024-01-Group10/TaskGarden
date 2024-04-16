@@ -43,8 +43,7 @@ function LoginPage() {
       });
     } else {
       // setUser(currentUser);
-      localStorage.setItem("username", currentUser.username);
-      localStorage.setItem("email", currentUser.email);
+      localStorage.setItem("userID", currentUser.id);
       Swal.fire({
         icon: 'success',
         title: 'Logged in!',
