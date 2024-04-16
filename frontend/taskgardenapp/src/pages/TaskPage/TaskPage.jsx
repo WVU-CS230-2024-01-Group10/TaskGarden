@@ -238,7 +238,7 @@ function TaskPage() {
     }
 
     return (
-        <div className='taskPage'>
+        <div id='container' className='taskPage'>
             <button id="logoutButton" onClick={handleLogout}>Logout</button>
             <h1>Task Garden Task View Page</h1>
             {userID && (<h3>Logged in as: {username}</h3>)}

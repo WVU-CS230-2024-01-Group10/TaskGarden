@@ -21,7 +21,6 @@ function HomePage() {
     // get user ID from localStorage
     const userID = localStorage.getItem("userID");
 
-
     // Import all plant images dynamically
     const importAll = (r) => {
         let images = {};
@@ -31,6 +30,14 @@ function HomePage() {
     const plantImages = importAll(require.context('../../img/plants', false, /\.(png|jpe?g|svg)$/));
     
     useEffect(() => {
+
+        if (!userID) {
+            navigate('/login');
+        } else {
+            getPoints();
+            console.log("Logged in as: " + username);
+        }
+
         const storedPlantType = localStorage.getItem("plantType");
         if (storedPlantType) setPlantType(JSON.parse(storedPlantType));
 
@@ -40,7 +47,6 @@ function HomePage() {
         const storedStage = localStorage.getItem("stage");
         if (storedStage) setStage(JSON.parse(storedStage));
 
-        getPoints(); // fetch points from db
         console.log("useEffect running. points: " + points);
     }, []);
 
@@ -122,7 +128,7 @@ function HomePage() {
 
     return (
         <div class = "background">
-        <div className="container">
+        <div id='container' className="container">
             {/* <h3>Hello, {currentUser.displayName ? currentUser.displayName : currentUser.email}!</h3> */}
             <div className="plant-view">
                 Plant Here
