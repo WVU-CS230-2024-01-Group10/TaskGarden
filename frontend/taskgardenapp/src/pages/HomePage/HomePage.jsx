@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import './Homepage.css'; 
-import { Link } from 'react-router-dom'; // Import Link component
-import axios from 'axios';
-import { useAuth } from '../../contexts/authContext';
+import { Link, useNavigate } from 'react-router-dom'; // Import Link component
+import Swal from 'sweetalert2';
+// import { useAuth } from '../../contexts/authContext';
+
+// firestore imports
+import { db } from '../../firebase/firebase';
+import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 function HomePage() {
+    const [username, setUsername] = useState('');
     const [plantType, setPlantType] = useState("succulent");
     const [points, setPoints] = useState(0);
     const [stage, setStage] = useState(1);
+    const navigate = useNavigate();
     // const { currentUser } = useAuth();
     const [plantSelectVisible, setPlantSelectVisible] = useState(false);
+
+
+    // get user ID from localStorage
+    const userID = localStorage.getItem("userID");
 
     // Import all plant images dynamically
     const importAll = (r) => {
@@ -20,6 +30,14 @@ function HomePage() {
     const plantImages = importAll(require.context('../../img/plants', false, /\.(png|jpe?g|svg)$/));
     
     useEffect(() => {
+
+        if (!userID) {
+            navigate('/login');
+        } else {
+            getPoints();
+            console.log("Logged in as: " + username);
+        }
+
         const storedPlantType = localStorage.getItem("plantType");
         if (storedPlantType) setPlantType(JSON.parse(storedPlantType));
 
@@ -29,24 +47,34 @@ function HomePage() {
         const storedStage = localStorage.getItem("stage");
         if (storedStage) setStage(JSON.parse(storedStage));
 
-        updateView();
-        console.log(points);
-    }, [points]);
-
-    // fetch points from db
-    useEffect(() => {
-        const fetchPoints = async () => {
-            try {
-                const res = await axios.get("http://localhost:3500/points");
-                console.log("Points: " + res.data.points)
-                setPoints(res.data.points);
-            } catch (err) {
-                console.log(err);
-            }
-        };
-
-        fetchPoints();
+        console.log("useEffect running. points: " + points);
     }, []);
+
+    /* function getPoints (version 4/16/24)
+    * author: C. Jones
+    * this function retrieves the user's point count from the db */
+    const getPoints = async () => {
+        const usersQuery = await getDocs(collection(db, "users"));
+        const users = usersQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
+        const currentUser = users.find(user => user.id === userID);
+
+        // set username and points
+        setUsername(currentUser.username);
+        if (currentUser.points === undefined || currentUser.points === 'NaN')
+        setPoints(0);
+        else setPoints(currentUser.points);
+    }
+
+    /* function updatePoints (version 4/16/24)
+    * author: C. Jones
+    * this function updates the user's point count within the db */
+    const updatePoints = async (newPoints) => {
+        const user = doc(db, "users", userID);
+        await updateDoc(user, {
+            points: newPoints
+        })
+        setPoints(newPoints);
+    }
 
     const showPlantSelect = () => {
         setPlantType(plantType);
@@ -56,10 +84,6 @@ function HomePage() {
     const closePlantSelect = () => {
         setPlantSelectVisible(false);
     };
-
-    function updateView() {
-        // i'm not sure how this one converts to react
-    }
 
     async function selectPlant() {
         setPlantType();
@@ -76,14 +100,30 @@ function HomePage() {
                 setPoints(prevPoints => prevPoints - 100);
                 localStorage.setItem("stage", stage + 1);
                 localStorage.setItem("points", points - 100);
-                const res = await axios.post('http://localhost:3500/points', {points: points - 100});
-                updateView();
+                updatePoints(points - 100);
             } catch (err) {
                 console.log(err);
             }
         } else {
             console.log("not enough points to upgrade plant");
         }
+    }
+
+    /* function handleLogout (version 4/16/24)
+    * author: C. Jones
+    * this function removes the user's ID from local storage and notifies them */
+    const handleLogout = () => {
+        localStorage.removeItem("userID");
+        document.getElementById('container').style.display = 'none';
+        Swal.fire({
+            icon: 'info',
+            title: `${username} has been logged out.`,
+            showCancelButton: false
+        }).then(result => {
+            // doSignOut().then(() => {
+                navigate('/login');
+            // });
+        })
     }
 
     return (
