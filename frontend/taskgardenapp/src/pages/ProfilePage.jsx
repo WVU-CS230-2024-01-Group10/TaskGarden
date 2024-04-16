@@ -1,10 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/profileStyles.css'; 
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase/firebase';
+import {  useNavigate } from 'react-router-dom'; // Import Link component
 
 // Need to implement db operations to fetch user info
 
 
 function ProfilePage() {
+
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+
+    const userID = localStorage.getItem("userID");
+    const navigate = useNavigate();
+
+    // fetch user info from db, only if user is logged in
+    useEffect(() => {
+        if (!userID) {
+            navigate('/login');
+        } else {
+            getUserInfo();
+            console.log("Logged in as: " + username);
+        }
+    }, [])
+
+    /* function getUserInfo (version 4/16/24)
+    * author: C. Jones
+    * this function retrieves information about the user that is relevant to the task page. (username, tasks, points) */
+    const getUserInfo = async () => {
+
+        // get users and docs from db
+        const usersQuery = await getDocs(collection(db, "users"));
+
+        // map users and docs
+        const users = usersQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
+
+        // find current user with locally stored user id
+        const currentUser = users.find(user => user.id === userID);
+
+        // set user information
+        setUsername(currentUser.username);
+        setEmail(currentUser.email);
+      }
 
     return (
         <div className="ProfilePage">
@@ -12,9 +50,8 @@ function ProfilePage() {
             <div className="gridContainer">
                 <div className="item1">
                     <h2>Account Information</h2>
-                    <p>Name: John Doe</p>
-                    <p>Username: JohnDoe123</p>
-                    <p>Email: example@gmail.com</p>
+                    <p>Username: {username}</p>
+                    <p>Email: {email}</p>
                     <button type="button" className="change">Change email</button>
                     <button type="button" className="change">Change password</button>
                     <h2 className="achievementsLabel">Achievements</h2>
