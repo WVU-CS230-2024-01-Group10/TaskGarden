@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth';
-import UserContext from '../../contexts/UserContext';
+// version 4/15/24 - all commented code is broken auth stuff
+
+import React, { useState, useEffect, /* useContext */ } from 'react';
+// import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth';
+// import UserContext from '../../contexts/UserContext';
 import './taskStyles.css';
 import { Link, useNavigate } from 'react-router-dom'; // Import Link component
-import { doSignOut } from '../../firebase/auth';
+// import { doSignOut } from '../../firebase/auth';
 import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
 
-/*Currently able to add, edit, remove, and complete tasks, BUT they don't save to localStorage. */
 function TaskPage() {
-    const { user } = useContext(UserContext);
+    // const { user } = useContext(UserContext); part of broken auth code 
     const [tasks, setTasks] = useState([]);
     const [points, setPoints] = useState(0);
     const [titleInput, setTitleInput] = useState('');
@@ -24,50 +25,40 @@ function TaskPage() {
     const navigate = useNavigate();
 
     // google auth
-    const auth = getAuth();
-    auth.useDeviceLanguage();
+    // const auth = getAuth();
+    // auth.useDeviceLanguage();
+
+    // get user from localStorage
+    const username = localStorage.getItem("username");
+    const email = localStorage.getItem("email");
 
     // fetch tasks from db, only if user is logged in
     useEffect(() => {
-        if (!user) {
+        if (!username) {
             navigate('/login');
         } else {
-            console.log(user);
+            console.log(username);
             getTasks();
         }
     }, [])
 
     // allow the user to stay signed in on refresh
-        setPersistence(auth, browserSessionPersistence)
-        .then(() => {
-            // Authentication state will persist across browser sessions
-    })
-        .catch((error) => {
-            console.log(error);
-    });
+    //     setPersistence(auth, browserSessionPersistence)
+    //     .then(() => {
+    //         // Authentication state will persist across browser sessions
+    // })
+    //     .catch((error) => {
+    //         console.log(error);
+    // });
 
     // get tasks function
     const getTasks = async () => {
+        document.getElementById('fetchingTasksMessage').style.display = 'block';
         const querySnapshot = await getDocs(collection(db, "tasks"));
         const tasks = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
         setTasks(tasks);
+        document.getElementById('fetchingTasksMessage').style.display = 'none';
     }
-
-    // fetch points from db
-    // OLD SQL CODE
-    // useEffect(() => {
-    //     const fetchPoints = async () => {
-    //         try {
-    //             const res = await axios.get("http://localhost:3500/points");
-    //             console.log("Points: " + res.data.points)
-    //             setPoints(res.data.points);
-    //         } catch (err) {
-    //             console.log(err);
-    //         }
-    //     };
-
-    //     fetchPoints();
-    // }, []);
 
     const showTaskAddBox = () => {
         setTitleInput('');
@@ -205,26 +196,26 @@ function TaskPage() {
     };
 
     const handleLogout = () => {
+        localStorage.removeItem("username");
+        localStorage.removeItem("email");
         Swal.fire({
             icon: 'info',
-            title: `${user.username} has been logged out.`,
+            title: `${username} has been logged out.`,
             showCancelButton: false,
             confirmButtonText: "Yes.",
         }).then(result => {
-            doSignOut().then(() => {
+            // doSignOut().then(() => {
                 navigate('/login');
-            });
+            // });
         })
         
     }
 
     return (
         <div className='taskPage'>
-            <div>
             <button id="logoutButton" onClick={handleLogout}>Logout</button>
-            </div>
             <h1>Task Garden Task View Page</h1>
-            {user && (<h3>Logged in as: {user.username}</h3>)}
+            {username && (<h3>Logged in as: {username}</h3>)}
             <div id="tally">You have {points} Points!</div>
             <p id='pageDesc'>
                 Here you can view the list of tasks you've added, the date and time they are to be completed (if applicable),
@@ -254,6 +245,7 @@ function TaskPage() {
                 </div>
             )}
             <h3>Current Task List:</h3>
+            <h2 id='fetchingTasksMessage' style={{display: 'none'}}>Fetching tasks...</h2>
             {tasks.map((task) => (
                 <div key={task.id} className="task-item">
                     <div className="card-body">

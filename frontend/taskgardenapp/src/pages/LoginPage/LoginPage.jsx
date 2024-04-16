@@ -1,10 +1,12 @@
+// version 4/15/24 - all commented code is broken auth stuff
+
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
 import './loginStyles.css';
-import UserContext from '../../contexts/UserContext';
+// import UserContext from '../../contexts/UserContext';
 
 function LoginPage() {
 
@@ -13,7 +15,7 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
 
-  const { setUser } = useContext(UserContext);
+  // const { setUser } = useContext(UserContext);
 
   const navigate = useNavigate(); 
 
@@ -40,8 +42,9 @@ function LoginPage() {
         document.getElementById('container').style.display = 'block';
       });
     } else {
-      setUser(currentUser);
-      localStorage.setItem("user", currentUser)
+      // setUser(currentUser);
+      localStorage.setItem("username", currentUser.username);
+      localStorage.setItem("email", currentUser.email);
       Swal.fire({
         icon: 'success',
         title: 'Logged in!',
