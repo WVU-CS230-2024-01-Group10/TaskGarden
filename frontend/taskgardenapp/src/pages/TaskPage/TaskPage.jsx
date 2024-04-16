@@ -151,25 +151,8 @@ function TaskPage() {
         } catch (err) {
             console.log(err);
         }
-
-        // reload the window to show the new task
-        window.location.reload();
-    };
-
-    const congratulate = () => {
-        const congratsElement = document.getElementById('congrats');
-        congratsElement.classList.remove('hidden');
-        congratsElement.classList.add('visible');
-
-        setTimeout(function () {
-            congratsElement.classList.remove('visible');
-            congratsElement.classList.add('hidden');
-            window.location.reload();
-        }, 1000);
     };
     
-    
-
     const removeTask = async (taskId) => {
         Swal.fire({
             icon: 'warning',

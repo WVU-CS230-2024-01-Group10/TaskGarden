@@ -28,7 +28,7 @@ function HomePage() {
         r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
         return images;
     };
-    const plantImages = importAll(require.context('../img/plants', false, /\.(png|jpe?g|svg)$/));
+    const plantImages = importAll(require.context('../../img/plants', false, /\.(png|jpe?g|svg)$/));
     
     useEffect(() => {
         const storedPlantType = localStorage.getItem("plantType");
