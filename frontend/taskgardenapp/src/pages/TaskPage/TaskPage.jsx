@@ -296,14 +296,14 @@ function TaskPage() {
             <div id="openNavBoxDiv"><button id="openNavBox" onClick={showNavBox}>Pages</button></div>
             {navBoxVisible && (
                 <div id="navBox" className="popup">
-                <h3>Task Garden Navigation</h3>
-                <Link className="link" id="homePageLink" to="/home">Home</Link>
-                <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
-                <Link className="link" id="studyPageLink" to="/study">Study</Link>
-                <Link className="link" id="profilePageLink" to="/profile">Profile</Link>
-                <button onClick={handleLogout}>Logout</button>
-                <button type="button" onClick={closeNavBox}>Cancel</button>
-            </div>
+                    <h3>Task Garden Navigation</h3>
+                    <Link className="link" id="homePageLink" to="/home">Home</Link>
+                    <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
+                    <Link className="link" id="studyPageLink" to="/study">Study</Link>
+                    <Link className="link" id="profilePageLink" to="/profile">Profile</Link>
+                    <button onClick={handleLogout}>Logout</button>
+                    <button type="button" onClick={closeNavBox}>Cancel</button>
+                </div>
             )}
         </div>
     );

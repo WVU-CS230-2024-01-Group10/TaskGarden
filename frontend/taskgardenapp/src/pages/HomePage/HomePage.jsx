@@ -16,6 +16,7 @@ function HomePage() {
     const navigate = useNavigate();
     // const { currentUser } = useAuth();
     const [plantSelectVisible, setPlantSelectVisible] = useState(false);
+    const [navBoxVisible, setNavBoxVisible] = useState(false);
 
 
     // get user ID from localStorage
@@ -85,8 +86,16 @@ function HomePage() {
         setPlantSelectVisible(false);
     };
 
+    const showNavBox = () => {
+        setNavBoxVisible(true);
+    }
+
+    const closeNavBox = () => {
+        setNavBoxVisible(false);
+    };
+
     async function selectPlant() {
-        setPlantType();
+        setPlantType(document.getElementById("plantTypeSelect").value);
     }
 
     async function upgradePlant() {
@@ -147,7 +156,7 @@ function HomePage() {
                         <h2>Select Plant</h2>
                         <form id="plantInfo">
                             <label htmlFor="title">Plant Type</label>
-                            <select name="plantTypeSelect" id="plantTypeSelect"  value={plantType}>
+                            <select name="plantTypeSelect" id="plantTypeSelect">
                                 <option value="cactus">Cactus</option>
                                 <option value="flower">Flower</option>
                                 <option value="pothos">Pothos</option>
@@ -157,6 +166,18 @@ function HomePage() {
                             <button type="button" onClick={closePlantSelect}>Cancel</button>
                         </form>
                     </div>
+                )}
+                <div id="openNavBoxDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showNavBox}>Pages</button></div>
+                {navBoxVisible && (
+                <div id="navBox" className="popup">
+                    <h3>Task Garden Navigation</h3>
+                    <Link className="link" id="homePageLink" to="/home">Home</Link>
+                    <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
+                    <Link className="link" id="studyPageLink" to="/study">Study</Link>
+                    <Link className="link" id="profilePageLink" to="/profile">Profile</Link>
+                    <button onClick={handleLogout}>Logout</button>
+                    <button type="button" onClick={closeNavBox}>Cancel</button>
+                </div>
                 )}
             </div>
             {/* <div className="link-board">
