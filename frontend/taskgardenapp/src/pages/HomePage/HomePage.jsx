@@ -131,7 +131,7 @@ function HomePage() {
             <div className="plant-view">
                 <img className="plant" src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
             </div>
-        <div className="container">
+        <div className="plant-container container">
             {/* <h3>Hello, {currentUser.displayName ? currentUser.displayName : currentUser.email}!</h3> */}
             {/* <div className="plant-view">
                 <button onClick={upgradePlant}>Upgrade for 100 points</button>
