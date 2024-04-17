@@ -95,7 +95,7 @@ function HomePage() {
     };
 
     async function selectPlant() {
-        setPlantType(document.getElementById("plantTypeSelect").value);
+        // setPlantType(document.getElementById("plantTypeSelect").value.body);
     }
 
     async function upgradePlant() {
@@ -156,7 +156,7 @@ function HomePage() {
                         <h2>Select Plant</h2>
                         <form id="plantInfo">
                             <label htmlFor="title">Plant Type</label>
-                            <select name="plantTypeSelect" id="plantTypeSelect">
+                            <select name="plantTypeSelect" id="plantTypeSelect">{/* doesn't work */}
                                 <option value="cactus">Cactus</option>
                                 <option value="flower">Flower</option>
                                 <option value="pothos">Pothos</option>
@@ -167,6 +167,12 @@ function HomePage() {
                         </form>
                     </div>
                 )}
+
+                <button onClick={upgradePlant}>Upgrade (100 points)</button>
+                {/* <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
+                <button onClick={() => {updatePoints(1000)}}>Get points</button>
+                <button onClick={() => {console.log(points)}}>See points</button> */}
+
                 <div id="openNavBoxDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showNavBox}>Pages</button></div>
                 {navBoxVisible && (
                 <div id="navBox" className="popup">
@@ -179,6 +185,7 @@ function HomePage() {
                     <button type="button" onClick={closeNavBox}>Cancel</button>
                 </div>
                 )}
+                
             </div>
             {/* <div className="link-board">
                 <Link className="link" id="taskPageLink" to="/tasks">Task List</Link>
