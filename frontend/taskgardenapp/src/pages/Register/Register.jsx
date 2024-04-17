@@ -52,6 +52,7 @@ const Register = () =>
                 console.log(err);
             }
         } else {
+            document.getElementById('container').style.display = 'none'
             Swal.fire({
                 icon: 'info',
                 title: 'Account found.',

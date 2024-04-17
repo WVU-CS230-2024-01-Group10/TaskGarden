@@ -36,6 +36,7 @@
 }
 
 .resetStageDiv {
+  display: none;
   position: fixed;
   top: 125%;
   left: -400%; 
