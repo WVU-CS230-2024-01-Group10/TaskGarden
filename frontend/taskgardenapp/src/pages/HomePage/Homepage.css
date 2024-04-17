@@ -1,16 +1,45 @@
+.background {
+  background-color: #F9E3D0;
+  background-image: url("../../img/homepage.jpeg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
 
-.container {
-  border: 1px solid black;
+.plant-container {
+  position: absolute;
+  top: 25%;
+  left: 74%;
   margin: 1rem;
   padding: 2rem 2rem;
   text-align: center;
+  width: 20%;
+  background: none;
+  box-shadow: none;
+}
+
+.selectPlantButton {
+  width: 80%;
+  padding: 10px;
+  /* background: none;
+  color:peru;
+  border: none; */
+}
+
+.plant {
+  position: absolute;
+  bottom: 0px;
+  width: 20%;
+  transition: all 2s ease-in-out;
 }
 
 .plant-view {
   display: inline-block;
-  border: 1px solid red;
-  padding: 1rem 1rem;
   vertical-align: middle;
+  position: absolute;
+  top: 80%;
+  left: 39.5%;
+  width: 50%;
 }
 
 .link-board {
@@ -18,10 +47,6 @@
   border: 1px solid red;
   padding: 1rem 1rem;
   vertical-align: middle;
-}
-
-.background{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/Bare%20Homepage.jpeg?raw=true");
 }
 
 .watering_can{
