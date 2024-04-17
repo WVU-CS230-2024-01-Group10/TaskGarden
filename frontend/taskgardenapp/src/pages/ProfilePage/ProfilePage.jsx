@@ -16,6 +16,14 @@ function ProfilePage() {
     const userID = localStorage.getItem("userID");
     const navigate = useNavigate();
 
+    // Import all plant images dynamically
+    const importAll = (r) => {
+        let images = {};
+        r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
+        return images;
+    };
+    const plantImages = importAll(require.context('../../img/plants', false, /\.(png|jpe?g|svg)$/));
+
     // fetch user info from db, only if user is logged in
     useEffect(() => {
         if (!userID) {
@@ -60,7 +68,7 @@ function ProfilePage() {
 
     return (
         <div className="ProfilePage">
-            <h1 className="userLabel">Username</h1>
+            <h1 className="userLabel">My Profile</h1>
             <div id='container' className="gridContainer">
                 <div className="item1">
                     <h2>Account Information</h2>
@@ -69,13 +77,13 @@ function ProfilePage() {
                     <button type="button" className="change">Change email</button>
                     <button type="button" className="change">Change password</button>
                     <h2 className="achievementsLabel">Achievements</h2>
-                    <p>Total Tasks Completed: X</p>
-                    <p>Total Points Earned: X</p>
-                    <p>Total Plants Grown: X</p>
+                    <p>Total Tasks Completed: ...</p>
+                    <p>Total Points Earned: ...</p>
+                    <p>Total Plants Grown: 1</p>
                 </div>
                 <div className="item2">
-                    <h2>Current plant: Flower</h2>
-                    <img src="../img/plants/succulent_s1.png" alt="Plant" />
+                    <h2>Current plant: Succulent</h2>
+                    <img src={plantImages[`succulent_s1.png`]} alt="Succulent Stage 1" />
                 </div>
                 <div className="item3">
                     <button type="button" className="deleteAccBtn">Delete Account</button>

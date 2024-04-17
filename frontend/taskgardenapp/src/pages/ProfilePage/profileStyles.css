@@ -4,6 +4,10 @@
     align-items: center;
 }
 
+.plantImage {
+  background-image: url("../../img/plants/succulent_s1.png");
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #b49673;

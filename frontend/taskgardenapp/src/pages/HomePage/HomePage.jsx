@@ -135,13 +135,20 @@ function HomePage() {
         })
     }
 
+    // function resetStage for development purposes
+    const resetStage = () => {
+        setStage(1);
+        localStorage.setItem("stage", 1);
+    }
+
     return (
         <body className="background">
             <div className="plant-view">
                 <img className="plant" src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
             </div>
-        <div className="plant-container container">
-            {/* <h3>Hello, {currentUser.displayName ? currentUser.displayName : currentUser.email}!</h3> */}
+        <div id='container' className="plant-container container">
+            <div id='greeting'><h3>{username}'s Room</h3></div>
+            <div id='message'><h3>Welcome to Task Garden! Use the buttons above to edit your plant, or navigate to a different page.</h3></div>
             {/* <div className="plant-view">
                 <button onClick={upgradePlant}>Upgrade for 100 points</button>
                 <p>(reset button for dev purposes)</p>
@@ -168,23 +175,31 @@ function HomePage() {
                     </div>
                 )}
 
-                <button onClick={upgradePlant}>Upgrade (100 points)</button>
+                <button id='upgradePlantButton' onClick={upgradePlant}>Upgrade (100 points)</button>
                 {/* <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
                 <button onClick={() => {updatePoints(1000)}}>Get points</button>
                 <button onClick={() => {console.log(points)}}>See points</button> */}
 
                 <div id="openNavBoxDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showNavBox}>Pages</button></div>
                 {navBoxVisible && (
-                <div id="navBox" className="popup">
+                <div id="homePageNavBox" className="popup">
                     <h3>Task Garden Navigation</h3>
-                    <Link className="link" id="homePageLink" to="/home">Home</Link>
-                    <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
-                    <Link className="link" id="studyPageLink" to="/study">Study</Link>
+                    <Link className="link" id="taskPageLink" to="/tasks">Tasks</Link>
+                    {/* <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link> */}
+                    {/* <Link className="link" id="studyPageLink" to="/study">Study</Link> */}
                     <Link className="link" id="profilePageLink" to="/profile">Profile</Link>
                     <button onClick={handleLogout}>Logout</button>
                     <button type="button" onClick={closeNavBox}>Cancel</button>
                 </div>
                 )}
+                <div id="pointsBox" className="pointsBox">
+                    <h3>Your Points:</h3>
+                    <h1 style={{marginTop: "15px"}}>{points}</h1>
+                </div>
+                <div id="resetStageDiv" className="resetStageDiv">
+                    <h4>Reset Stage (for dev purposes)</h4>
+                    <button onClick={resetStage}>Reset</button>  
+                </div>
                 
             </div>
             {/* <div className="link-board">
