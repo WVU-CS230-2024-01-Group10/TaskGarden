@@ -241,14 +241,13 @@ function TaskPage() {
     return (
         <div id='container' className='taskPage'>
             <div style={{ margin: '15px' }} >
-                <h1>Task Garden Task View Page</h1>
+                <h1>🪴Task Garden🪴</h1>
             </div>
             {userID && (<h3>Logged in as: {username}</h3>)}
-            <div id="tally">You have {points} Points!</div>
-            <p id='pageDesc'>
-                Here you can view the list of tasks you've added, the date and time they are to be completed (if applicable),
-                the difficulty level, and how many points will be awarded for completing it.
-            </p>
+            <div id="tally" className>You have <br></br>{points} Points!</div>
+            <h2>
+                Task Management Made Easy!
+            </h2>
             <h3>Click the button below to add a new task!</h3>
             <div id="taskButtonDiv"><button id="addTaskButton" onClick={showTaskAddBox}>Add a Task!</button></div>
             {taskAddBoxVisible && (

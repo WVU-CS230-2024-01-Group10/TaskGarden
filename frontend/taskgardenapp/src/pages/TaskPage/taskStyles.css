@@ -12,9 +12,25 @@ body {
     box-shadow: 0 0 0 10px #050505;
 }
 
-h1, h2, h3 {
+h1{
+    font-size: 50px;
     color: #52412c;
     text-align: center;
+}
+
+h2 {
+    color: #52412c;
+    text-align: center;
+    padding-top: 20px;
+}
+
+h3 {
+    color: #52412c;
+    text-align: center;
+}
+
+.loggedInAs{
+    text-align: right;
 }
 
 p {
@@ -233,6 +249,15 @@ button[type="button"]:hover {
 }
 
 #tally {
-    margin-right:5px;
-    text-align: right;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-450%, -400%);
+    background-color: rgb(255, 243, 228);
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    height: fit-content;
+    width: 10vw;
 }
