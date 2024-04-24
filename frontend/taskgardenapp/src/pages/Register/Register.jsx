@@ -3,6 +3,7 @@ import { Navigate, Link, useNavigate } from 'react-router-dom'
 import { addDoc, getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
+import './register.css';
 
 const Register = () =>
 {

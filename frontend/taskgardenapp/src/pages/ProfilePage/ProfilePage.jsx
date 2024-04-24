@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './profileStyles.css'; 
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import {  useNavigate } from 'react-router-dom'; // Import Link component
 import Swal from 'sweetalert2';
@@ -70,6 +70,38 @@ function ProfilePage() {
         })
     }
 
+    const handleAcctDelete = async () => {
+        try {
+            // Reference to the user document
+            const userDocRef = doc(db, 'users', userID);
+    
+            // Delete the user document
+            await deleteDoc(userDocRef);
+    
+            // Remove the user ID from local storage
+            localStorage.removeItem("userID");
+    
+            // Display a confirmation message
+            Swal.fire({
+                icon: 'success',
+                title: 'Account Deleted Successfully',
+                text: 'Your account has been deleted.',
+                showCancelButton: false
+            }).then(result => {
+                // Navigate to the login page
+                navigate('/login');
+            });
+        } catch (error) {
+            // Display an error message if deletion fails
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed to Delete Account',
+                text: 'An error occurred while deleting your account. Please try again later.',
+                showCancelButton: false
+            });
+        }
+    }
+
     return (
         <div className="ProfilePage">
             <h1 className="userLabel">My Profile</h1>
@@ -90,7 +122,7 @@ function ProfilePage() {
                     <img src={plantImages[`succulent_s1.png`]} alt="Succulent Stage 1" />
                 </div>
                 <div className="item3">
-                    <button type="button" className="deleteAccBtn">Delete Account</button>
+                    <button onClick={handleAcctDelete} type="button" className="deleteAccBtn">Delete Account</button>
                     <p className="alert">*Account cannot be recovered after deletion.</p>
                 </div>
                 <div className="item4">
