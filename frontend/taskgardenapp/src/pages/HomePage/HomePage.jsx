@@ -98,18 +98,22 @@ function HomePage() {
         // setPlantType(document.getElementById("plantTypeSelect").value.body);
     }
 
+    //create map for level upgrade points
+    const nxtStagePoints = new Map([ [1, 250], [2, 500], [3, 750], [4, 1000], [5, 'max level'] ]);
+    
     async function upgradePlant() {
+        let lvlPoints = nxtStagePoints.get(stage);
         if (stage === 5) {
             console.log("plant is at maximum stage");
             return;
         }
-        if (points >= 100) {
+        if (points >= lvlPoints) {
             try {
                 setStage(prevStage => prevStage + 1);
-                setPoints(prevPoints => prevPoints - 100);
+                setPoints(prevPoints => prevPoints - lvlPoints);
                 localStorage.setItem("stage", stage + 1);
-                localStorage.setItem("points", points - 100);
-                updatePoints(points - 100);
+                localStorage.setItem("points", points - lvlPoints);
+                updatePoints(points - lvlPoints);
             } catch (err) {
                 console.log(err);
             }
@@ -175,7 +179,7 @@ function HomePage() {
                     </div>
                 )}
 
-                <button id='upgradePlantButton' onClick={upgradePlant}>Upgrade (100 points)</button>
+                <button id='upgradePlantButton' onClick={upgradePlant}>Upgrade (nxtStagePoints.get(stage) points)</button>
                 {/* <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
                 <button onClick={() => {updatePoints(1000)}}>Get points</button>
                 <button onClick={() => {console.log(points)}}>See points</button> */}
