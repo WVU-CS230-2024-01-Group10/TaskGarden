@@ -24,6 +24,8 @@ function TaskPage() {
     const [navBoxVisible, setNavBoxVisible] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const navigate = useNavigate();
+    const [completedTotal, setCompletedTotal] = useState(0);
+    const [allTimePoints, setAllTimePoints] = useState(0);
 
     // google auth
     // const auth = getAuth();
@@ -71,11 +73,25 @@ function TaskPage() {
         // find current user with locally stored user id
         const currentUser = users.find(user => user.id === userID);
 
-        // set user information
+        // set username
         setUsername(currentUser.username);
+
+        // set user points
         if (currentUser.points === undefined || currentUser.points === 'NaN')
             setPoints(0);
         else setPoints(currentUser.points);
+
+        // set user all time points earned
+        if (currentUser.allTimePoints === undefined || currentUser.allTimePoints === 'NaN')
+            setAllTimePoints(0);
+        else setAllTimePoints(currentUser.allTimePoints);
+
+        // set user total completed tasks
+        if (currentUser.completedTotal === undefined || currentUser.completedTotal === 'NaN')
+            setCompletedTotal(0);
+        else setCompletedTotal(currentUser.completedTotal);
+
+        // set user task list
         setTasks(tasks);
 
         // display information
@@ -89,6 +105,22 @@ function TaskPage() {
             points: newPoints
         })
         setPoints(newPoints);
+    }
+
+    const updateAllTimePoints = async (newAllTime) => {
+        const user = doc(db, "users", userID);
+        await updateDoc(user, {
+            allTimePoints: newAllTime
+        })
+        setAllTimePoints(newAllTime);
+    }
+
+    const updateCompletedTotal = async (newTotal) => {
+        const user = doc(db, "users", userID);
+        await updateDoc(user, {
+            completedTotal: newTotal
+        })
+        setCompletedTotal(newTotal);
     }
 
     const showTaskAddBox = () => {
@@ -208,6 +240,8 @@ function TaskPage() {
             timer: 2500,
         }).then(result => {
             updatePoints(points + (task.diff * 10));
+            updateAllTimePoints(allTimePoints + (task.diff * 10));
+            updateCompletedTotal(completedTotal + 1);
         });
     };
     

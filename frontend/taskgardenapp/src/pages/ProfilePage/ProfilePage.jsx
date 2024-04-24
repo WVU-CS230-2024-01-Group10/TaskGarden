@@ -12,6 +12,8 @@ function ProfilePage() {
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
+    const [completedTotal, setCompletedTotal] = useState(0);
+    const [allTimePoints, setAllTimePoints] = useState(0);
 
     const userID = localStorage.getItem("userID");
     const navigate = useNavigate();
@@ -51,6 +53,8 @@ function ProfilePage() {
         // set user information
         setUsername(currentUser.username);
         setEmail(currentUser.email);
+        setCompletedTotal(currentUser.completedTotal);
+        setAllTimePoints(currentUser.allTimePoints);
     }
 
       const handleLogout = () => {
@@ -77,8 +81,8 @@ function ProfilePage() {
                     <button type="button" className="change">Change email</button>
                     <button type="button" className="change">Change password</button>
                     <h2 className="achievementsLabel">Achievements</h2>
-                    <p>Total Tasks Completed: ...</p>
-                    <p>Total Points Earned: ...</p>
+                    <p>Total Tasks Completed: {completedTotal}</p>
+                    <p>Total Points Earned: {allTimePoints}</p>
                     <p>Total Plants Grown: 1</p>
                 </div>
                 <div className="item2">
