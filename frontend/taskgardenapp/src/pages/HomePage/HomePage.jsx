@@ -196,8 +196,8 @@ function HomePage() {
                         </form>
                     </div>
                 )}
-
-                <button id='upgradePlantButton' onClick={upgradePlant}>Upgrade (nxtStagePoints.get(stage) points)</button>
+                
+                <button id='upgradePlantButton' onClick={upgradePlant}>Upgrade: <br></br> {nxtStagePoints.get(stage)} points</button>
                 {/* <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
                 <button onClick={() => {updatePoints(1000)}}>Get points</button>
                 <button onClick={() => {console.log(points)}}>See points</button> */}
