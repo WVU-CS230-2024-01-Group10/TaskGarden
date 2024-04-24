@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './profileStyles.css'; 
-import { collection, doc, getDocs, deleteDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import {  useNavigate } from 'react-router-dom'; // Import Link component
 import Swal from 'sweetalert2';
@@ -14,6 +14,7 @@ function ProfilePage() {
     const [email, setEmail] = useState('');
     const [completedTotal, setCompletedTotal] = useState(0);
     const [allTimePoints, setAllTimePoints] = useState(0);
+    const [totalPlants, setTotalPlants] = useState(0);
 
     const userID = localStorage.getItem("userID");
     const navigate = useNavigate();
@@ -55,6 +56,10 @@ function ProfilePage() {
         setEmail(currentUser.email);
         setCompletedTotal(currentUser.completedTotal);
         setAllTimePoints(currentUser.allTimePoints);
+
+        if (currentUser.totalPlants === undefined || currentUser.totalPlants === 'NaN')
+            setTotalPlants(0);
+        else setTotalPlants(currentUser.totalPlants);
     }
 
       const handleLogout = () => {
@@ -102,6 +107,10 @@ function ProfilePage() {
         }
     }
 
+    const handleEditUserInfo = async () => {
+
+    }
+
     return (
         <div className="ProfilePage">
             <h1 className="userLabel">My Profile</h1>
@@ -115,7 +124,7 @@ function ProfilePage() {
                     <h2 className="achievementsLabel">Achievements</h2>
                     <p>Total Tasks Completed: {completedTotal}</p>
                     <p>Total Points Earned: {allTimePoints}</p>
-                    <p>Total Plants Grown: 1</p>
+                    <p>Total Plants Grown: {totalPlants}</p>
                 </div>
                 <div className="item2">
                     <h2>Current plant: Succulent</h2>

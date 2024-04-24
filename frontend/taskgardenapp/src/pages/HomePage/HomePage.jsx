@@ -12,6 +12,7 @@ function HomePage() {
     const [username, setUsername] = useState('');
     const [plantType, setPlantType] = useState("succulent");
     const [points, setPoints] = useState(0);
+    const [totalPlants, setTotalPlants] = useState(0);
     const [stage, setStage] = useState(1);
     const navigate = useNavigate();
     // const { currentUser } = useAuth();
@@ -62,8 +63,13 @@ function HomePage() {
         // set username and points
         setUsername(currentUser.username);
         if (currentUser.points === undefined || currentUser.points === 'NaN')
-        setPoints(0);
+            setPoints(0);
         else setPoints(currentUser.points);
+
+        // Set total plants
+        if (currentUser.totalPlants === undefined || currentUser.totalPlants === 'NaN')
+            setTotalPlants(0);
+        else setTotalPlants(currentUser. totalPlants);
     }
 
     /* function updatePoints (version 4/16/24)
@@ -75,6 +81,14 @@ function HomePage() {
             points: newPoints
         })
         setPoints(newPoints);
+    }
+
+    const updateTotalPlants = async (newTotalPlants) => {
+        const user = doc(db, "users", userID);
+        await updateDoc(user, {
+            totalPlants: newTotalPlants
+        })
+        setTotalPlants(newTotalPlants);
     }
 
     const showPlantSelect = () => {
@@ -109,6 +123,10 @@ function HomePage() {
         }
         if (points >= lvlPoints) {
             try {
+                // Add to plant total if about to max out current plant
+                if (stage === 4){
+                    updateTotalPlants(totalPlants + 1);
+                }
                 setStage(prevStage => prevStage + 1);
                 setPoints(prevPoints => prevPoints - lvlPoints);
                 localStorage.setItem("stage", stage + 1);
