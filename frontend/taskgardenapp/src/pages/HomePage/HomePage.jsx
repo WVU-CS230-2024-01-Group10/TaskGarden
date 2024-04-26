@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './Homepage.css'; 
 import { Link, useNavigate } from 'react-router-dom'; // Import Link component
 import Swal from 'sweetalert2';
-// import { useAuth } from '../../contexts/authContext';
 
 // firestore imports
 import { db } from '../../firebase/firebase';
@@ -15,7 +14,6 @@ function HomePage() {
     const [totalPlants, setTotalPlants] = useState(0);
     const [stage, setStage] = useState(1);
     const navigate = useNavigate();
-    // const { currentUser } = useAuth();
     const [plantSelectVisible, setPlantSelectVisible] = useState(false);
     const [navBoxVisible, setNavBoxVisible] = useState(false);
 
@@ -172,13 +170,6 @@ function HomePage() {
         <div id='container' className="plant-container container">
             <div id='greeting'><h3>{username}'s Room</h3></div>
             <div id='message'><h3>Welcome to Task Garden! Use the buttons above to edit your plant, or navigate to a different page.</h3></div>
-            {/* <div className="plant-view">
-                <button onClick={upgradePlant}>Upgrade for 100 points</button>
-                <p>(reset button for dev purposes)</p>
-                <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
-                <button onClick={() => {localStorage.setItem("points", 10000)}}>Get points</button>
-                <p>Your Points: {points}</p>
-            </div> */}
             <div>
                 <div id="plantButtonDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showPlantSelect}>Select Plant</button></div>
                 {plantSelectVisible && (
@@ -199,17 +190,12 @@ function HomePage() {
                 )}
                 
                 <button id='upgradePlantButton' onClick={upgradePlant}>Upgrade: <br></br> {nxtStagePoints.get(stage)} points</button>
-                {/* <button onClick={() => {localStorage.setItem("stage", 1)}}>Reset Stage</button>
-                <button onClick={() => {updatePoints(1000)}}>Get points</button>
-                <button onClick={() => {console.log(points)}}>See points</button> */}
 
                 <div id="openNavBoxDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showNavBox}>Pages</button></div>
                 {navBoxVisible && (
                 <div id="homePageNavBox" className="popup">
                     <h3>Task Garden Navigation</h3>
                     <Link className="link" id="taskPageLink" to="/tasks">Tasks</Link>
-                    {/* <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link> */}
-                    {/* <Link className="link" id="studyPageLink" to="/study">Study</Link> */}
                     <Link className="link" id="profilePageLink" to="/profile">Profile</Link>
                     <button onClick={handleLogout}>Logout</button>
                     <button type="button" onClick={closeNavBox}>Cancel</button>
@@ -225,12 +211,6 @@ function HomePage() {
                 </div>
                 
             </div>
-            {/* <div className="link-board">
-                <Link className="link" id="taskPageLink" to="/tasks">Task List</Link>
-                <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link>
-                <Link className="link" id="studyPageLink" to="/study">Study</Link>
-                <Link className="link" id="loginPageLink" to="/login">Logout</Link>
-            </div> */}
         </div>
         </body>
     );

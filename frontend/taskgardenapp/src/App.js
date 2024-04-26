@@ -18,13 +18,12 @@ function App() {
         <UserProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/home" element={<HomePage />}></Route>
               <Route path="/login" element={<LoginPage />}></Route>
               <Route path="/tasks" element={<TaskPage />}></Route>
               <Route path="/greenhouse" element={<GreenHouse />}></Route>
               <Route path="/study" element={<StudyPage />}></Route>
               <Route path="/register" element={<Register />}></Route>
-              {/* For development purposes: */} <Route path="/" element={<TaskPage />}></Route> {/* (should be homepage later */}
+              <Route path="/" element={<HomePage />}></Route>
               <Route path="/profile" element={<ProfilePage />}></Route>
             </Routes>
           </BrowserRouter>

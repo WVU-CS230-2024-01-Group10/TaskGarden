@@ -1,17 +1,13 @@
 // version 4/15/24 - all commented code is broken auth stuff
 
-import React, { useState, useEffect, /* useContext */ } from 'react';
-// import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth';
-// import UserContext from '../../contexts/UserContext';
+import React, { useState, useEffect } from 'react';
 import './taskStyles.css';
-import { Link, useNavigate } from 'react-router-dom'; // Import Link component
-// import { doSignOut } from '../../firebase/auth';
+import { Link, useNavigate } from 'react-router-dom';
 import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
 
 function TaskPage() {
-    // const { user } = useContext(UserContext); part of broken auth code 
     const [tasks, setTasks] = useState([]);
     const [points, setPoints] = useState(0);
     const [username, setUsername] = useState('');
@@ -27,10 +23,6 @@ function TaskPage() {
     const [completedTotal, setCompletedTotal] = useState(0);
     const [allTimePoints, setAllTimePoints] = useState(0);
 
-    // google auth
-    // const auth = getAuth();
-    // auth.useDeviceLanguage();
-
     // get user ID from localStorage
     const userID = localStorage.getItem("userID");
 
@@ -43,15 +35,6 @@ function TaskPage() {
             console.log("Logged in as: " + username);
         }
     }, [])
-
-    // allow the user to stay signed in on refresh
-    //     setPersistence(auth, browserSessionPersistence)
-    //     .then(() => {
-    //         // Authentication state will persist across browser sessions
-    // })
-    //     .catch((error) => {
-    //         console.log(error);
-    // });
 
     /* function getUserInfo (version 4/16/24)
     * author: C. Jones
@@ -266,9 +249,7 @@ function TaskPage() {
             title: `${username} has been logged out.`,
             showCancelButton: false
         }).then(result => {
-            // doSignOut().then(() => {
                 navigate('/login');
-            // });
         })
     }
 
@@ -331,8 +312,6 @@ function TaskPage() {
                 <div id="navBox" className="popup">
                     <h3>Task Garden Navigation</h3>
                     <Link className="link" id="homePageLink" to="/home">Home</Link>
-                    {/* <Link className="link" id="greenhousePageLink" to="/greenhouse">The Greenhouse</Link> */}
-                    {/* <Link className="link" id="studyPageLink" to="/study">Study</Link> */}
                     <Link className="link" id="profilePageLink" to="/profile">Profile</Link>
                     <button onClick={handleLogout}>Logout</button>
                     <button type="button" onClick={closeNavBox}>Cancel</button>
