@@ -6,7 +6,6 @@ import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
 import './loginStyles.css';
-// import UserContext from '../../contexts/UserContext';
 
 function LoginPage() {
 
@@ -14,8 +13,6 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
-
-  // const { setUser } = useContext(UserContext);
 
   useEffect(() => {
     getUsers();
@@ -54,8 +51,8 @@ function LoginPage() {
         showConfirmButton: false,
         timer: 1500
       }).then(result => {
-        // Navigate to the TaskPage
-        navigate('/tasks');
+        // Navigate to the HomePage
+        navigate('/');
       });
     }
   };

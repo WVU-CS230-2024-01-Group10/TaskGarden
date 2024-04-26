@@ -22,19 +22,3 @@ export const doSignInWithGoogle = async () => {
 export const doSignOut = () => {
     return auth.signOut();
 };
-
-
-// CODE FOR PASSWORD RESET, PASSWORD CHANGE, AND EMAIL VERIFICATION
-// export const doPasswordReset = (email) => {
-//     return sendPasswordResetEmail(auth, email);
-// }
-
-// export const doPasswordChange = () => {
-//     return updatePassword(auth.currentUser, password);
-// }
-
-// export const doSendEmailVerification = () => {
-//     return sendEmailVerification(auth.currentUser, {
-//         url: `${window.location.origin}/home`,
-//     });
-// }

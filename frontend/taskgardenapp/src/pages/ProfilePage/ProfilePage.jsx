@@ -69,9 +69,7 @@ function ProfilePage() {
             title: `${username} has been logged out.`,
             showCancelButton: false
         }).then(result => {
-            // doSignOut().then(() => {
                 navigate('/login');
-            // });
         })
     }
 
