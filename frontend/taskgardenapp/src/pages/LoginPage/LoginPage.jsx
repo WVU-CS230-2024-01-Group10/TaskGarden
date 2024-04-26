@@ -31,11 +31,21 @@ function LoginPage() {
     document.getElementById('container').style.display = 'none';
   
     const currentUser = users.find(user => user.email === email);
-    if (currentUser === undefined) {
+    if (currentUser === undefined ) {
       Swal.fire({
         icon: 'error',
         title: 'Account not found!',
         text: `Please check your username and password again.`,
+        confirmButtonText: "OK",
+        showConfirmButton: true,
+      }).then(result => {
+        document.getElementById('container').style.display = 'block';
+      });
+    } else if (currentUser.password !== password) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Incorrect password!',
+        text: `Please check your password again.`,
         confirmButtonText: "OK",
         showConfirmButton: true,
       }).then(result => {
