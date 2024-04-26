@@ -316,7 +316,7 @@ function TaskPage() {
                     <p className="card-text">Difficulty Level: {task.diff}</p>
                     <p className="card-text">Priority Level: {task.priority}</p>
                     <div className="btn-div">
-                        <button className="btn remove-btn" onClick={() => removeTask(task.id, true)}>Remove</button>
+                        <button className="btn remove-btn" onClick={() => removeTask(task.id)}>Remove</button>
                         <button className="btn complete-btn" onClick={() => completeTask(task.id)}>Complete</button>
                         <button className="btn edit-btn" onClick={() => editTask(task.id)}>Edit</button>
                     </div>
