@@ -109,7 +109,8 @@ function HomePage() {
     };
 
     async function selectPlant() {
-        // setPlantType(document.getElementById("plantTypeSelect").value.body);
+        var selected = document.getElementById("plantTypeSelect").value;
+        setPlantType(selected);
     }
 
     //create map for level upgrade points
@@ -186,7 +187,7 @@ function HomePage() {
                         <form id="plantInfo">
                             <label htmlFor="title">Plant Type</label>
                             <select name="plantTypeSelect" id="plantTypeSelect">{/* doesn't work */}
-                                <option value="cactus">Cactus</option>
+                                <option value="cactus" selected>Cactus</option>
                                 <option value="flower">Flower</option>
                                 <option value="pothos">Pothos</option>
                                 <option value="succulent">Succulent</option>
