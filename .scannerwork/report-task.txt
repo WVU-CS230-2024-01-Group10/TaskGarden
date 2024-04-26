@@ -2,5 +2,5 @@ projectKey=group10:taskGarden
 serverUrl=http://localhost:9000
 serverVersion=8.8.0.42792
 dashboardUrl=http://localhost:9000/dashboard?id=group10%3AtaskGarden
-ceTaskId=AY8S2WZjmP-gFugBKiH0
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AY8S2WZjmP-gFugBKiH0
+ceTaskId=AY8Yn7G_JYWLL0KyBg5o
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AY8Yn7G_JYWLL0KyBg5o
