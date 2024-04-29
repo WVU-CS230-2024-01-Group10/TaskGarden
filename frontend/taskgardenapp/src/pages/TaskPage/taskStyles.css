@@ -1,0 +1,263 @@
+/* 
+ * TaskGarden/taskPage/taskStyles.css 
+ * Version: 1.0.2 (01 Mar 2024)
+ * Authors: C. Jones, E. Hall
+ * Last Edit: E. Hall
+ */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #b49673;
+    border: 5px solid  #775f41;
+    box-shadow: 0 0 0 10px #050505;
+}
+
+h1{
+    font-size: 50px;
+    color: #52412c;
+    text-align: center;
+}
+
+h2 {
+    color: #52412c;
+    text-align: center;
+    padding-top: 20px;
+}
+
+h3 {
+    color: #52412c;
+    text-align: center;
+}
+
+.loggedInAs{
+    text-align: right;
+}
+
+p {
+    color: #775f41;
+    text-align: center;
+}
+
+a {
+    color: #775f41;
+}
+
+a:hover {
+    color: #3f3221;
+}
+
+#pageDesc {
+    font-size: 20px;
+    margin-bottom: 20px;
+    margin-right: 20%;
+    margin-left: 20%;
+}
+
+/* Task button styles */
+#taskButtonDiv, #openNavBoxDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5%;
+}
+
+#addTaskButton, #openNavBox {
+    background-color: #775f41;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 50vw;
+}
+
+#addTaskButton:hover, #openNavBox:hover {
+    background-color: #634f36; 
+}
+
+/* Pop-up box styles */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    /*Removed display: none;*/
+    background-color: rgb(255, 243, 228);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    height:fit-content;
+    width: 20vw;
+}
+
+/* .popup h2 {
+    color: darkgreen;
+    padding-top: 5px;
+} */
+
+/* Input field styles */
+input[type="text"], input[type="datetime-local"], input[type="range"]{
+    width: 100%;
+    padding: 5px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button{
+    width: 100%;
+    padding: 5px;
+    margin: 5px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Task list styles */
+#taskListDiv {
+    margin: 20px auto; 
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+}
+
+/* Button styles */
+button[type="button"] {
+    background-color: #775f41;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 15px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button[type="button"]:hover {
+    background-color: #775f41;
+}
+
+/* Logout link styles */
+#logoutButton {
+    text-decoration: none;
+    text-align: right;
+    color: #775f41;
+}
+
+#loginButton:hover {
+    color: #3b2f21;
+}
+
+/* Common styles for all button types */
+.edit-btn,
+.remove-btn,
+.complete-btn {
+    background-size:cover;
+    background-color: #f3f3f3;
+    width: 30px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    text-indent: -9999px;
+    margin-right:5px;
+}
+
+.btn:hover {
+    background-color:#755d40;
+}
+
+/* Specific styles for each button type */
+.edit-btn {
+    background-image: url('editIcon.png');
+    background-color: inherit;
+}
+
+.remove-btn {
+    background-image: url('removeIcon.png');
+    background-color: inherit;
+}
+
+.complete-btn {
+    background-image: url('completeIcon.png');
+    background-color: inherit;
+}
+
+/* hidden and visible states for the congratulations message / potentially usable for future animations */
+.hidden {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.visible {
+    opacity: 1;
+}
+
+/* New Styling for tasks: Cards rather than tables. */
+.task-item {
+    position: relative;
+    width: 100%;
+    max-width: 80%; 
+    border: 1px solid #634f36;
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 0;
+    margin: 10px auto;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    color: black;
+    text-align: left;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.card-text {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.btn-div {
+    text-align: right;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#pointCount {
+    text-align: right;
+}
+
+#tally {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-450%, -400%);
+    background-color: rgb(255, 243, 228);
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    height: fit-content;
+    width: 10vw;
+}
