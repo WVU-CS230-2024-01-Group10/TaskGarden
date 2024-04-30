@@ -1,12 +1,17 @@
+// Import React and sweetalert components
 import React, { useState, useEffect } from 'react';
 import './Homepage.css'; 
-import { Link, useNavigate } from 'react-router-dom'; // Import Link component
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-// firestore imports
+// Import firestore components
 import { db } from '../../firebase/firebase';
 import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
+/**
+ * Homepage component for Task Garden.
+ * Allows user to use earned points to grow a plant of their choosing. 
+ */
 function HomePage() {
     const [username, setUsername] = useState('');
     const [plantType, setPlantType] = useState("succulent");
@@ -30,7 +35,7 @@ function HomePage() {
     const plantImages = importAll(require.context('../../img/plants', false, /\.(png|jpe?g|svg)$/));
     
     useEffect(() => {
-
+        // Redirect to login if no userID found
         if (!userID) {
             navigate('/login');
         } else {
@@ -38,6 +43,7 @@ function HomePage() {
             console.log("Logged in as: " + username);
         }
 
+        // Load stored user data
         const storedPlantType = localStorage.getItem("plantType");
         if (storedPlantType) setPlantType(JSON.parse(storedPlantType));
 
@@ -50,9 +56,9 @@ function HomePage() {
         console.log("useEffect running. points: " + points);
     }, []);
 
-    /* function getPoints (version 4/16/24)
-    * author: C. Jones
-    * this function retrieves the user's point count from the db */
+    /**
+     * Retrieves user's point count from the database.
+     */
     const getPoints = async () => {
         const usersQuery = await getDocs(collection(db, "users"));
         const users = usersQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
@@ -70,9 +76,10 @@ function HomePage() {
         else setTotalPlants(currentUser. totalPlants);
     }
 
-    /* function updatePoints (version 4/16/24)
-    * author: C. Jones
-    * this function updates the user's point count within the db */
+    /**
+     * Updates the user's point count within the database.
+     * @param {number} newPoints - The new point count.
+     */
     const updatePoints = async (newPoints) => {
         const user = doc(db, "users", userID);
         await updateDoc(user, {
@@ -81,6 +88,10 @@ function HomePage() {
         setPoints(newPoints);
     }
 
+    /**
+     * Updates the user's total plants count within the database.
+     * @param {number} newTotalPlants - The new total plants count.
+     */
     const updateTotalPlants = async (newTotalPlants) => {
         const user = doc(db, "users", userID);
         await updateDoc(user, {
@@ -89,6 +100,7 @@ function HomePage() {
         setTotalPlants(newTotalPlants);
     }
 
+    // Show and hide plant selection popup
     const showPlantSelect = () => {
         setPlantType(plantType);
         setPlantSelectVisible(true);
@@ -98,6 +110,7 @@ function HomePage() {
         setPlantSelectVisible(false);
     };
 
+    // Show and hide navigation box
     const showNavBox = () => {
         setNavBoxVisible(true);
     }
@@ -106,16 +119,20 @@ function HomePage() {
         setNavBoxVisible(false);
     };
 
+    // Select a plant type
     async function selectPlant() {
         var selected = document.getElementById("plantTypeSelect").value;
         setPlantType(selected);
     }
 
-    //create map for level upgrade points
+    // Map for level upgrade points
     const nxtStagePoints = new Map([ [1, 250], [2, 500], [3, 750], [4, 1000], [5, 'max level'] ]);
     
+    // Upgrade plant to the next stage
     async function upgradePlant() {
         let lvlPoints = nxtStagePoints.get(stage);
+
+        // Do nothing if plant is at max stage
         if (stage === 5) {
             console.log("plant is at maximum stage");
             return;
@@ -126,6 +143,7 @@ function HomePage() {
                 if (stage === 4){
                     updateTotalPlants(totalPlants + 1);
                 }
+                // Upgrade the plant
                 setStage(prevStage => prevStage + 1);
                 setPoints(prevPoints => prevPoints - lvlPoints);
                 localStorage.setItem("stage", stage + 1);
@@ -135,13 +153,13 @@ function HomePage() {
                 console.log(err);
             }
         } else {
-            console.log("not enough points to upgrade plant");
+            console.log("Not enough points to upgrade plant.");
         }
     }
 
-    /* function handleLogout (version 4/16/24)
-    * author: C. Jones
-    * this function removes the user's ID from local storage and notifies them */
+    /**
+     * Handles user logout by removing user ID from local storage and navigating to login page.
+     */
     const handleLogout = () => {
         localStorage.removeItem("userID");
         document.getElementById('container').style.display = 'none';
@@ -150,13 +168,11 @@ function HomePage() {
             title: `${username} has been logged out.`,
             showCancelButton: false
         }).then(result => {
-            // doSignOut().then(() => {
                 navigate('/login');
-            // });
         })
     }
 
-    // function resetStage for development purposes
+    // Reset stage for development purposes
     const resetStage = () => {
         setStage(1);
         localStorage.setItem("stage", 1);
