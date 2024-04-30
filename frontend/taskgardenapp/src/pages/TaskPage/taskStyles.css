@@ -1,10 +1,10 @@
 /* 
- * TaskGarden/taskPage/taskStyles.css 
- * Version: 1.0.2 (01 Mar 2024)
+ * taskStyles.css 
  * Authors: C. Jones, E. Hall
- * Last Edit: E. Hall
+ * Version: 4.30.2024
  */
 
+/* Global styles for the body */ 
 body {
     font-family: Arial, sans-serif;
     background-color: #b49673;
@@ -12,12 +12,14 @@ body {
     box-shadow: 0 0 0 10px #050505;
 }
 
+/* Heading styles for the 'Task Garden' title at the top of the page */
 h1{
     font-size: 50px;
     color: #52412c;
     text-align: center;
 }
 
+/* Subheading styles for the description of the task page. */
 h2 {
     color: #52412c;
     text-align: center;
@@ -29,15 +31,18 @@ h3 {
     text-align: center;
 }
 
+/* Styles for the message indicating which user is logged in */
 .loggedInAs{
     text-align: right;
 }
 
+/* Styles for non-header text. */
 p {
     color: #775f41;
     text-align: center;
 }
 
+/* Styles for links to other pages. */
 a {
     color: #775f41;
 }
@@ -46,6 +51,7 @@ a:hover {
     color: #3f3221;
 }
 
+/* Styles for the page description. */
 #pageDesc {
     font-size: 20px;
     margin-bottom: 20px;
@@ -53,7 +59,7 @@ a:hover {
     margin-left: 20%;
 }
 
-/* Task button styles */
+/* Styles for the divs that hold the task add button or the navigation button */
 #taskButtonDiv, #openNavBoxDiv {
     display: flex;
     justify-content: center;
@@ -61,6 +67,7 @@ a:hover {
     margin-bottom: 5%;
 }
 
+/* Styles for the task add and navigation buttons themselves. */
 #addTaskButton, #openNavBox {
     background-color: #775f41;
     color: white;
@@ -80,7 +87,7 @@ a:hover {
     background-color: #634f36; 
 }
 
-/* Pop-up box styles */
+/* Global styles for all popup boxes. */
 .popup {
     position: fixed;
     top: 50%;
@@ -96,12 +103,7 @@ a:hover {
     width: 20vw;
 }
 
-/* .popup h2 {
-    color: darkgreen;
-    padding-top: 5px;
-} */
-
-/* Input field styles */
+/* Styles for input fields within the task add popup box. */
 input[type="text"], input[type="datetime-local"], input[type="range"]{
     width: 100%;
     padding: 5px;
@@ -111,6 +113,15 @@ input[type="text"], input[type="datetime-local"], input[type="range"]{
     box-sizing: border-box;
 }
 
+/* Styles for the div that holds the task list. */
+#taskListDiv {
+    margin: 20px auto; 
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+}
+
+/* Global styles for buttons. */
 button{
     width: 100%;
     padding: 5px;
@@ -121,15 +132,6 @@ button{
     box-sizing: border-box;
 }
 
-/* Task list styles */
-#taskListDiv {
-    margin: 20px auto; 
-    display: flex; 
-    flex-direction: column;
-    align-items: center; 
-}
-
-/* Button styles */
 button[type="button"] {
     background-color: #775f41;
     color: white;
@@ -147,17 +149,6 @@ button[type="button"] {
 
 button[type="button"]:hover {
     background-color: #775f41;
-}
-
-/* Logout link styles */
-#logoutButton {
-    text-decoration: none;
-    text-align: right;
-    color: #775f41;
-}
-
-#loginButton:hover {
-    color: #3b2f21;
 }
 
 /* Common styles for all button types */
@@ -179,22 +170,26 @@ button[type="button"]:hover {
 }
 
 /* Specific styles for each button type */
+
+/* Styles for the edit buttons. */
 .edit-btn {
     background-image: url('editIcon.png');
     background-color: inherit;
 }
 
+/* Styles for the remove buttons. */
 .remove-btn {
     background-image: url('removeIcon.png');
     background-color: inherit;
 }
 
+/* Styles for the complete buttons. */
 .complete-btn {
     background-image: url('completeIcon.png');
     background-color: inherit;
 }
 
-/* hidden and visible states for the congratulations message / potentially usable for future animations */
+/* hidden and visible states for the popup boxes. */
 .hidden {
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -204,7 +199,7 @@ button[type="button"]:hover {
     opacity: 1;
 }
 
-/* New Styling for tasks: Cards rather than tables. */
+/* Styling for tasks, made to look like cards. */
 .task-item {
     position: relative;
     width: 100%;
@@ -217,6 +212,7 @@ button[type="button"]:hover {
     margin: 10px auto;
 }
 
+/* Styling for task cards. */
 .card-body {
     padding: 20px;
 }
@@ -229,12 +225,12 @@ button[type="button"]:hover {
     margin-bottom: 10px;
 }
 
-
 .card-text {
     text-align: left;
     margin-bottom: 10px;
 }
 
+/* Styling for divs that hold buttons. */
 .btn-div {
     text-align: right;
     position: absolute;
@@ -244,10 +240,12 @@ button[type="button"]:hover {
     cursor: pointer;
 }
 
+/* Styling for the text that displays the point count */
 #pointCount {
     text-align: right;
 }
 
+/* Styling for div that holds the point count. */
 #tally {
     position: fixed;
     top: 50%;

@@ -47,9 +47,9 @@ function HomePage() {
     }, []);
 
     /**
-     * Retrieves user's point count from the database.
+     * Retrieves user information from the database.
      */
-    const getPoints = async () => {
+    const getUserInfo = async () => {
         const usersQuery = await getDocs(collection(db, "users"));
         const users = usersQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
         const currentUser = users.find(user => user.id === userID);
