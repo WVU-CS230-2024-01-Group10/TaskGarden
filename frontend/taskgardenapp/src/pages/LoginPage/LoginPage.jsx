@@ -1,6 +1,6 @@
 /*
  *  LoginPage.jsx
- *  Authors: C. Jones, E. Hall
+ *  Authors: C. Jones, E. Hall, S. Tabidze, G. Breeden
  *  Version 4.30.2024
  */ 
 
@@ -18,7 +18,7 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // Fetches users from Firestore database on component mount
+  // Fetches users from Firestore database as soon as the page loads
   useEffect(() => {
     getUsers();
   }, []);
