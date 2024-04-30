@@ -311,7 +311,7 @@ function TaskPage() {
             {navBoxVisible && (
                 <div id="navBox" className="popup">
                     <h3>Task Garden Navigation</h3>
-                    <Link className="link" id="homePageLink" to="/home">Home</Link>
+                    <Link className="link" id="homePageLink" to="/">Home</Link>
                     <Link className="link" id="profilePageLink" to="/profile">Profile</Link>
                     <button onClick={handleLogout}>Logout</button>
                     <button type="button" onClick={closeNavBox}>Cancel</button>

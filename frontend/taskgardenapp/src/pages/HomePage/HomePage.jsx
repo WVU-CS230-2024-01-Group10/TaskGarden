@@ -34,26 +34,17 @@ function HomePage() {
         if (!userID) {
             navigate('/login');
         } else {
-            getPoints();
+            getUserInfo();
             console.log("Logged in as: " + username);
         }
-
-        const storedPlantType = localStorage.getItem("plantType");
-        if (storedPlantType) setPlantType(JSON.parse(storedPlantType));
-
-        const storedPoints = localStorage.getItem("points");
-        if (storedPoints) setPoints(JSON.parse(storedPoints));
-
-        const storedStage = localStorage.getItem("stage");
-        if (storedStage) setStage(JSON.parse(storedStage));
 
         console.log("useEffect running. points: " + points);
     }, []);
 
-    /* function getPoints (version 4/16/24)
+    /* function getUserInfo (version 4/16/24)
     * author: C. Jones
     * this function retrieves the user's point count from the db */
-    const getPoints = async () => {
+    const getUserInfo = async () => {
         const usersQuery = await getDocs(collection(db, "users"));
         const users = usersQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
         const currentUser = users.find(user => user.id === userID);
@@ -68,6 +59,10 @@ function HomePage() {
         if (currentUser.totalPlants === undefined || currentUser.totalPlants === 'NaN')
             setTotalPlants(0);
         else setTotalPlants(currentUser. totalPlants);
+
+        // set plant type and stage from db
+        if (currentUser.plantType !== undefined) setPlantType(currentUser.plantType); else setPlantType("succulent");
+        if (currentUser.plantStage !== undefined) setStage(currentUser.plantStage); else setStage(1);
     }
 
     /* function updatePoints (version 4/16/24)
@@ -108,13 +103,28 @@ function HomePage() {
 
     async function selectPlant() {
         var selected = document.getElementById("plantTypeSelect").value;
+        setPlantSelectVisible(false);
+
+        Swal.fire({
+            icon: 'info',
+            title: `Plant switched.`,
+            text: `${plantType} has been switched to ${selected}.`,
+            showConfirmButton: false,
+            timer: 2500,
+        });
+
         setPlantType(selected);
+
+        const user = doc(db, "users", userID);
+        await updateDoc(user, { "plantType": selected });
     }
 
     //create map for level upgrade points
     const nxtStagePoints = new Map([ [1, 250], [2, 500], [3, 750], [4, 1000], [5, 'max level'] ]);
     
     async function upgradePlant() {
+        const user = doc(db, "users", userID);
+        
         let lvlPoints = nxtStagePoints.get(stage);
         if (stage === 5) {
             console.log("plant is at maximum stage");
@@ -128,9 +138,18 @@ function HomePage() {
                 }
                 setStage(prevStage => prevStage + 1);
                 setPoints(prevPoints => prevPoints - lvlPoints);
-                localStorage.setItem("stage", stage + 1);
+                await updateDoc(user, { "plantStage": stage + 1 });
                 localStorage.setItem("points", points - lvlPoints);
                 updatePoints(points - lvlPoints);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: `Congratulations!`,
+                    text: `${plantType} has been upgraded to stage ${stage + 1}`,
+                    showConfirmButton: false,
+                    timer: 2500,
+                });
+
             } catch (err) {
                 console.log(err);
             }
@@ -144,7 +163,7 @@ function HomePage() {
     * this function removes the user's ID from local storage and notifies them */
     const handleLogout = () => {
         localStorage.removeItem("userID");
-        document.getElementById('container').style.display = 'none';
+        closePlantSelect();
         Swal.fire({
             icon: 'info',
             title: `${username} has been logged out.`,
@@ -157,9 +176,10 @@ function HomePage() {
     }
 
     // function resetStage for development purposes
-    const resetStage = () => {
+    const resetStage = async () => {
         setStage(1);
-        localStorage.setItem("stage", 1);
+        const user = doc(db, "users", userID);
+        await updateDoc(user, { "plantStage": 1 });
     }
 
     return (
