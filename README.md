@@ -127,11 +127,11 @@ Project Link: [https://github.com/WVU-CS230-2024-01-Group10/TaskGarden](https://
 ## Acknowledgments
 Daniel Campa, Elijah Hall, Christopher Jones, Gillian Breeden, Sandrik Tabidze
 
-* [Daniel Campa]()
-* [Elijah Hall]()
-* [Christopher Jones]()
-* [Gillian Breeden]()
-* [Sandrik Tabidze]()
+* [Daniel Campa](https://github.com/daniel-campa)
+* [Elijah Hall](https://github.com/e-hall4)
+* [Christopher Jones](https://github.com/caj00017)
+* [Gillian Breeden](https://github.com/Gillian-Breeden)
+* [Sandrik Tabidze](https://github.com/Sandrik)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
