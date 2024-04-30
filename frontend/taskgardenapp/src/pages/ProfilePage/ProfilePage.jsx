@@ -1,23 +1,26 @@
+// Import React and necessary components
 import React, { useState, useEffect } from 'react';
-import './profileStyles.css'; 
+import './profileStyles.css';
 import { collection, doc, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
-import {  useNavigate } from 'react-router-dom'; // Import Link component
+import { useNavigate } from 'react-router-dom'; // Import Link component
 import Swal from 'sweetalert2';
 
-// Need to implement db operations to fetch user info
-
-
+/**
+ * Profile page component for Task Garden.
+ * Manages user's profile information and actions.
+ */
 function ProfilePage() {
-
+    // State variables for user data
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [completedTotal, setCompletedTotal] = useState(0);
     const [allTimePoints, setAllTimePoints] = useState(0);
     const [totalPlants, setTotalPlants] = useState(0);
-
-    const userID = localStorage.getItem("userID");
     const navigate = useNavigate();
+
+    // Retrieve userID from local storage
+    const userID = localStorage.getItem("userID");
 
     // Import all plant images dynamically
     const importAll = (r) => {
@@ -27,7 +30,7 @@ function ProfilePage() {
     };
     const plantImages = importAll(require.context('../../img/plants', false, /\.(png|jpe?g|svg)$/));
 
-    // fetch user info from db, only if user is logged in
+    // Fetch user info from the database, only if user is logged in
     useEffect(() => {
         if (!userID) {
             navigate('/login');
@@ -37,21 +40,21 @@ function ProfilePage() {
         }
     }, [])
 
-    /* function getUserInfo (version 4/16/24)
-    * author: C. Jones
-    * this function retrieves information about the user that is relevant to the task page. (username, tasks, points) */
+    /**
+     * Retrieves user information from the database.
+     */
     const getUserInfo = async () => {
 
-        // get users and docs from db
+        // Get users and docs from db
         const usersQuery = await getDocs(collection(db, "users"));
 
-        // map users and docs
-        const users = usersQuery.docs.map(doc => ({id: doc.id, ...doc.data()}));
+        // Map users and docs
+        const users = usersQuery.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        // find current user with locally stored user id
+        // Find current user with locally stored user id
         const currentUser = users.find(user => user.id === userID);
 
-        // set user information
+        // Set user information
         setUsername(currentUser.username);
         setEmail(currentUser.email);
         setCompletedTotal(currentUser.completedTotal);
@@ -62,28 +65,34 @@ function ProfilePage() {
         else setTotalPlants(currentUser.totalPlants);
     }
 
-      const handleLogout = () => {
+    /**
+     * Handles user logout by removing user ID from local storage and navigating to login page.
+     */
+    const handleLogout = () => {
         localStorage.removeItem("userID");
         Swal.fire({
             icon: 'info',
             title: `${username} has been logged out.`,
             showCancelButton: false
         }).then(result => {
-                navigate('/login');
+            navigate('/login');
         })
     }
 
+     /**
+     * Handles account deletion by deleting the user document from the database and navigating to login page.
+     */
     const handleAcctDelete = async () => {
         try {
             // Reference to the user document
             const userDocRef = doc(db, 'users', userID);
-    
+
             // Delete the user document
             await deleteDoc(userDocRef);
-    
+
             // Remove the user ID from local storage
             localStorage.removeItem("userID");
-    
+
             // Display a confirmation message
             Swal.fire({
                 icon: 'success',
@@ -105,6 +114,7 @@ function ProfilePage() {
         }
     }
 
+    // Function for handling editing user information (not implemented yet)
     const handleEditUserInfo = async () => {
 
     }

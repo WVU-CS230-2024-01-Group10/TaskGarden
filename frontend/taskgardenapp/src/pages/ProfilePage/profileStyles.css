@@ -1,13 +1,16 @@
+/* Styles for the profile page */
 .ProfilePage {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+
 .plantImage {
   background-image: url("../../img/plants/succulent_s1.png");
 }
 
+/* Global styles for the body */
 body {
     font-family: Arial, sans-serif;
     background-color: #b49673;
@@ -16,107 +19,116 @@ body {
     width: 100vw;
 }
 
+/* Heading styles */
 h1, h2 {
-    color: #52412c;
-    text-align: center;
+  color: #52412c;
+  text-align: center;
 }
 
+/* Additional styles for the achievements label */
 h2.achievementsLabel {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
+/* Paragraph styles */
 p {
-    color: #775f41;
-    text-align: left;
-    margin: 5px;
-    padding: 5px 0px;
+  color: #775f41;
+  text-align: left;
+  margin: 5px;
+  padding: 5px 0px;
 }
 
+/* User label styles */
 h1.userLabel {
-    background-color: rgb(223, 146, 2);
-    text-align: center;
-    margin: 20px auto 5px;
-    display: inline-block;
-    padding: 10px 20px;
-    border-radius: 5px;
+  background-color: rgb(223, 146, 2);
+  text-align: center;
+  margin: 20px auto 5px;
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
 }
+
+/* Grid container styles */
 .gridContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Three columns with equal width */
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    grid-gap: 10px; /* Gap between grid items */
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns of equal width */
+  grid-template-rows: 1fr 1fr 1fr 1fr; /* Four rows of equal width */
+  grid-gap: 10px; /* Gap between grid items */
+}
 
-  .item1 {
-    background-color: #f1f1f1;
-    padding: 20px;
-    text-align: center;
-    grid-row: span 4; /* Takes up 4 rows */
-    min-width: 350px;
-    border-radius: 5px;
-    height: min-content;
-  }
+/* Grid item styles */
+.item1 {
+  background-color: #f1f1f1;
+  padding: 20px;
+  text-align: center;
+  grid-row: span 4; /* Takes up 4 rows */
+  min-width: 350px;
+  border-radius: 5px;
+  height: min-content;
+}
 
-  .item2 {
-    background-color: #f1f1f1;
-    padding: 20px;
-    text-align: center;
-    grid-row: span 2; /* Takes up 2 rows */
-    min-width: 350px;
-    border-radius: 5px;
-  }
+.item2 {
+  background-color: #f1f1f1;
+  padding: 20px;
+  text-align: center;
+  grid-row: span 2; /* Takes up 2 rows */
+  min-width: 350px;
+  border-radius: 5px;
+}
 
-  .item3, .item4 {
-    background-color: #f1f1f1;
-    padding: 20px;
-    text-align: center;
-    min-width: 350px;
-    border-radius: 5px;
-    height: min-content;
-  }
+.item3, .item4 {
+  background-color: #f1f1f1;
+  padding: 20px;
+  text-align: center;
+  min-width: 350px;
+  border-radius: 5px;
+  height: min-content;
+}
 
-  p.alert {
-    color: crimson;
-  }
+/* Alert message styles */
+p.alert {
+  color: crimson;
+}
 
-  button.deleteAccBtn {
-    background-color: crimson;
-    color: white;
-    border: none;
-    padding: 10px;
-    text-align: center;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
+/* Button styles */
+button.deleteAccBtn {
+  background-color: crimson;
+  color: white;
+  border: none;
+  padding: 10px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
 
-  button.signOutBtn {
-    background-color: rgb(223, 146, 2);
-    color: white;
-    border: none;
-    padding: 10px;
-    text-align: center;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
+button.signOutBtn {
+  background-color: rgb(223, 146, 2);
+  color: white;
+  border: none;
+  padding: 10px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
 
-  button.change {
-    background-color: #a0b678;
-    color: white;
-    border: none;
-    padding: 10px;
-    text-align: center;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
+button.change {
+  background-color: #a0b678;
+  color: white;
+  border: none;
+  padding: 10px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
 
-  img {
-    width: 100px;
-    height: auto;
-  }
-
+/* Image styles */
+img {
+  width: 100px;
+  height: auto;
+}
