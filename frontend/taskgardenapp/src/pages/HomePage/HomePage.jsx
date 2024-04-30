@@ -39,19 +39,9 @@ function HomePage() {
         if (!userID) {
             navigate('/login');
         } else {
-            getPoints();
+            getUserInfo();
             console.log("Logged in as: " + username);
         }
-
-        // Load stored user data
-        const storedPlantType = localStorage.getItem("plantType");
-        if (storedPlantType) setPlantType(JSON.parse(storedPlantType));
-
-        const storedPoints = localStorage.getItem("points");
-        if (storedPoints) setPoints(JSON.parse(storedPoints));
-
-        const storedStage = localStorage.getItem("stage");
-        if (storedStage) setStage(JSON.parse(storedStage));
 
         console.log("useEffect running. points: " + points);
     }, []);
@@ -74,6 +64,10 @@ function HomePage() {
         if (currentUser.totalPlants === undefined || currentUser.totalPlants === 'NaN')
             setTotalPlants(0);
         else setTotalPlants(currentUser. totalPlants);
+
+         // set plant type and stage from db
+         if (currentUser.plantType !== undefined) setPlantType(currentUser.plantType); else setPlantType("succulent");
+         if (currentUser.plantStage !== undefined) setStage(currentUser.plantStage); else setStage(1);
     }
 
     /**
@@ -122,7 +116,20 @@ function HomePage() {
     // Select a plant type
     async function selectPlant() {
         var selected = document.getElementById("plantTypeSelect").value;
+        setPlantSelectVisible(false);
+
+        Swal.fire({
+            icon: 'info',
+            title: `Plant switched.`,
+            text: `${plantType} has been switched to ${selected}.`,
+            showConfirmButton: false,
+            timer: 2500,
+        });
+
         setPlantType(selected);
+
+        const user = doc(db, "users", userID);
+        await updateDoc(user, { "plantType": selected });
     }
 
     // Map for level upgrade points
@@ -130,6 +137,8 @@ function HomePage() {
     
     // Upgrade plant to the next stage
     async function upgradePlant() {
+        const user = doc(db, "users", userID);
+        
         let lvlPoints = nxtStagePoints.get(stage);
 
         // Do nothing if plant is at max stage
@@ -146,9 +155,18 @@ function HomePage() {
                 // Upgrade the plant
                 setStage(prevStage => prevStage + 1);
                 setPoints(prevPoints => prevPoints - lvlPoints);
-                localStorage.setItem("stage", stage + 1);
+                await updateDoc(user, { "plantStage": stage + 1 });
                 localStorage.setItem("points", points - lvlPoints);
                 updatePoints(points - lvlPoints);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: `Congratulations!`,
+                    text: `${plantType} has been upgraded to stage ${stage + 1}`,
+                    showConfirmButton: false,
+                    timer: 2500,
+                });
+
             } catch (err) {
                 console.log(err);
             }
@@ -162,7 +180,7 @@ function HomePage() {
      */
     const handleLogout = () => {
         localStorage.removeItem("userID");
-        document.getElementById('container').style.display = 'none';
+        closePlantSelect();
         Swal.fire({
             icon: 'info',
             title: `${username} has been logged out.`,
@@ -173,9 +191,10 @@ function HomePage() {
     }
 
     // Reset stage for development purposes
-    const resetStage = () => {
+    const resetStage = async () => {
         setStage(1);
-        localStorage.setItem("stage", 1);
+        const user = doc(db, "users", userID);
+        await updateDoc(user, { "plantStage": 1 });
     }
 
     return (

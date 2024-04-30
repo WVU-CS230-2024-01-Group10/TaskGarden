@@ -1,4 +1,8 @@
-
+/*
+ *  TaskPage.jsx
+ *  Authors: C. Jones, E. Hall, D. Campa, S. Tabidze, G. Breeden
+ *  Version 4.30.2024
+ */ 
 
 import React, { useState, useEffect } from 'react';
 import './taskStyles.css';
@@ -8,6 +12,8 @@ import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
 
 function TaskPage() {
+
+    // State variables to manage tasks, points, username, inputs, popup boxes, edit flags, and stats for completed tasks and all-time points.
     const [tasks, setTasks] = useState([]);
     const [points, setPoints] = useState(0);
     const [username, setUsername] = useState('');
@@ -19,26 +25,26 @@ function TaskPage() {
     const [taskAddBoxVisible, setTaskAddBoxVisible] = useState(false);
     const [navBoxVisible, setNavBoxVisible] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const navigate = useNavigate();
     const [completedTotal, setCompletedTotal] = useState(0);
     const [allTimePoints, setAllTimePoints] = useState(0);
 
-    // get user ID from localStorage
+    // Hook for navigation
+    const navigate = useNavigate();
+
+    // Get the User's ID from Local Storage.
     const userID = localStorage.getItem("userID");
 
-    // fetch tasks from db, only if user is logged in
+    // Fetch tasks from the Firestore database ONLY if the user is logged in
     useEffect(() => {
-        if (!userID) {
+        if (!userID) { // if the user is NOT logged in, navigate them to the login page.
             navigate('/login');
-        } else {
+        } else { // if the user IS logged in, get their info from the database.
             getUserInfo();
             console.log("Logged in as: " + username);
         }
     }, [])
 
-    /* function getUserInfo (version 4/16/24)
-    * author: C. Jones
-    * this function retrieves information about the user that is relevant to the task page. (username, tasks, points) */
+    /* function getUserInfo retrieves information about the user that is relevant to the task page. (username, tasks, points) */
     const getUserInfo = async () => {
 
         // show "fetching user info..." message and hide inaccurate tally
@@ -82,22 +88,35 @@ function TaskPage() {
         document.getElementById('fetchingUserInfoMessage').style.display = 'none';
       }
 
+    /* function updatePoints updates the user's points within the database using the newPoints parameter. */
     const updatePoints = async (newPoints) => {
+        // find the logged-in user within the database.
         const user = doc(db, "users", userID);
+
+        // update the user's points in Firestore according to the newPoints parameter.
         await updateDoc(user, {
             points: newPoints
         })
+
+        // update the points within the app. 
         setPoints(newPoints);
     }
 
+    /* function updateAllTimePoints updates the user's all-time points within the database using the newAllTime parameter. */
     const updateAllTimePoints = async (newAllTime) => {
+        // find the logged-in user within the database.
         const user = doc(db, "users", userID);
+
+        // update the user's all-time points in Firestore according to the newAllTime parameter.
         await updateDoc(user, {
             allTimePoints: newAllTime
         })
+
+        // update the all-time points within the app. 
         setAllTimePoints(newAllTime);
     }
 
+    /* function updateCompletedTotal updates the user's all-time completed tasks within the database */
     const updateCompletedTotal = async (newTotal) => {
         const user = doc(db, "users", userID);
         await updateDoc(user, {
@@ -106,28 +125,40 @@ function TaskPage() {
         setCompletedTotal(newTotal);
     }
 
+    /* function showTaskAddBox displays the task add box to the user and ensures it is empty. */
     const showTaskAddBox = () => {
+        // set inputs to empty indicating a NEW task is being created.
         setTitleInput('');
         setDescInput('');
         setDatetimeInput('');
-        setDiffInput(2); // Reset to default difficulty
-        setPriorityInput(2); // Reset to default priority
+
+        // initialize default difficulty and priority to '2'
+        setDiffInput(2);
+        setPriorityInput(2); 
+
+        // show the task add box.
         setTaskAddBoxVisible(true);
     };
 
+    /* function showNavBox displays the navigation box to the user. */
     const showNavBox = () => {
         setNavBoxVisible(true);
     }
 
+    /* function closeTaskAddBox hides the task add box from the user. */
     const closeTaskAddBox = () => {
         setTaskAddBoxVisible(false);
     };
 
+    /* function closeNavBox hides the navigation box from the user. */
     const closeNavBox = () => {
         setNavBoxVisible(false);
     };
 
+    /* function addTask adds a new task to the UI and Firestore. */
     const addTask = async () => {
+
+        // create a new task object from input fields
         const newTask = {
             "title": titleInput,
             "desc": descInput,
@@ -136,16 +167,20 @@ function TaskPage() {
             "priority": priorityInput
         };
     
-        if (newTask.title === "") { newTask.title = "Unnamed Task" };
+        // if the title and description are left empty, set to hard-coded "empty" messages. 
+        if (newTask.title === "") { newTask.title = "Untitled Task" };
         if (newTask.desc === "") { newTask.desc = "This task has no description" };
     
         try {
+
+            // add the new task to the database and close the task add box.
             await addDoc(collection(db, "users", userID, "tasks"), {...newTask});
             closeTaskAddBox();
     
             // Fetch the updated list of tasks from the database
             getUserInfo();
     
+            // if this function is not being called inside editTask, indicate that a new task is being added.
             if (!isEditing) {
                 Swal.fire({
                     icon: 'success',
@@ -154,7 +189,7 @@ function TaskPage() {
                     showConfirmButton: false,
                     timer: 1500,
                 });
-            } else {
+            } else { // if this function IS being called inside editTask, indicate that an existing task is being edited.
                 Swal.fire({
                     icon: 'success',
                     title: 'Edited!',
@@ -167,8 +202,10 @@ function TaskPage() {
             console.log(err);
         }
     };
-    
+
+    /* function removeTask removes an existing task (indicated by the parameter taskId) from the UI and Firestore. */
     const removeTask = async (taskId) => {
+        // verify that the user is sure they want to remove this task.
         Swal.fire({
             icon: 'warning',
             title: 'Are you sure?',
@@ -176,8 +213,10 @@ function TaskPage() {
             showCancelButton: true,
             confirmButtonText: "Yes, delete it!",
             cancelButtonText: 'No, cancel!',
-        }).then(result => {
-            if (result.value) {
+        }).then(result => { 
+            if (result.value) { // if they confirm they are sure, remove the task
+
+                // find the task that matches the taskId parameter
                 const [task] = tasks.filter(task => task.id === taskId);
     
                 // remove from firebase
@@ -185,6 +224,7 @@ function TaskPage() {
                     // Update the task list state after deleting the task
                     setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
     
+                    // indicate to the user that the task has been successfully deleted.
                     Swal.fire({
                         icon: 'success',
                         title: 'Deleted!',
@@ -197,24 +237,31 @@ function TaskPage() {
         });
     };
     
-
-    // function removeWithoutAsking for completion and editing
+    // function removeWithoutAsking removes the task without asking for calls inside editTask and completeTask
     const removeWithoutAsking = (taskId) => {
         const [task] = tasks.filter(task => task.id === taskId)
             // delete from firebase
             deleteDoc(doc(db, "users", userID, "tasks", taskId));
     }
 
+    // function completeTask removes the task from the UI and Firestore and awards the appropriate points to the user.
     const completeTask = async (taskId) => {
+
+        // determine the current task from the taskId parameter
         const task = tasks.find(task => task.id === taskId);
+
+        // determine the point count for the task.
         const newPoints = points + task.diff * 10;
     
         // Update the task list state after completing the task
         const updatedTasks = tasks.filter(t => t.id !== taskId);
         setTasks(updatedTasks);
-    
+
+        // update the user's point count and remove the task.
         setPoints(newPoints);
         removeWithoutAsking(taskId);
+
+        // indivate to the user that their points have been awarded.
         Swal.fire({
             icon: 'success',
             title: `Congratulations!`,
@@ -222,34 +269,51 @@ function TaskPage() {
             showConfirmButton: false,
             timer: 2500,
         }).then(result => {
+            // update points and completed tasks within the database. 
             updatePoints(points + (task.diff * 10));
             updateAllTimePoints(allTimePoints + (task.diff * 10));
             updateCompletedTotal(completedTotal + 1);
         });
     };
     
-
+    // function editTask allows the user to change the fields of an existing task (indicated by taskId parameter).
     const editTask = async (taskId) => {
+        // find the task that corresponds to the taskId parameter. 
         const task = tasks.find(task => task.id === taskId);
+
+        // indicate that the user is editing so that the appropriate message can be displayed.
         setIsEditing(true);
+
+        // set inputs to existing fields. 
         setTitleInput(task.title);
         setDescInput(task.desc);
         setDatetimeInput(task.datetime);
         setDiffInput(task.diff);
         setPriorityInput(task.priority);
+
+        // display the task add box so that the user can edit fields.
         setTaskAddBoxVisible(true);
+
+        // remove the old task without asking. 
         removeWithoutAsking(taskId);
     };
 
+    // function handleLogout logs out the user from the app and redirects them to the login page.
     const handleLogout = () => {
+        // hide all other elements on the page so that the user can see the message indicating their logout. 
         document.getElementById('container').style.display = 'none';
+
+        // remove the user's ID from localStorage. 
         localStorage.removeItem("userID");
+
+        // indicate to the user that their account has been logged out. 
         Swal.fire({
             icon: 'info',
             title: `${username} has been logged out.`,
             showCancelButton: false
         }).then(result => {
-                navigate('/login');
+            // navigate to the login page.
+            navigate('/login');
         })
     }
 
