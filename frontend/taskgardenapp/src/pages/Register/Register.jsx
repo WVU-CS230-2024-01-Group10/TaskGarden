@@ -13,6 +13,7 @@ import './register.css';
 
 const Register = () =>
 {
+    // Hook for navigation
     const navigate = useNavigate(); 
 
     // State variables to manage username, email, password, and users
@@ -21,23 +22,23 @@ const Register = () =>
     const [password, setPassword] = useState('');
     const [users, setUsers] = useState([]);
 
-    // Fetches users from Firestore database on component mount
+    // Fetches users from Firestore database when the page loads.
     useEffect(() => {
         getUsers();
     });
 
-    // Fetches users from Firestore database
+    // function getUsers fetches users from Firestore database
     const getUsers = async () => {
         const querySnapshot = await getDocs(collection(db, "users"));
         const users = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
         setUsers(users);
     }
 
-    // Handles form submission
+    // function handleSubmit handles form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-    // Finds the current user by email
+        // Finds the current user by email
         const currentUser = users.find(user => user.email === email);
         if (currentUser === undefined) {
             // Creates a new user object if the user does not exist

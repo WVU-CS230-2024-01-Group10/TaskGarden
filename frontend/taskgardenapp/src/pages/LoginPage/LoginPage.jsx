@@ -26,14 +26,14 @@ function LoginPage() {
   // Hook for navigation
   const navigate = useNavigate();
 
-  // Fetches users from Firestore database
+  // function getUsers fetches users from Firestore database
   const getUsers = async () => {
     const querySnapshot = await getDocs(collection(db, "users"));
     const users = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
     setUsers(users);
   }
 
-  // Handles form submission
+  // function handleSubmit handles form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     document.getElementById('container').style.display = 'none';
