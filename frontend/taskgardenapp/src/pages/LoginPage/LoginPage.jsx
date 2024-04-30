@@ -1,7 +1,11 @@
-// version 4/15/24 - all commented code is broken auth stuff
+/*
+ *  LoginPage.jsx
+ *  Authors: C. Jones, E. Hall
+ *  Version 4.30.2024
+ */ 
 
-import React, { useContext, useEffect, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
@@ -9,29 +13,35 @@ import './loginStyles.css';
 
 function LoginPage() {
 
+  // State variables to manage users, email, and password
   const [users, setUsers] = useState([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSigningIn, setIsSigningIn] = useState(false);
 
+  // Fetches users from Firestore database on component mount
   useEffect(() => {
     getUsers();
-  }, [])
+  }, []);
 
-  const navigate = useNavigate(); 
+  // Hook for navigation
+  const navigate = useNavigate();
 
+  // Fetches users from Firestore database
   const getUsers = async () => {
     const querySnapshot = await getDocs(collection(db, "users"));
     const users = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
     setUsers(users);
   }
 
+  // Handles form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     document.getElementById('container').style.display = 'none';
-  
+
+    // Finds the current user by email
     const currentUser = users.find(user => user.email === email);
     if (currentUser === undefined ) {
+      // Displays an error message if the account is not found
       Swal.fire({
         icon: 'error',
         title: 'Account not found!',
@@ -42,6 +52,7 @@ function LoginPage() {
         document.getElementById('container').style.display = 'block';
       });
     } else if (currentUser.password !== password) {
+      // Displays an error message if the password is incorrect
       Swal.fire({
         icon: 'error',
         title: 'Incorrect password!',
@@ -52,7 +63,7 @@ function LoginPage() {
         document.getElementById('container').style.display = 'block';
       });
     } else {
-      // setUser(currentUser);
+      // Sets the user ID in local storage and displays a success message
       localStorage.setItem("userID", currentUser.id);
       Swal.fire({
         icon: 'success',
@@ -61,7 +72,7 @@ function LoginPage() {
         showConfirmButton: false,
         timer: 1500
       }).then(result => {
-        // Navigate to the HomePage
+        // Navigates to the HomePage after successful login
         navigate('/');
       });
     }
@@ -74,7 +85,7 @@ function LoginPage() {
             <h2>🪴 Welcome to TaskGarden 🪴</h2>
             <input type="email" name="email" value={email} onChange={(e) => { setEmail(e.target.value) }} placeholder="Email" required />
             <input type="password" name="password" value={password} onChange={(e) => { setPassword(e.target.value) }} placeholder="Password" required />
-            <button type="submit" disabled={isSigningIn}>{isSigningIn ? 'Signing In...' : 'Sign In'}</button>
+            <button type="submit">Sign In</button>
             <Link to="/register">New User? Register Here</Link>
           </form>
         </div>
