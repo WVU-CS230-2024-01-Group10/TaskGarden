@@ -124,6 +124,7 @@ function HomePage() {
             text: `${plantType} has been switched to ${selected}.`,
             showConfirmButton: false,
             timer: 2500,
+            target: document.getElementById('corkboard')
         });
 
         setPlantType(selected);
@@ -165,6 +166,7 @@ function HomePage() {
                     text: `${plantType} has been upgraded to stage ${stage + 1}`,
                     showConfirmButton: false,
                     timer: 2500,
+                    target: document.getElementById('corkboard')
                 });
 
             } catch (err) {
@@ -184,7 +186,8 @@ function HomePage() {
         Swal.fire({
             icon: 'info',
             title: `${username} has been logged out.`,
-            showCancelButton: false
+            showCancelButton: false,
+            target: document.getElementById('homePageNavBox')
         }).then(result => {
                 navigate('/login');
         })
@@ -199,7 +202,59 @@ function HomePage() {
 
     return (
         <body className="background">
-            <div className="plant-view">
+            <div className="container plant-view">
+                <img className="plant" src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
+            </div>
+            <div id='corkboard' className="corkboard container">
+                <div className='greeting'><h3>{username}'s Room</h3></div>
+                <div className="corkboard-buttons">
+                    <div id="plantButtonDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showPlantSelect}>Select Plant</button></div>
+                    {plantSelectVisible && (
+                        <div id="plantSelectBox" className="popup">
+                            <h2>Select Plant</h2>
+                            <form id="plantInfo">
+                                <label htmlFor="title">Plant Type</label>
+                                <select name="plantTypeSelect" id="plantTypeSelect">
+                                    <option value="cactus" selected>Cactus</option>
+                                    <option value="flower">Flower</option>
+                                    <option value="pothos">Pothos</option>
+                                    <option value="succulent">Succulent</option>
+                                </select>
+                                <button type="button" onClick={selectPlant}>Confirm</button>
+                                <button type="button" onClick={closePlantSelect}>Cancel</button>
+                            </form>
+                        </div>
+                    )}
+                    
+                    <button id='upgradePlantButton' onClick={upgradePlant}>Upgrade: <br></br> {nxtStagePoints.get(stage)} points</button>
+
+                    <div id="openNavBoxDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showNavBox}>Pages</button></div>
+                    {navBoxVisible && (
+                    <div id="homePageNavBox" className="popup">
+                        <h3>Task Garden Navigation</h3>
+                        <Link className="link" id="taskPageLink" to="/tasks">Tasks</Link>
+                        <Link className="link" id="profilePageLink" to="/profile">Profile</Link>
+                        <button onClick={handleLogout}>Logout</button>
+                        <button type="button" onClick={closeNavBox}>Cancel</button>
+                    </div>
+                    )}
+                </div>
+                <div className='message'><h3>Welcome to Task Garden! Use the buttons above to edit your plant, or navigate to a different page.</h3></div>
+            </div>
+
+            <div id="pointsBox" className="pointsBox">
+                <h3>Your Points:</h3>
+                <h1 style={{marginTop: "15px"}}>{points}</h1>
+            </div>
+            <div id="resetStageDiv" className="resetStageDiv">
+                <h4>Reset Stage (for dev purposes)</h4>
+                <button onClick={resetStage}>Reset</button>  
+            </div>
+
+            <div className='bookshelf'></div>
+
+
+            {/* <div className="container plant-view">
                 <img className="plant" src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
             </div>
         <div id='container' className="plant-container container">
@@ -212,7 +267,7 @@ function HomePage() {
                         <h2>Select Plant</h2>
                         <form id="plantInfo">
                             <label htmlFor="title">Plant Type</label>
-                            <select name="plantTypeSelect" id="plantTypeSelect">{/* doesn't work */}
+                            <select name="plantTypeSelect" id="plantTypeSelect">
                                 <option value="cactus" selected>Cactus</option>
                                 <option value="flower">Flower</option>
                                 <option value="pothos">Pothos</option>
@@ -246,7 +301,8 @@ function HomePage() {
                 </div>
                 
             </div>
-        </div>
+        </div> */}
+
         </body>
     );
 }

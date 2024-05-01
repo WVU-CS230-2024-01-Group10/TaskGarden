@@ -1,31 +1,49 @@
 .background {
   background-color: #F9E3D0;
-  background-image: url("../../img/homepage.jpeg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
 }
 
-.plant-container {
-  position: absolute;
-  top: 380px;
-  left: 1400px;
+.corkboard {
+  background-image: url(../../img/homepage/corkboard.png);
+  width: 288px;
+  height: 530px;
+  top: 40%;
+  left: 80%;
   margin: 1rem;
   padding: 2rem 2rem;
   text-align: center;
-  width: 266px;
-  background: none;
   box-shadow: none;
-  justify-content: center;
+}
+
+.corkboard-buttons {
+  position: absolute;
+  top: 100px;
+  left: 43px;
+}
+
+.greeting {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  width: 210px;
+  height: 50px;
+  text-align: center;
+  line-height: 3rem;
+}
+
+.message {
+  position: absolute;
+  bottom: 40px;
+  left: 25px;
+  width: 235px;
+  height: 150px;
+  text-align: center;
 }
 
 /* Pop-up box styles */
 .pointsBox {
-  position: fixed;
-  top: 50%;
-  left: -400%; 
-  transform: translate(-50%, -50%);
-  /*Removed display: none;*/
+  position: absolute;
+  top: 30%;
+  left: 4%; 
   background-color: rgb(255, 243, 228);
   padding: 20px;
   border-radius: 10px;
@@ -38,10 +56,8 @@
 .resetStageDiv {
   display: block;
   position: fixed;
-  top: 125%;
-  left: -400%; 
-  transform: translate(-50%, -50%);
-  /*Removed display: none;*/
+  top: 55%;
+  left: 4%;  
   background-color: rgb(255, 243, 228);
   padding: 20px;
   border-radius: 10px;
@@ -51,17 +67,13 @@
   width: 10vw;
 }
 
-#greeting {
-  position: fixed;
-  top: -15%;
-  left: 27%;
-}
-
-#message {
-  position: fixed;
-  top: 115%;
-  left: 12%;
-  max-width: 200px;
+.bookshelf {
+  background-image: url(../../img/homepage/bookshelf.png);
+  position: absolute;
+  bottom: 0px;
+  left: 70%;
+  width: 390px;
+  height: 230px;
 }
 
 .selectPlantButton {
@@ -81,18 +93,19 @@
 
 .plant {
   position: absolute;
-  bottom: 0px;
-  width: 20%;
+  bottom: 20px;
+  left: 293px;
+  width: 180px;
   transition: all 2s ease-in-out;
 }
 
 .plant-view {
-  display: inline-block;
-  vertical-align: middle;
-  position: absolute;
-  top: 80%;
-  left: 39.5%;
-  width: 50%;
+  background-image: url(../../img/homepage/window.png);
+  top: 50%;
+  left: 42%;
+  width: 766px;
+  height: 646px;
+  box-shadow: none;
 }
 
 .link-board {
@@ -102,114 +115,6 @@
   vertical-align: middle;
 }
 
-.watering_can{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/Watering%20Can%20png.png?raw=true");
-  background-position: left bottom;
-}
-
-.watering_can:hover{
-  background-color: bisque;
-}
-
-.flower_s1{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Flower%20Stage%201.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.flower_s2{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Flower%20Stage%202.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.flower_s3{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Flower%20Stage%203.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.flower_s4{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Flower%20Stage%204.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.flower_s5{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Flower%20Stage%205.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.cactus_s1{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Cactus%20Stage%201.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.cactus_s2{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Cactus%20Stage%202.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.cactus_s3{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Cactus%20Stage%203.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.cactus_s4{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Cactus%20Stage%204.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.cactus_s5{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Cactus%20Stage%205.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.pothos_s1{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Pothos%20Stage%201.png?raw=true");
-  background-position: center 25% top;
-}
-
-.pothos_s2{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Pothos%20Stage%202.png?raw=true");
-  background-position: center 25% top;
-}
-
-.pothos_s3{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Pothos%20Stage%203.png?raw=true");
-  background-position: center 25% top;
-}
-
-.pothos_s4{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Pothos%20Stage%204.png?raw=true");
-  background-position: center 25% top;
-}
-
-.pothos_s5{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Pothos%20Stage%205.png?raw=true");
-  background-position: center 25% top;
-}
-
-.succulent_s1{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Succulent%20Stage%201.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.succulent_s2{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Succulent%20Stage%202.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.succulent_s3{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Succulent%20Stage%203.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.succulent_s4{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Succulent%20Stage%204.png?raw=true");
-  background-position: center 25% bottom;
-}
-
-.succulent_s5{
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/png%20Succulent%20Stage%205.png?raw=true");
-  background-position: center 25% bottom;
-}
 
 #taskPageLink {
   background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/Tasks%20Sticky%20Note%20png.png?raw=true");
