@@ -45,7 +45,14 @@ function HomePage() {
         }
 
         console.log("useEffect running. points: " + points);
-    }, []);
+
+        // Set plant class based on plant type
+        if (plantType === "pothos") {
+            setPlantClass("plant-hung");
+        } else {
+            setPlantClass("plant");
+        }
+    }, [plantType]);
 
     /**
      * Retrieves user information from the database.
