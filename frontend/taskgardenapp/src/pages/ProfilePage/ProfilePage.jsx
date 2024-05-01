@@ -5,6 +5,7 @@ import { collection, doc, getDocs, deleteDoc, updateDoc } from 'firebase/firesto
 import { db } from '../../firebase/firebase';
 import { useNavigate } from 'react-router-dom'; // Import Link component
 import Swal from 'sweetalert2';
+import CryptoJS from 'crypto-js';
 
 /**
  * Profile page component for Task Garden.
@@ -17,6 +18,16 @@ function ProfilePage() {
     const [completedTotal, setCompletedTotal] = useState(0);
     const [allTimePoints, setAllTimePoints] = useState(0);
     const [totalPlants, setTotalPlants] = useState(0);
+    
+    // for information change operations
+    const [currentEmail, setCurrentEmail] = useState('');
+    const [newEmail, setNewEmail] = useState('');
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [newPassword2, setNewPassword2] = useState('');
+    const [emailBoxVisible, setEmailBoxVisible] = useState(false);
+    const [passwordBoxVisible, setPasswordBoxVisible] = useState(false);
+
     const navigate = useNavigate();
 
     // Retrieve userID from local storage
@@ -40,9 +51,7 @@ function ProfilePage() {
         }
     }, [])
 
-    /**
-     * Retrieves user information from the database.
-     */
+    // Retrieves user information from the database.
     const getUserInfo = async () => {
 
         // Get users and docs from db
@@ -83,52 +92,183 @@ function ProfilePage() {
      * Handles account deletion by deleting the user document from the database and navigating to login page.
      */
     const handleAcctDelete = async () => {
-        try {
-            // Reference to the user document
-            const userDocRef = doc(db, 'users', userID);
+        Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this',
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: 'No, cancel!',
+        }).then(async () => { 
+            try {
+                // Reference to the user document
+                const userDocRef = doc(db, 'users', userID);
 
-            // Delete the user document
-            await deleteDoc(userDocRef);
+                // Delete the user document
+                await deleteDoc(userDocRef);
 
-            // Remove the user ID from local storage
-            localStorage.removeItem("userID");
+                // Remove the user ID from local storage
+                localStorage.removeItem("userID");
 
-            // Display a confirmation message
-            Swal.fire({
-                icon: 'success',
-                title: 'Account Deleted Successfully',
-                text: 'Your account has been deleted.',
-                showCancelButton: false
-            }).then(result => {
-                // Navigate to the login page
-                navigate('/login');
-            });
-        } catch (error) {
-            // Display an error message if deletion fails
-            Swal.fire({
-                icon: 'error',
-                title: 'Failed to Delete Account',
-                text: 'An error occurred while deleting your account. Please try again later.',
-                showCancelButton: false
-            });
-        }
+                // Display a confirmation message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Account Deleted Successfully',
+                    text: 'Your account has been deleted.',
+                    showCancelButton: false
+                }).then(result => {
+                    // Navigate to the login page
+                    navigate('/login');
+                });
+            } catch (error) {
+                // Display an error message if deletion fails
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to Delete Account',
+                    text: 'An error occurred while deleting your account. Please try again later.',
+                    showCancelButton: false
+                });
+            }
+        });
     }
 
-    // Function for handling editing user information (not implemented yet)
-    const handleEditUserInfo = async () => {
+    // Function for handling an email change
+    const changeEmail = async () => {
 
+        // Get user from db
+        const usersQuery = await getDocs(collection(db, "users"));
+        const users = usersQuery.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const currentUser = users.find(user => user.id === userID);
+        const userRef = doc(db, 'users', userID);
+
+        if (currentEmail !== currentUser.email) { // test if emails match. if they don't, notify the user.
+            Swal.fire({
+                icon: 'error',
+                title: 'Email mismatch!',
+                text: "Please make sure you entered the correct email.",
+                showConfirmButton: false,
+                timer: 1500,
+            })
+        } else { // if they do, update the user's email in the database.
+            await updateDoc(userRef, {
+                email: newEmail
+            })
+
+            Swal.fire({ // then notify the user
+                icon: 'success',
+                title: 'Email changed!',
+                text: `Your email has been successfully changed to ${newEmail}`,
+                showConfirmButton: false,
+                timer: 1500,
+            })
+        }
+
+        // hide the email edit box
+        hideEmailBox();
+    }
+
+    // Function for handling editing the user's password
+    const changePassword = async () => {
+
+        // Get user from db
+        const usersQuery = await getDocs(collection(db, "users"));
+        const users = usersQuery.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const currentUser = users.find(user => user.id === userID);
+        const userRef = doc(db, 'users', userID);
+
+        // test if the input password matches the logged in one
+        if (CryptoJS.SHA256(currentPassword).toString(CryptoJS.enc.Hex) !== currentUser.password) {
+            Swal.fire({ // if not, notify the user
+                icon: 'error',
+                title: 'Password mismatch!',
+                text: "Please make sure you entered the correct password.",
+                showConfirmButton: false,
+                timer: 2000,
+            })
+        } else if (newPassword === newPassword2) { // if they do, update to the new password
+            await updateDoc(userRef, {
+                password: CryptoJS.SHA256(newPassword).toString(CryptoJS.enc.Hex)
+            })
+
+            Swal.fire({ // then notify the user 
+                icon: 'success',
+                title: 'Password changed!',
+                text: `Your password has been successfully changed!`,
+                showConfirmButton: false,
+                timer: 1500,
+            })
+        } else { // if newPassword fields don't match, notify the user.
+            Swal.fire({
+                icon: 'error',
+                title: 'Password mismatch!',
+                text: `Please ensure the new password re-entry matches the initial one.`,
+                showConfirmButton: false,
+                timer: 2500,
+            })
+        }
+
+        // hide the password input box.
+        hidePasswordBox();
+    }
+
+    // function for showing the email input box.
+    const showEmailBox = () => {
+        setEmailBoxVisible(true);
+    }
+
+    // function for showing the password input box.
+    const showPasswordBox = () => {
+        setPasswordBoxVisible(true);
+    }
+
+    // function for hiding the email input box.
+    const hideEmailBox = () => {
+        setEmailBoxVisible(false);
+    }
+
+    // function for hiding the password input box.
+    const hidePasswordBox = () => {
+        setPasswordBoxVisible(false);
     }
 
     return (
-        <div className="ProfilePage">
+        <div id='container' className="ProfilePage">
+            {emailBoxVisible && (
+                    <div id="emailBox" className="popup">
+                        <h2>Change Email</h2>
+                        <form id="emailInfo">
+                            <label htmlFor="currentEmail">Current Email:</label>
+                            <input type="text" id="currentEmail" name="currentEmail" value={currentEmail} onChange={(e) => setCurrentEmail(e.target.value)} required /><br /><br />
+                            <label htmlFor="newEmail">New Email:</label>
+                            <input type="text" id="newEmail" name="newEmail" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} required /><br /><br />
+                            <button type="button" onClick={changeEmail}>Confirm</button>
+                            <button id="taskAddBoxCancelButton" type="button" onClick={hideEmailBox}>Cancel</button>
+                        </form>
+                    </div>
+            )}
+            {passwordBoxVisible && (
+                    <div id="passwordBox" className="popup">
+                        <h2>Change Password</h2>
+                        <form id="passwordInfo">
+                            <label htmlFor="currentPassword">Current Password:</label>
+                            <input type="password" id="currentPassword" name="currentPassword" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required /><br /><br />
+                            <label htmlFor="newPassword">New Password:</label>
+                            <input type="password" id="newPassword" name="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required /><br /><br />
+                            <label htmlFor="newPassword2">Confirm New Password:</label>
+                            <input type="password" id="newPassword2" name="newPassword2" value={newPassword2} onChange={(e) => setNewPassword2(e.target.value)} required /><br /><br />
+                            <button type="button" onClick={changePassword}>Confirm</button>
+                            <button id="taskAddBoxCancelButton" type="button" onClick={hidePasswordBox}>Cancel</button>
+                        </form>
+                    </div>
+            )}
             <h1 className="userLabel">My Profile</h1>
-            <div id='container' className="gridContainer">
+            <div className="gridContainer">
                 <div className="item1">
                     <h2>Account Information</h2>
                     <p>Username: {username}</p>
                     <p>Email: {email}</p>
-                    <button type="button" className="change">Change email</button>
-                    <button type="button" className="change">Change password</button>
+                    <button onClick={showEmailBox} type="button" className="change">Change email</button>
+                    <button onClick={showPasswordBox} type="button" className="change">Change password</button>
                     <h2 className="achievementsLabel">Achievements</h2>
                     <p>Total Tasks Completed: {completedTotal}</p>
                     <p>Total Points Earned: {allTimePoints}</p>
