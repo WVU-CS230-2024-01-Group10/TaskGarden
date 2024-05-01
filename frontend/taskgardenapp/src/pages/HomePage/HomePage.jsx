@@ -124,7 +124,6 @@ function HomePage() {
             text: `${plantType} has been switched to ${selected}.`,
             showConfirmButton: false,
             timer: 2500,
-            target: document.getElementById('corkboard')
         });
 
         setPlantType(selected);
@@ -166,7 +165,6 @@ function HomePage() {
                     text: `${plantType} has been upgraded to stage ${stage + 1}`,
                     showConfirmButton: false,
                     timer: 2500,
-                    target: document.getElementById('corkboard')
                 });
 
             } catch (err) {
@@ -187,7 +185,6 @@ function HomePage() {
             icon: 'info',
             title: `${username} has been logged out.`,
             showCancelButton: false,
-            target: document.getElementById('homePageNavBox')
         }).then(result => {
                 navigate('/login');
         })

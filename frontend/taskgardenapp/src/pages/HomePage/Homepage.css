@@ -12,6 +12,7 @@
   padding: 2rem 2rem;
   text-align: center;
   box-shadow: none;
+  z-index: 0;
 }
 
 .corkboard-buttons {
@@ -51,6 +52,7 @@
   z-index: 10000;
   height:fit-content;
   width: 10vw;
+  z-index: 0;
 }
 
 .resetStageDiv {
@@ -65,6 +67,7 @@
   z-index: 10000;
   height:fit-content;
   width: 10vw;
+  z-index: 0;
 }
 
 .bookshelf {
@@ -106,6 +109,7 @@
   width: 766px;
   height: 646px;
   box-shadow: none;
+  z-index: 0;
 }
 
 .link-board {
