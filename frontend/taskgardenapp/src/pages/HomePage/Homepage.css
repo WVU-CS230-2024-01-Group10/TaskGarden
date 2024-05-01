@@ -88,7 +88,7 @@
  * flex around content
  */
 .resetStageDiv {
-  display: block;
+  display: none;
   position: fixed;
   top: 55%;
   left: 4%;  

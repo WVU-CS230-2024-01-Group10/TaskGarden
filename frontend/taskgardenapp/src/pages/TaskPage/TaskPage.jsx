@@ -196,6 +196,8 @@ function TaskPage() {
                     text: `"${newTask.title}" has been edited.`,
                     showConfirmButton: false,
                     timer: 1500,
+                }).then(() => {
+                    setIsEditing(false); // indicate that the user is no longer editing.
                 });
             }
         } catch (err) {
@@ -277,7 +279,7 @@ function TaskPage() {
     };
     
     // function editTask allows the user to change the fields of an existing task (indicated by taskId parameter).
-    const editTask = async (taskId) => {
+    const editTask = (taskId) => {
         // find the task that corresponds to the taskId parameter. 
         const task = tasks.find(task => task.id === taskId);
 
