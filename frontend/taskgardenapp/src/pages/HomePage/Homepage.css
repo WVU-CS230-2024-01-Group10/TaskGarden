@@ -131,7 +131,7 @@
   border: none; */
 }
 
-/* plant image div within
+/* plant image on windowsill
  * plant-view div
  * positioned relative to parent div
  * transition for plant growth
@@ -139,7 +139,20 @@
 .plant {
   position: absolute;
   bottom: 20px;
-  left: 293px;
+  left: 290px;
+  width: 180px;
+  transition: all 2s ease-in-out;
+}
+
+/* plant image hung above windowsill
+ * plant-view div
+ * positioned relative to parent div
+ * transition for plant growth
+ */
+.plant-hung {
+  position: absolute;
+  top: 45px;
+  left: 290px;
   width: 180px;
   transition: all 2s ease-in-out;
 }

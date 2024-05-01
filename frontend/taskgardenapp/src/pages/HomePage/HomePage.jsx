@@ -15,6 +15,7 @@ import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase
 function HomePage() {
     const [username, setUsername] = useState('');
     const [plantType, setPlantType] = useState("succulent");
+    const [plantClass, setPlantClass] = useState("plant");
     const [points, setPoints] = useState(0);
     const [totalPlants, setTotalPlants] = useState(0);
     const [stage, setStage] = useState(1);
@@ -68,6 +69,9 @@ function HomePage() {
          // set plant type and stage from db
          if (currentUser.plantType !== undefined) setPlantType(currentUser.plantType); else setPlantType("succulent");
          if (currentUser.plantStage !== undefined) setStage(currentUser.plantStage); else setStage(1);
+         if (plantType == "pothos") {
+            setPlantClass("plant-hung");
+         }
     }
 
     /**
@@ -116,6 +120,11 @@ function HomePage() {
     // Select a plant type
     async function selectPlant() {
         var selected = document.getElementById("plantTypeSelect").value;
+        if (selected === "pothos") {
+            setPlantClass('plant-hung');
+        } else {
+            setPlantClass('plant');
+        }
         setPlantSelectVisible(false);
 
         Swal.fire({
@@ -134,7 +143,6 @@ function HomePage() {
 
     // Map for level upgrade points
     const nxtStagePoints = new Map([ [1, 250], [2, 500], [3, 750], [4, 1000], [5, 'max level'] ]);
-    
     // Upgrade plant to the next stage
     async function upgradePlant() {
         const user = doc(db, "users", userID);
@@ -199,12 +207,16 @@ function HomePage() {
 
     return (
         <body className="background">
+
             <div className="container plant-view">
-                <img className="plant" src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
+                <img className={plantClass} src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
             </div>
+
             <div id='corkboard' className="corkboard container">
                 <div className='greeting'><h3>{username}'s Room</h3></div>
+
                 <div className="corkboard-buttons">
+
                     <div id="plantButtonDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showPlantSelect}>Select Plant</button></div>
                     {plantSelectVisible && (
                         <div id="plantSelectBox" className="popup">
@@ -235,7 +247,9 @@ function HomePage() {
                         <button type="button" onClick={closeNavBox}>Cancel</button>
                     </div>
                     )}
+
                 </div>
+
                 <div className='message'><h3>Welcome to Task Garden! Use the buttons above to edit your plant, or navigate to a different page.</h3></div>
             </div>
 
@@ -243,62 +257,13 @@ function HomePage() {
                 <h3>Your Points:</h3>
                 <h1 style={{marginTop: "15px"}}>{points}</h1>
             </div>
+
             <div id="resetStageDiv" className="resetStageDiv">
                 <h4>Reset Stage (for dev purposes)</h4>
                 <button onClick={resetStage}>Reset</button>  
             </div>
 
             <div className='bookshelf'></div>
-
-
-            {/* <div className="container plant-view">
-                <img className="plant" src={plantImages[`${plantType}_s${stage}.png`]} alt={`${plantType} stage ${stage}`} />
-            </div>
-        <div id='container' className="plant-container container">
-            <div id='greeting'><h3>{username}'s Room</h3></div>
-            <div id='message'><h3>Welcome to Task Garden! Use the buttons above to edit your plant, or navigate to a different page.</h3></div>
-            <div>
-                <div id="plantButtonDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showPlantSelect}>Select Plant</button></div>
-                {plantSelectVisible && (
-                    <div id="plantSelectBox" className="popup">
-                        <h2>Select Plant</h2>
-                        <form id="plantInfo">
-                            <label htmlFor="title">Plant Type</label>
-                            <select name="plantTypeSelect" id="plantTypeSelect">
-                                <option value="cactus" selected>Cactus</option>
-                                <option value="flower">Flower</option>
-                                <option value="pothos">Pothos</option>
-                                <option value="succulent">Succulent</option>
-                            </select>
-                            <button type="button" onClick={selectPlant}>Confirm</button>
-                            <button type="button" onClick={closePlantSelect}>Cancel</button>
-                        </form>
-                    </div>
-                )}
-                
-                <button id='upgradePlantButton' onClick={upgradePlant}>Upgrade: <br></br> {nxtStagePoints.get(stage)} points</button>
-
-                <div id="openNavBoxDiv"><button className="selectPlantButton" id="selectPlantButton" onClick={showNavBox}>Pages</button></div>
-                {navBoxVisible && (
-                <div id="homePageNavBox" className="popup">
-                    <h3>Task Garden Navigation</h3>
-                    <Link className="link" id="taskPageLink" to="/tasks">Tasks</Link>
-                    <Link className="link" id="profilePageLink" to="/profile">Profile</Link>
-                    <button onClick={handleLogout}>Logout</button>
-                    <button type="button" onClick={closeNavBox}>Cancel</button>
-                </div>
-                )}
-                <div id="pointsBox" className="pointsBox">
-                    <h3>Your Points:</h3>
-                    <h1 style={{marginTop: "15px"}}>{points}</h1>
-                </div>
-                <div id="resetStageDiv" className="resetStageDiv">
-                    <h4>Reset Stage (for dev purposes)</h4>
-                    <button onClick={resetStage}>Reset</button>  
-                </div>
-                
-            </div>
-        </div> */}
 
         </body>
     );
