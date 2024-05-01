@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
+import CryptoJS from 'crypto-js';
 import './loginStyles.css';
 
 function LoginPage() {
@@ -51,7 +52,7 @@ function LoginPage() {
       }).then(result => {
         document.getElementById('container').style.display = 'block';
       });
-    } else if (currentUser.password !== password) {
+    } else if (currentUser.password !== CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex)) {
       // Displays an error message if the password is incorrect
       Swal.fire({
         icon: 'error',

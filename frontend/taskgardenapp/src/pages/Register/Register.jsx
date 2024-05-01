@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { addDoc, getDocs, collection } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import Swal from 'sweetalert2';
+import CryptoJS from 'crypto-js';
 import './register.css';
 
 const Register = () =>
@@ -38,13 +39,16 @@ const Register = () =>
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Hashes the password before storing it in the database.
+        const hashedPassword = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
+
         // Finds the current user by email
         const currentUser = users.find(user => user.email === email);
         if (currentUser === undefined) {
             // Creates a new user object if the user does not exist
             const newUser = {
                 "username": username,
-                "password": password,
+                "password": hashedPassword,
                 "email": email
             }
 
