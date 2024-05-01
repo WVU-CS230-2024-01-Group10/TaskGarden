@@ -1,7 +1,20 @@
+/* Homepage.css
+ * This file provides
+ * styling for the HomePage
+ * component
+ */
+
+ /* body background color */
 .background {
   background-color: #F9E3D0;
 }
 
+/* corkboard styling
+ * width and height match the background image
+ * top and left are positioning based on viewport
+ * text-align for child text elements
+ * z-index=0 so sweet alerts are shown correctly
+ */
 .corkboard {
   background-image: url(../../img/homepage/corkboard.png);
   width: 288px;
@@ -15,12 +28,20 @@
   z-index: 0;
 }
 
+/* buttons within corkboard div
+ * position relative to corkboard div
+ */
 .corkboard-buttons {
   position: absolute;
   top: 100px;
   left: 43px;
 }
 
+/* greeting within corkboard div
+ * position relative to corkboard div
+ * line-height=3rem so that text is centered
+ * vertically
+ */
 .greeting {
   position: absolute;
   top: 30px;
@@ -31,6 +52,9 @@
   line-height: 3rem;
 }
 
+/* message within corkboard div
+ * position relative to corkboard div
+ */
 .message {
   position: absolute;
   bottom: 40px;
@@ -40,7 +64,10 @@
   text-align: center;
 }
 
-/* Pop-up box styles */
+/* Pop-up box styles
+ * displays number of points earned
+ * flex around content
+ */
 .pointsBox {
   position: absolute;
   top: 30%;
@@ -55,6 +82,11 @@
   z-index: 0;
 }
 
+/* Pop-up box styles
+ * development button div
+ * not visible to end user
+ * flex around content
+ */
 .resetStageDiv {
   display: block;
   position: fixed;
@@ -70,6 +102,10 @@
   z-index: 0;
 }
 
+/* bookshelf div
+ * positioned relative to body
+ * width and height of background image
+ */
 .bookshelf {
   background-image: url(../../img/homepage/bookshelf.png);
   position: absolute;
@@ -79,6 +115,7 @@
   height: 230px;
 }
 
+/* button within corkboard-buttons */
 .selectPlantButton {
   width: 200px;
   padding: 10px;
@@ -94,6 +131,11 @@
   border: none; */
 }
 
+/* plant image div within
+ * plant-view div
+ * positioned relative to parent div
+ * transition for plant growth
+ */
 .plant {
   position: absolute;
   bottom: 20px;
@@ -102,6 +144,10 @@
   transition: all 2s ease-in-out;
 }
 
+/* plant window div
+ * positioned relative to body
+ * transition for plant growth
+ */
 .plant-view {
   background-image: url(../../img/homepage/window.png);
   top: 50%;
@@ -112,41 +158,15 @@
   z-index: 0;
 }
 
-.link-board {
-  display: inline-block;
-  border: 1px solid red;
-  padding: 1rem 1rem;
-  vertical-align: middle;
-}
-
-
-#taskPageLink {
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/Tasks%20Sticky%20Note%20png.png?raw=true");
-  background-position: right center 20px left 10px top;
-}
-
-#taskPageLink:hover {
+/* reactive link hovering  for nav */
+#taskPageLink:hover, #profilePageLink:hover {
   background-color: bisque;
 }
 
-#studyPageLink {
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/Study%20Sticky%20Note%20png.png?raw=true");
-  background-position: right center 10px left 10px top;
-}
-
-#studyPageLink:hover {
-  background-color: bisque;
-}
-
-#greenhousePageLink {
-  background-image: url("https://github.com/WVU-CS230-2024-01-Group10/TaskGardenBackup/blob/main/PNG%20Images/Greenhouse%20Sticky%20Note%20png.png?raw=true");
-  background-position: right center 15px left;
-}
-
-#greenhousePageLink:hover {
-  background-color: bisque;
-}
-
+/* navigation popup
+ * large z-index to cover background
+ * reactive to viewport
+ */
 #homePageNavBox {
   position: fixed;
   top: 90%;
